@@ -17,7 +17,7 @@ const About = () => {
       opacity: 0,
       yPercent: 100,
       duration: 0.8,
-      ease: 'expo.out',
+      ease: 'elastic.out',
       stagger: 0.1,
     });
 

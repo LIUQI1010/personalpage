@@ -3,7 +3,7 @@ import About from './components/About';
 
 function App() {
   return (
-    <main>
+    <main className='bg-black text-white'>
       <MyNavigation />
       <About id='about' />
     </main>
