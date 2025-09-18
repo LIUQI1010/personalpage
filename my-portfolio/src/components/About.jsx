@@ -7,7 +7,7 @@ import { useRef } from 'react';
 // 注册ScrollTrigger插件
 gsap.registerPlugin(ScrollTrigger);
 
-const About = () => {
+const About = ({ id }) => {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
@@ -426,8 +426,19 @@ const About = () => {
 
   return (
     <section
+      id={id}
       ref={sectionRef}
       className='min-h-screen bg-gray-900 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
+      style={{
+        backgroundImage: `
+          radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
+          radial-gradient(circle at 80% 70%, rgba(255,255,255,0.012) 0.3px, transparent 0.3px),
+          radial-gradient(circle at 45% 15%, rgba(255,255,255,0.018) 0.4px, transparent 0.4px),
+          radial-gradient(circle at 15% 85%, rgba(255,255,255,0.01) 0.2px, transparent 0.2px)
+        `,
+        backgroundSize: '120px 120px, 80px 80px, 100px 100px, 60px 60px',
+        backgroundPosition: '0 0, 40px 40px, 20px 60px, 80px 20px',
+      }}
     >
       {/* 背景装饰 */}
       <div
@@ -497,14 +508,14 @@ const About = () => {
           <h2 className='text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent'>
             Certifications
           </h2>
-          <div className='max-w-4xl mx-auto'>
+          <div className='max-w-5xl mx-auto'>
             {Object.entries(certifications).map(([category, certs]) => (
               <div key={category} className='certification-category'>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
                   {certs.map((cert, index) => (
                     <div
                       key={cert.name}
-                      className={`certification-card relative overflow-hidden rounded-2xl p-8 transition-all duration-500 group cursor-pointer ${
+                      className={`certification-card relative overflow-hidden rounded-xl p-6 transition-all duration-500 group cursor-pointer ${
                         index === 0
                           ? 'border border-[#00b4d8]/30 hover:border-[#00b4d8]/50 hover:shadow-xl hover:shadow-[#00b4d8]/10'
                           : index === 1
@@ -521,44 +532,35 @@ const About = () => {
                       }}
                     >
                       {/* AWS徽章区域 - 支持Credly官方徽章 */}
-                      <div className='flex justify-center mb-6'>
+                      <div className='flex justify-center mb-4'>
                         {cert.credlyImageUrl ? (
                           // 使用Credly官方徽章
-                          <div className='relative'>
+                          <div className='relative group-hover:scale-150 group-hover:translate-y-3 transition-all duration-500 ease-out'>
                             {cert.credlyVerifyUrl ? (
                               <a
                                 href={cert.credlyVerifyUrl}
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='block hover:scale-105 transition-transform duration-300'
+                                className='block'
                               >
                                 <img
                                   src={cert.credlyImageUrl}
                                   alt={`AWS ${cert.name} Certification Badge`}
-                                  className='w-24 h-24 object-contain rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300'
+                                  className='w-20 h-20 object-contain rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-500'
                                 />
                               </a>
                             ) : (
                               <img
                                 src={cert.credlyImageUrl}
                                 alt={`AWS ${cert.name} Certification Badge`}
-                                className='w-24 h-24 object-contain rounded-lg shadow-lg'
+                                className='w-20 h-20 object-contain rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-300'
                               />
-                            )}
-
-                            {/* 验证链接提示 */}
-                            {cert.credlyVerifyUrl && (
-                              <div className='absolute -bottom-2 left-1/2 transform -translate-x-1/2'>
-                                <div className='bg-blue-500 text-white text-xs px-2 py-1 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300'>
-                                  点击验证
-                                </div>
-                              </div>
                             )}
                           </div>
                         ) : (
                           // 备用设计（没有Credly徽章时）
                           <div
-                            className={`relative w-24 h-24 rounded-xl flex items-center justify-center shadow-lg ${
+                            className={`relative w-20 h-20 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-150 group-hover:translate-y-3 group-hover:shadow-2xl transition-all duration-500 ease-out ${
                               cert.status === 'completed'
                                 ? 'bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600'
                                 : cert.status === 'preparing'
@@ -569,7 +571,7 @@ const About = () => {
                             {cert.status === 'preparing' ? (
                               // 进行中占位设计
                               <div className='text-slate-600 text-center'>
-                                <div className='w-12 h-12 mx-auto mb-1 opacity-40'>
+                                <div className='w-10 h-10 mx-auto mb-1 opacity-40'>
                                   <svg viewBox='0 0 100 100' fill='currentColor'>
                                     {/* 占位徽章轮廓 */}
                                     <circle
@@ -593,7 +595,7 @@ const About = () => {
                                     <text
                                       x='50'
                                       y='58'
-                                      fontSize='16'
+                                      fontSize='14'
                                       fontWeight='bold'
                                       textAnchor='middle'
                                       fill='currentColor'
@@ -606,7 +608,7 @@ const About = () => {
                             ) : (
                               // 已认证AWS Logo SVG
                               <div className='text-white'>
-                                <svg viewBox='0 0 120 70' className='w-16 h-10' fill='currentColor'>
+                                <svg viewBox='0 0 120 70' className='w-14 h-8' fill='currentColor'>
                                   {/* 云朵形状 */}
                                   <path
                                     d='M25 40c-4 0-7-3-7-7s3-7 7-7c1-10 9-18 20-18s19 8 20 18c4 0 7 3 7 7s-3 7-7 7H25z'
@@ -616,7 +618,7 @@ const About = () => {
                                   <text
                                     x='30'
                                     y='58'
-                                    fontSize='14'
+                                    fontSize='12'
                                     fontWeight='bold'
                                     letterSpacing='2'
                                   >
@@ -628,9 +630,9 @@ const About = () => {
 
                             {/* 认证状态图标 */}
                             {cert.status === 'completed' && (
-                              <div className='absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white'>
+                              <div className='absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white'>
                                 <svg
-                                  className='w-5 h-5 text-white'
+                                  className='w-3 h-3 text-white'
                                   fill='currentColor'
                                   viewBox='0 0 20 20'
                                 >
@@ -649,36 +651,39 @@ const About = () => {
                         )}
                       </div>
 
-                      {/* 状态标签 */}
-                      <div className='flex justify-center mb-4'>
-                        <div
-                          className={`px-4 py-2 rounded-full text-xs font-bold tracking-wide ${
-                            cert.status === 'completed'
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                              : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
-                          }`}
-                        >
-                          {cert.status === 'completed' ? '✓ CERTIFIED' : 'IN PROGRESS'}
+                      {/* 文字内容整体容器 */}
+                      <div className='group-hover:scale-80 group-hover:translate-y-4 transition-all duration-500 ease-out'>
+                        {/* 状态标签 */}
+                        <div className='flex justify-center mb-3'>
+                          <div
+                            className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide ${
+                              cert.status === 'completed'
+                                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
+                            }`}
+                          >
+                            {cert.status === 'completed' ? '✓ CERTIFIED' : 'IN PROGRESS'}
+                          </div>
+                        </div>
+
+                        {/* 证书名称 */}
+                        <div className='text-center mb-3'>
+                          <h4 className='text-base font-bold text-white mb-1 leading-tight'>
+                            AWS Certified
+                          </h4>
+                          <h5 className='text-lg font-extrabold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent leading-tight'>
+                            {cert.name.toUpperCase()}
+                          </h5>
+                        </div>
+
+                        {/* 年份 */}
+                        <div className='text-center'>
+                          <p className='text-gray-400 text-sm font-medium'>{cert.year}</p>
                         </div>
                       </div>
 
-                      {/* 证书名称 */}
-                      <div className='text-center mb-4'>
-                        <h4 className='text-lg font-bold text-white mb-2 leading-tight'>
-                          AWS Certified
-                        </h4>
-                        <h5 className='text-xl font-extrabold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent leading-tight'>
-                          {cert.name.toUpperCase()}
-                        </h5>
-                      </div>
-
-                      {/* 年份 */}
-                      <div className='text-center'>
-                        <p className='text-gray-400 text-sm font-medium'>{cert.year}</p>
-                      </div>
-
                       {/* 装饰性背景元素 */}
-                      <div className='absolute top-0 right-0 w-32 h-32 opacity-5'>
+                      <div className='absolute top-0 right-0 w-24 h-24 opacity-5'>
                         <div
                           className={`w-full h-full rounded-full ${
                             cert.status === 'completed'
@@ -689,9 +694,9 @@ const About = () => {
                       </div>
 
                       {/* Hover效果的光晕 */}
-                      <div className='absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
+                      <div className='absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
                         <div
-                          className={`absolute inset-0 rounded-2xl ${
+                          className={`absolute inset-0 rounded-xl ${
                             cert.status === 'completed'
                               ? 'bg-gradient-to-br from-orange-500/5 to-yellow-500/5'
                               : 'bg-gradient-to-br from-blue-500/5 to-purple-500/5'
@@ -723,7 +728,7 @@ const About = () => {
 
           <div className='max-w-6xl mx-auto'>
             {/* 学位信息卡片 */}
-            <div className='academic-card mb-8 p-8 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-400/20 relative overflow-hidden'>
+            <div className='academic-card mb-6 p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-400/20 relative overflow-hidden'>
               {/* VUW Logo作为背景 - 占满整个卡片 */}
               <div
                 className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15'
@@ -734,16 +739,16 @@ const About = () => {
               ></div>
 
               {/* GPA徽章 - 桌面端右上角，与标题对齐，移动端隐藏 */}
-              <div className='hidden md:block absolute top-8 right-4 z-20'>
+              <div className='hidden md:block absolute top-6 right-4 z-20'>
                 <div className='px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-bold shadow-lg'>
                   {academicPerformance.currentGPA}
                 </div>
               </div>
 
               <div className='relative z-10'>
-                <div className='flex items-center mb-4'>
+                <div className='flex items-center mb-3'>
                   {/* Shield图标 - 桌面端显示，移动端隐藏 */}
-                  <div className='hidden md:flex w-14 h-14 mr-6 overflow-hidden items-center justify-center'>
+                  <div className='hidden md:flex w-12 h-12 mr-4 overflow-hidden items-center justify-center'>
                     <img
                       src='/img/Shield.png'
                       alt='Victoria University of Wellington Shield'
@@ -752,15 +757,15 @@ const About = () => {
                     />
                   </div>
                   <div>
-                    <h3 className='text-3xl font-bold text-white leading-tight mb-1'>
+                    <h3 className='text-2xl font-bold text-white leading-tight mb-1'>
                       {academicPerformance.degree}
                     </h3>
-                    <p className='text-emerald-400 text-xl'>{academicPerformance.university}</p>
+                    <p className='text-emerald-400 text-lg'>{academicPerformance.university}</p>
                   </div>
                 </div>
 
-                <div className='ml-0 md:ml-20'>
-                  <p className='text-gray-400 text-lg mt-4 mb-4'>
+                <div className='ml-0 md:ml-16'>
+                  <p className='text-gray-400 text-base mt-2 mb-3'>
                     Expected Graduation: {academicPerformance.expectedGraduation}
                   </p>
 
