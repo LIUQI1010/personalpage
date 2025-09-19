@@ -178,10 +178,10 @@ const Experience = ({ id }) => {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: educationTitleRef.current,
-              start: 'top 80%',
+              start: 'top 85%',
               toggleActions: 'play reverse play reverse',
             },
-            delay: 0.8,
+            delay: 0.3,
           }
         );
       }
@@ -207,7 +207,7 @@ const Experience = ({ id }) => {
               start: 'top 85%',
               toggleActions: 'play reverse play reverse',
             },
-            delay: 1.0 + index * 0.1,
+            delay: 0.5 + index * 0.1,
           }
         );
       });

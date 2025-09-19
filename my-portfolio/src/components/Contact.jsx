@@ -240,14 +240,14 @@ const Contact = ({ id }) => {
             <div className='contact-card'>
               <a
                 href='mailto:qiliu.1122@icloud.com'
-                className='block bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl border border-gray-700/30 p-8 transition-all duration-300 hover:border-slate-400/50 hover:shadow-xl group'
+                className='block bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl border border-gray-700/30 p-6 transition-all duration-300 hover:border-slate-400/50 hover:shadow-xl group'
               >
                 <div className='flex items-center space-x-4'>
                   <div className='w-12 h-12 bg-slate-400/10 rounded-xl flex items-center justify-center group-hover:bg-slate-400/20 transition-colors duration-300'>
                     <Mail size={24} className='text-slate-400' />
                   </div>
-                  <div>
-                    <h3 className='text-xl font-semibold text-white mb-1'>Email</h3>
+                  <div className='flex items-center space-x-3'>
+                    <h3 className='text-xl font-semibold text-white'>Email:</h3>
                     <p className='text-gray-300 group-hover:text-white transition-colors duration-300'>
                       qiliu.1122@icloud.com
                     </p>
@@ -260,14 +260,14 @@ const Contact = ({ id }) => {
             <div className='contact-card'>
               <a
                 href='tel:+64274892131'
-                className='block bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl border border-gray-700/30 p-8 transition-all duration-300 hover:border-stone-400/50 hover:shadow-xl group'
+                className='block bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl border border-gray-700/30 p-6 transition-all duration-300 hover:border-stone-400/50 hover:shadow-xl group'
               >
                 <div className='flex items-center space-x-4'>
                   <div className='w-12 h-12 bg-stone-400/10 rounded-xl flex items-center justify-center group-hover:bg-stone-400/20 transition-colors duration-300'>
                     <Phone size={24} className='text-stone-400' />
                   </div>
-                  <div>
-                    <h3 className='text-xl font-semibold text-white mb-1'>Phone</h3>
+                  <div className='flex items-center space-x-3'>
+                    <h3 className='text-xl font-semibold text-white'>Phone:</h3>
                     <p className='text-gray-300 group-hover:text-white transition-colors duration-300'>
                       +64 27 489 2131
                     </p>
