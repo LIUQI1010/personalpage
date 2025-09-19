@@ -168,7 +168,7 @@ const Contact = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-800 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
+      className='min-h-screen bg-gray-950 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
       style={{
         backgroundImage: `
           radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
@@ -214,7 +214,7 @@ const Contact = ({ id }) => {
             <div className='contact-card'>
               <a
                 href='mailto:qiliu.1122@icloud.com'
-                className='block bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl border border-gray-700/30 p-6 transition-all duration-300 hover:border-slate-400/50 hover:shadow-xl group'
+                className='block bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-2xl border border-gray-700/30 p-6 transition-all duration-300 hover:border-slate-400/50 hover:shadow-xl group'
               >
                 <div className='flex items-center space-x-4'>
                   <div className='w-12 h-12 bg-slate-400/10 rounded-xl flex items-center justify-center group-hover:bg-slate-400/20 transition-colors duration-300'>
@@ -234,7 +234,7 @@ const Contact = ({ id }) => {
             <div className='contact-card'>
               <a
                 href='tel:+64274892131'
-                className='block bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl border border-gray-700/30 p-6 transition-all duration-300 hover:border-stone-400/50 hover:shadow-xl group'
+                className='block bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-2xl border border-gray-700/30 p-6 transition-all duration-300 hover:border-stone-400/50 hover:shadow-xl group'
               >
                 <div className='flex items-center space-x-4'>
                   <div className='w-12 h-12 bg-stone-400/10 rounded-xl flex items-center justify-center group-hover:bg-stone-400/20 transition-colors duration-300'>
@@ -259,7 +259,7 @@ const Contact = ({ id }) => {
                 href='https://linkedin.com/in/qi-liu-b501b8319'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='block bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-xl border border-gray-700/20 p-6 transition-all duration-300 hover:border-blue-300/50 hover:shadow-lg group text-center'
+                className='block bg-gradient-to-br from-gray-800/10 to-gray-900/10 rounded-xl border border-gray-700/20 p-6 transition-all duration-300 hover:border-blue-300/50 hover:shadow-lg group text-center'
               >
                 <div className='w-10 h-10 bg-blue-300/10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-300/20 transition-colors duration-300'>
                   <Linkedin size={20} className='text-blue-300' />
@@ -277,7 +277,7 @@ const Contact = ({ id }) => {
                 href='https://github.com/LIUQI1010'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='block bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-xl border border-gray-700/20 p-6 transition-all duration-300 hover:border-violet-300/50 hover:shadow-lg group text-center'
+                className='block bg-gradient-to-br from-gray-800/10 to-gray-900/10 rounded-xl border border-gray-700/20 p-6 transition-all duration-300 hover:border-violet-300/50 hover:shadow-lg group text-center'
               >
                 <div className='w-10 h-10 bg-violet-300/10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-violet-300/20 transition-colors duration-300'>
                   <Github size={20} className='text-violet-300' />
@@ -291,7 +291,7 @@ const Contact = ({ id }) => {
 
             {/* Location */}
             <div className='contact-card'>
-              <div className='bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-xl border border-gray-700/20 p-6 text-center'>
+              <div className='bg-gradient-to-br from-gray-800/10 to-gray-900/10 rounded-xl border border-gray-700/20 p-6 text-center'>
                 <div className='w-10 h-10 bg-rose-300/10 rounded-lg flex items-center justify-center mx-auto mb-3'>
                   <MapPin size={20} className='text-rose-300' />
                 </div>

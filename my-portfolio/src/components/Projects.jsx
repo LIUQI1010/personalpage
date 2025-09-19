@@ -362,7 +362,7 @@ const Projects = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-800 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
+      className='min-h-screen bg-gray-950 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
       style={{
         backgroundImage: `
           radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
@@ -390,7 +390,7 @@ const Projects = ({ id }) => {
 
         {/* 项目卡片展示 */}
         <div ref={projectContainerRef} className='max-w-4xl mx-auto'>
-          <div className='bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl border border-gray-700/50 overflow-hidden hover:border-purple-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10'>
+          <div className='bg-gradient-to-br from-gray-800/60 to-gray-900/60 rounded-2xl border border-gray-700/50 overflow-hidden hover:border-purple-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10'>
             {/* 项目标题和描述 */}
             <div className='p-8 md:p-10'>
               <h2 className='text-2xl md:text-3xl font-bold text-white mb-4'>{project.title}</h2>

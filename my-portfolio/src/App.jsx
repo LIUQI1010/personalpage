@@ -168,7 +168,7 @@ function App() {
   }, []);
 
   return (
-    <main className='bg-gray-900 text-white relative'>
+    <main className='text-white relative'>
       <GalaxyBackground />
       <MyNavigation />
       <About id='about' />

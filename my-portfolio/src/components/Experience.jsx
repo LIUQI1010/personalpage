@@ -258,7 +258,7 @@ const Experience = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-800 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
+      className='min-h-screen bg-gray-950 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
       style={{
         backgroundImage: `
           radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
