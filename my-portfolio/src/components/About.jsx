@@ -390,51 +390,52 @@ const About = ({ id }) => {
         });
       });
 
-      // 6. 认证区域标题动画
+      // 6. 认证区域整体动画
       if (highlightsRef.current) {
-        const certTitle = highlightsRef.current.querySelector('h2');
-        if (certTitle) {
-          gsap.fromTo(
-            certTitle,
-            {
-              opacity: 0,
-              y: 50,
-              scale: 0.9,
+        gsap.fromTo(
+          highlightsRef.current,
+          {
+            opacity: 0,
+            y: 40,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: highlightsRef.current,
+              start: 'top 98%',
+              end: 'bottom 2%',
+              toggleActions: 'play none none reverse',
             },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 1,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: certTitle,
-                start: 'top 90%',
-                toggleActions: 'play none none reverse',
-              },
-            }
-          );
-        }
+          }
+        );
+
+        // 认证区域标题动画已由整体容器动画处理
       }
 
-      // 7. 认证卡片动画 - 简单淡入效果
+      // 7. 认证卡片动画 - 由整体容器动画处理，这里只添加轻微的延迟效果
       const certCards = gsap.utils.toArray('.certification-card');
       certCards.forEach((card, index) => {
         gsap.fromTo(
           card,
           {
             opacity: 0,
+            y: 20,
           },
           {
             opacity: 1,
-            duration: 0.4,
+            y: 0,
+            duration: 0.6,
             ease: 'power2.out',
             scrollTrigger: {
-              trigger: card,
-              start: 'top 95%',
+              trigger: highlightsRef.current,
+              start: 'top 98%',
+              end: 'bottom 2%',
               toggleActions: 'play none none reverse',
             },
-            delay: index * 0.05,
+            delay: 0.3 + index * 0.1,
           }
         );
       });
@@ -787,10 +788,7 @@ const About = ({ id }) => {
                           </h5>
                         </div>
 
-                        {/* 年份 */}
-                        <div className='text-center'>
-                          <p className='text-gray-400 text-sm font-medium'>{cert.year}</p>
-                        </div>
+                        {/* 年份已隐藏 */}
                       </div>
 
                       {/* 装饰性背景元素 */}
