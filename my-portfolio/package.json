@@ -17,6 +17,7 @@
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.13",
+    "@vercel/speed-insights": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gsap": "^3.13.0",
@@ -37,8 +38,8 @@
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
     "shadcn-ui": "^0.9.5",
+    "svg-path-properties": "^1.0.12",
     "tw-animate-css": "^1.3.8",
-    "vite": "^7.1.2",
-    "svg-path-properties": "^1.0.12"
+    "vite": "^7.1.2"
   }
 }
