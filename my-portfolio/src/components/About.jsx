@@ -260,9 +260,9 @@ const About = ({ id }) => {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: titleRef.current,
-              start: 'top 80%',
-              end: 'bottom 20%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              end: 'bottom 10%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -283,8 +283,8 @@ const About = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: subtitleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.2,
           }
@@ -306,8 +306,8 @@ const About = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: introRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 95%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.4,
           }
@@ -331,8 +331,8 @@ const About = ({ id }) => {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: skillsTitleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -356,8 +356,8 @@ const About = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: category,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 95%',
+              toggleActions: 'play none none reverse',
             },
             delay: index * 0.1,
           }
@@ -381,8 +381,8 @@ const About = ({ id }) => {
               ease: 'back.out(1.7)',
               scrollTrigger: {
                 trigger: category,
-                start: 'top 80%',
-                toggleActions: 'play reverse play reverse',
+                start: 'top 90%',
+                toggleActions: 'play none none reverse',
               },
               delay: index * 0.1 + tagIndex * 0.05 + 0.3,
             }
@@ -409,8 +409,8 @@ const About = ({ id }) => {
               ease: 'power3.out',
               scrollTrigger: {
                 trigger: certTitle,
-                start: 'top 80%',
-                toggleActions: 'play reverse play reverse',
+                start: 'top 90%',
+                toggleActions: 'play none none reverse',
               },
             }
           );
@@ -431,8 +431,8 @@ const About = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: card,
-              start: 'top 90%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 95%',
+              toggleActions: 'play none none reverse',
             },
             delay: index * 0.05,
           }

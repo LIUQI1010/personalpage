@@ -80,9 +80,9 @@ const Experience = ({ id }) => {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: titleRef.current,
-              start: 'top 80%',
-              end: 'bottom 20%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              end: 'bottom 10%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -103,8 +103,8 @@ const Experience = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: subtitleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.2,
           }
@@ -128,8 +128,8 @@ const Experience = ({ id }) => {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: experienceTitleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.4,
           }
@@ -154,7 +154,7 @@ const Experience = ({ id }) => {
             scrollTrigger: {
               trigger: experienceRef.current,
               start: 'top 95%',
-              toggleActions: 'play reverse play reverse',
+              toggleActions: 'play none none reverse',
             },
             delay: 0,
           }
@@ -178,8 +178,8 @@ const Experience = ({ id }) => {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: educationTitleRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 95%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.3,
           }
@@ -204,8 +204,8 @@ const Experience = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 95%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.5 + index * 0.1,
           }

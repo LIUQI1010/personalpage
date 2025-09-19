@@ -305,9 +305,9 @@ const Blog = ({ id }) => {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: titleRef.current,
-              start: 'top 80%',
-              end: 'bottom 20%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              end: 'bottom 10%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -328,8 +328,8 @@ const Blog = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: subtitleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 90%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.2,
           }
@@ -351,8 +351,8 @@ const Blog = ({ id }) => {
             ease: 'power2.out',
             scrollTrigger: {
               trigger: gridRef.current,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
+              start: 'top 95%',
+              toggleActions: 'play none none reverse',
             },
             delay: 0.4,
           }
@@ -373,8 +373,8 @@ const Blog = ({ id }) => {
               ease: 'power2.out',
               scrollTrigger: {
                 trigger: card,
-                start: 'top 90%',
-                toggleActions: 'play reverse play reverse',
+                start: 'top 95%',
+                toggleActions: 'play none none reverse',
               },
               delay: index * 0.05,
             }
