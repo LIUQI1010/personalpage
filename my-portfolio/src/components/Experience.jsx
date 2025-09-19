@@ -193,13 +193,9 @@ const Experience = ({ id }) => {
           card,
           {
             opacity: 0,
-            y: 30,
-            scale: 0.95,
           },
           {
             opacity: 1,
-            y: 0,
-            scale: 1,
             duration: 0.6,
             ease: 'power2.out',
             scrollTrigger: {
@@ -262,7 +258,7 @@ const Experience = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-900 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
+      className='min-h-screen bg-gray-800 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
       style={{
         backgroundImage: `
           radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
@@ -274,32 +270,6 @@ const Experience = ({ id }) => {
         backgroundPosition: '0 0, 40px 40px, 20px 60px, 80px 20px',
       }}
     >
-      {/* 背景装饰 */}
-      <div
-        ref={decorationRef}
-        className='absolute inset-0 pointer-events-none'
-        style={{ overflowAnchor: 'none', contain: 'layout paint' }}
-      >
-        <div className='decoration-shape absolute top-20 left-10 w-20 h-20 border border-orange-500/20 rounded-full'></div>
-        <div className='decoration-shape absolute top-40 right-20 w-16 h-16 border border-cyan-500/20'></div>
-        <div className='decoration-shape absolute bottom-40 left-20 w-12 h-12 border border-yellow-500/20 rounded-full'></div>
-        <div className='decoration-shape absolute bottom-20 right-10 w-24 h-24 border border-red-500/20'></div>
-
-        {/* 三角形装饰 */}
-        <div
-          className='decoration-shape triangle-decoration triangle-right absolute top-36 left-36 text-orange-400/20'
-          style={{ '--triangle-size': '17px', '--triangle-color': 'currentColor' }}
-        ></div>
-        <div
-          className='decoration-shape triangle-decoration triangle-down absolute top-24 right-44 text-cyan-400/20'
-          style={{ '--triangle-size': '14px', '--triangle-color': 'currentColor' }}
-        ></div>
-        <div
-          className='decoration-shape triangle-decoration triangle-up absolute bottom-56 right-24 text-yellow-400/20'
-          style={{ '--triangle-size': '15px', '--triangle-color': 'currentColor' }}
-        ></div>
-      </div>
-
       <div className='max-w-6xl mx-auto'>
         {/* 标题部分 */}
         <div className='text-center mb-16'>
@@ -349,88 +319,113 @@ const Experience = ({ id }) => {
             </h2>
 
             <div className='max-w-6xl mx-auto space-y-8'>
-              {/* 硕士学位信息卡片 */}
-              <div className='academic-card p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-400/20 relative overflow-hidden'>
-                {/* VUW Logo作为背景 - 占满整个卡片 */}
+              {/* 硕士学位信息卡片容器 - 包含hover时显示的课程卡片 */}
+              <div className='relative group'>
+                {/* 全屏背景模糊遮罩 - 先出现 */}
+                <div className='fixed inset-0 bg-black/20 backdrop-blur-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in z-10 pointer-events-none'></div>
+                {/* hover时显示的课程卡片 - 延迟出现 */}
                 <div
-                  className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15'
-                  style={{
-                    backgroundImage: 'url(/img/Full-logo-green.png)',
-                    backgroundSize: '70%',
-                  }}
-                ></div>
+                  className='hover-cards-container absolute bottom-full left-0 w-full mb-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-700 ease-out transform translate-y-8 group-hover:translate-y-0 z-30'
+                  style={{ transitionDelay: '200ms' }}
+                >
+                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                    {educationData.master.keySubjects.map((subject, index) => {
+                      // 固定每张卡片的延迟时间，确保顺序一致
+                      const delays = ['300ms', '400ms', '500ms'];
+                      return (
+                        <div
+                          key={subject.name}
+                          className='course-card p-6 rounded-xl border transition-all duration-500 hover:scale-105 shadow-xl transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'
+                          style={{
+                            backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                            borderColor: 'rgba(16, 185, 129, 0.3)',
+                            backdropFilter: 'blur(8px)',
+                            transitionDelay: delays[index] || '300ms',
+                          }}
+                        >
+                          <div className='flex justify-between items-start mb-3'>
+                            <h4 className='text-lg font-semibold text-white leading-tight flex-1 mr-3'>
+                              {subject.name}
+                            </h4>
+                            <div
+                              className={`px-3 py-1 rounded-full text-sm font-bold ${
+                                subject.grade === 'A+'
+                                  ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
+                                  : subject.grade === 'A'
+                                    ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white'
+                                    : 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white'
+                              }`}
+                            >
+                              {subject.grade}
+                            </div>
+                          </div>
+                          <p className='text-gray-300 text-sm leading-relaxed'>
+                            {subject.description}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
 
-                <div className='relative z-10'>
-                  <div className='flex flex-col md:flex-row md:items-start md:justify-between mb-3'>
-                    <div className='flex items-center flex-1'>
-                      {/* Shield图标 - 桌面端显示，移动端隐藏 */}
-                      <div className='hidden md:flex w-12 h-12 mr-4 overflow-hidden items-center justify-center'>
-                        <img
-                          src='/img/Shield.png'
-                          alt='Victoria University of Wellington Shield'
-                          className='h-full object-cover'
-                          style={{ objectPosition: 'center' }}
-                        />
+                  {/* 指向箭头 */}
+                  <div className='flex justify-center mt-4'>
+                    <div className='w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-emerald-400/50'></div>
+                  </div>
+                </div>
+
+                {/* 硕士学位信息卡片 */}
+                <div className='academic-card p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-400/20 relative overflow-hidden hover:border-emerald-400/40 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-500 cursor-pointer z-20'>
+                  {/* VUW Logo作为背景 - 占满整个卡片 */}
+                  <div
+                    className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15'
+                    style={{
+                      backgroundImage: 'url(/img/Full-logo-green.png)',
+                      backgroundSize: '70%',
+                    }}
+                  ></div>
+
+                  <div className='relative z-10'>
+                    <div className='flex flex-col md:flex-row md:items-start md:justify-between mb-3'>
+                      <div className='flex items-center flex-1'>
+                        {/* Shield图标 - 桌面端显示，移动端隐藏 */}
+                        <div className='hidden md:flex w-12 h-12 mr-4 overflow-hidden items-center justify-center'>
+                          <img
+                            src='/img/Shield.png'
+                            alt='Victoria University of Wellington Shield'
+                            className='h-full object-cover'
+                            style={{ objectPosition: 'center' }}
+                          />
+                        </div>
+                        <div>
+                          <h3 className='text-2xl font-bold text-white leading-tight mb-1'>
+                            {educationData.master.degree}
+                          </h3>
+                          <p className='text-emerald-400 text-lg'>
+                            {educationData.master.university}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className='text-2xl font-bold text-white leading-tight mb-1'>
-                          {educationData.master.degree}
-                        </h3>
-                        <p className='text-emerald-400 text-lg'>
-                          {educationData.master.university}
-                        </p>
-                      </div>
-                    </div>
-                    <div className='flex flex-col items-start md:items-end mt-3 md:mt-0'>
-                      <div className='flex flex-row gap-2 md:flex-col md:gap-0'>
+                      <div className='flex flex-col items-start md:items-end mt-3 md:mt-0'>
                         <div className='px-3 py-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-full text-xs md:text-sm text-center'>
                           {educationData.master.period}
                         </div>
-                        <div className='px-2 py-1 md:px-3 md:py-1 bg-gradient-to-r from-orange-300 to-red-600 text-white font-bold rounded-full text-xs md:text-sm md:mt-2'>
+                      </div>
+                    </div>
+
+                    <div className='ml-0 md:ml-16 flex flex-col md:flex-row md:items-end md:justify-between'>
+                      <p className='text-gray-400 text-base mt-2 mb-2 md:mb-0'>
+                        Expected Graduation: {educationData.master.expectedGraduation}
+                      </p>
+                      <div className='relative'>
+                        {/* 背景发光效果 - 减少半径 */}
+                        <div className='absolute inset-0 rounded-full bg-gradient-to-r from-slate-400 to-slate-500 blur-sm opacity-50 animate-pulse scale-105'></div>
+                        <div className='relative px-2 py-1 md:px-3 md:py-1 bg-gradient-to-r from-slate-500 to-slate-600 text-white font-bold rounded-full text-xs md:text-sm mt-2 md:mt-0'>
                           {educationData.master.currentGPA}
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <div className='ml-0 md:ml-16 flex flex-col md:flex-row md:items-end md:justify-between'>
-                    <p className='text-gray-400 text-base mt-2 mb-2 md:mb-0'>
-                      Expected Graduation: {educationData.master.expectedGraduation}
-                    </p>
-                  </div>
                 </div>
-              </div>
-
-              {/* 核心课程成绩 */}
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
-                {educationData.master.keySubjects.map((subject, index) => (
-                  <div
-                    key={subject.name}
-                    className='academic-card p-6 rounded-xl border transition-all duration-300 hover:scale-105'
-                    style={{
-                      backgroundColor: 'rgba(16, 185, 129, 0.08)',
-                      borderColor: 'rgba(16, 185, 129, 0.2)',
-                    }}
-                  >
-                    <div className='flex justify-between items-start mb-3'>
-                      <h4 className='text-lg font-semibold text-white leading-tight flex-1 mr-3'>
-                        {subject.name}
-                      </h4>
-                      <div
-                        className={`px-3 py-1 rounded-full text-sm font-bold ${
-                          subject.grade === 'A+'
-                            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
-                            : subject.grade === 'A'
-                              ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white'
-                              : 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white'
-                        }`}
-                      >
-                        {subject.grade}
-                      </div>
-                    </div>
-                    <p className='text-gray-400 text-sm leading-relaxed'>{subject.description}</p>
-                  </div>
-                ))}
               </div>
 
               {/* 学士学位信息卡片 */}

@@ -168,7 +168,7 @@ const Contact = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-900 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
+      className='min-h-screen bg-gray-800 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
       style={{
         backgroundImage: `
           radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
@@ -180,32 +180,6 @@ const Contact = ({ id }) => {
         backgroundPosition: '0 0, 40px 40px, 20px 60px, 80px 20px',
       }}
     >
-      {/* 背景装饰 */}
-      <div
-        ref={decorationRef}
-        className='absolute inset-0 pointer-events-none'
-        style={{ overflowAnchor: 'none', contain: 'layout paint' }}
-      >
-        <div className='decoration-shape absolute top-20 left-10 w-20 h-20 border border-amber-200/20 rounded-full'></div>
-        <div className='decoration-shape absolute top-40 right-20 w-16 h-16 border border-slate-300/20'></div>
-        <div className='decoration-shape absolute bottom-40 left-20 w-12 h-12 border border-stone-300/20 rounded-full'></div>
-        <div className='decoration-shape absolute bottom-20 right-10 w-24 h-24 border border-rose-200/20'></div>
-
-        {/* 三角形装饰 */}
-        <div
-          className='decoration-shape triangle-decoration triangle-down absolute top-32 left-32 text-amber-300/20'
-          style={{ '--triangle-size': '15px', '--triangle-color': 'currentColor' }}
-        ></div>
-        <div
-          className='decoration-shape triangle-decoration triangle-left absolute top-48 right-36 text-slate-400/20'
-          style={{ '--triangle-size': '12px', '--triangle-color': 'currentColor' }}
-        ></div>
-        <div
-          className='decoration-shape triangle-decoration triangle-up absolute bottom-48 left-40 text-rose-300/20'
-          style={{ '--triangle-size': '18px', '--triangle-color': 'currentColor' }}
-        ></div>
-      </div>
-
       <div className='max-w-6xl mx-auto'>
         {/* 标题部分 */}
         <div className='text-center mb-16'>

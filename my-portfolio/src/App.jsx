@@ -5,6 +5,7 @@ import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Blog from './components/Blog';
 import Contact from './components/Contact';
+import GalaxyBackground from './components/GalaxyBackground';
 
 function App() {
   useEffect(() => {
@@ -167,7 +168,8 @@ function App() {
   }, []);
 
   return (
-    <main className='bg-gray-900 text-white'>
+    <main className='bg-gray-900 text-white relative'>
+      <GalaxyBackground />
       <MyNavigation />
       <About id='about' />
       <Projects id='projects' />
