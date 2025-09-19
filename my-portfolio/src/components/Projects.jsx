@@ -383,6 +383,20 @@ const Projects = ({ id }) => {
         <div className='decoration-shape absolute top-40 right-20 w-16 h-16 border border-blue-500/20'></div>
         <div className='decoration-shape absolute bottom-40 left-20 w-12 h-12 border border-green-500/20 rounded-full'></div>
         <div className='decoration-shape absolute bottom-20 right-10 w-24 h-24 border border-pink-500/20'></div>
+
+        {/* 三角形装饰 */}
+        <div
+          className='decoration-shape triangle-decoration triangle-left absolute top-28 left-40 text-pink-400/20'
+          style={{ '--triangle-size': '14px', '--triangle-color': 'currentColor' }}
+        ></div>
+        <div
+          className='decoration-shape triangle-decoration triangle-up absolute top-52 right-36 text-purple-400/20'
+          style={{ '--triangle-size': '16px', '--triangle-color': 'currentColor' }}
+        ></div>
+        <div
+          className='decoration-shape triangle-decoration triangle-down absolute bottom-52 left-36 text-blue-400/20'
+          style={{ '--triangle-size': '13px', '--triangle-color': 'currentColor' }}
+        ></div>
       </div>
 
       <div className='max-w-6xl mx-auto'>

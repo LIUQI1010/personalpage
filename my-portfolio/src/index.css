@@ -178,3 +178,60 @@
 .blog-card:hover img {
   transform: scale(1.1) !important;
 }
+
+/* 鼠标路径轨迹曲线效果 */
+.mouse-trail-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  background: transparent;
+}
+
+/* 三角形装饰样式 */
+.triangle-decoration {
+  width: 0;
+  height: 0;
+  position: relative;
+}
+
+.triangle-decoration::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 向上三角形 */
+.triangle-up::before {
+  border-left: var(--triangle-size, 10px) solid transparent;
+  border-right: var(--triangle-size, 10px) solid transparent;
+  border-bottom: var(--triangle-size, 10px) solid var(--triangle-color, currentColor);
+}
+
+/* 向下三角形 */
+.triangle-down::before {
+  border-left: var(--triangle-size, 10px) solid transparent;
+  border-right: var(--triangle-size, 10px) solid transparent;
+  border-top: var(--triangle-size, 10px) solid var(--triangle-color, currentColor);
+}
+
+/* 向左三角形 */
+.triangle-left::before {
+  border-top: var(--triangle-size, 10px) solid transparent;
+  border-bottom: var(--triangle-size, 10px) solid transparent;
+  border-right: var(--triangle-size, 10px) solid var(--triangle-color, currentColor);
+}
+
+/* 向右三角形 */
+.triangle-right::before {
+  border-top: var(--triangle-size, 10px) solid transparent;
+  border-bottom: var(--triangle-size, 10px) solid transparent;
+  border-left: var(--triangle-size, 10px) solid var(--triangle-color, currentColor);
+}

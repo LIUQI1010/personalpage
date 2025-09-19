@@ -284,6 +284,20 @@ const Experience = ({ id }) => {
         <div className='decoration-shape absolute top-40 right-20 w-16 h-16 border border-cyan-500/20'></div>
         <div className='decoration-shape absolute bottom-40 left-20 w-12 h-12 border border-yellow-500/20 rounded-full'></div>
         <div className='decoration-shape absolute bottom-20 right-10 w-24 h-24 border border-red-500/20'></div>
+
+        {/* 三角形装饰 */}
+        <div
+          className='decoration-shape triangle-decoration triangle-right absolute top-36 left-36 text-orange-400/20'
+          style={{ '--triangle-size': '17px', '--triangle-color': 'currentColor' }}
+        ></div>
+        <div
+          className='decoration-shape triangle-decoration triangle-down absolute top-24 right-44 text-cyan-400/20'
+          style={{ '--triangle-size': '14px', '--triangle-color': 'currentColor' }}
+        ></div>
+        <div
+          className='decoration-shape triangle-decoration triangle-up absolute bottom-56 right-24 text-yellow-400/20'
+          style={{ '--triangle-size': '15px', '--triangle-color': 'currentColor' }}
+        ></div>
       </div>
 
       <div className='max-w-6xl mx-auto'>
@@ -369,7 +383,7 @@ const Experience = ({ id }) => {
                     </div>
                     <div className='flex flex-col items-start md:items-end mt-3 md:mt-0'>
                       <div className='flex flex-row gap-2 md:flex-col md:gap-0'>
-                        <div className='px-3 py-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-full text-xs md:text-sm'>
+                        <div className='px-3 py-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-full text-xs md:text-sm text-center'>
                           {educationData.master.period}
                         </div>
                         <div className='px-2 py-1 md:px-3 md:py-1 bg-gradient-to-r from-orange-300 to-red-600 text-white font-bold rounded-full text-xs md:text-sm md:mt-2'>

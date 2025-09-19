@@ -190,6 +190,20 @@ const Contact = ({ id }) => {
         <div className='decoration-shape absolute top-40 right-20 w-16 h-16 border border-slate-300/20'></div>
         <div className='decoration-shape absolute bottom-40 left-20 w-12 h-12 border border-stone-300/20 rounded-full'></div>
         <div className='decoration-shape absolute bottom-20 right-10 w-24 h-24 border border-rose-200/20'></div>
+
+        {/* 三角形装饰 */}
+        <div
+          className='decoration-shape triangle-decoration triangle-down absolute top-32 left-32 text-amber-300/20'
+          style={{ '--triangle-size': '15px', '--triangle-color': 'currentColor' }}
+        ></div>
+        <div
+          className='decoration-shape triangle-decoration triangle-left absolute top-48 right-36 text-slate-400/20'
+          style={{ '--triangle-size': '12px', '--triangle-color': 'currentColor' }}
+        ></div>
+        <div
+          className='decoration-shape triangle-decoration triangle-up absolute bottom-48 left-40 text-rose-300/20'
+          style={{ '--triangle-size': '18px', '--triangle-color': 'currentColor' }}
+        ></div>
       </div>
 
       <div className='max-w-6xl mx-auto'>
