@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 // 注册ScrollTrigger插件
 gsap.registerPlugin(ScrollTrigger);
@@ -12,9 +12,10 @@ const Projects = ({ id }) => {
   const subtitleRef = useRef(null);
   const projectContainerRef = useRef(null);
   const decorationRef = useRef(null);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isContainerHovered, setIsContainerHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 项目数据
   const project = {
@@ -25,28 +26,28 @@ const Projects = ({ id }) => {
     images: [
       {
         id: 'architecture',
-        title: 'System Architecture',
-        placeholder: 'https://via.placeholder.com/300x200/1f2937/60a5fa?text=Architecture+Diagram',
+        title: 'AWS Cloud Foundation',
+        placeholder: '/img/cloud foundation.png',
       },
       {
         id: 'login',
         title: 'Login Interface',
-        placeholder: 'https://via.placeholder.com/300x200/1f2937/10b981?text=Login+Page',
+        placeholder: '/img/siwei/login.png',
       },
       {
         id: 'dashboard',
         title: 'Main Dashboard',
-        placeholder: 'https://via.placeholder.com/300x200/1f2937/f59e0b?text=Dashboard',
+        placeholder: '/img/siwei/main.png',
       },
       {
         id: 'submit',
         title: 'Assignment Submission',
-        placeholder: 'https://via.placeholder.com/300x200/1f2937/ef4444?text=Submit+Assignment',
+        placeholder: '/img/siwei/submission.png',
       },
       {
         id: 'grading',
         title: 'Automated Grading',
-        placeholder: 'https://via.placeholder.com/300x200/1f2937/8b5cf6?text=Grading+System',
+        placeholder: '/img/siwei/grading.png',
       },
     ],
   };
@@ -111,16 +112,17 @@ const Projects = ({ id }) => {
     }
   };
 
-  // 移动端点击切换
-  const handleMobileToggle = () => {
-    if (isMobile()) {
-      setIsExpanded(!isExpanded);
-      if (!isExpanded) {
-        animateImagesExpand();
-      } else {
-        animateImagesCollapse();
-      }
-    }
+  // 点击图片打开模态框
+  const handleImageClick = (image, event) => {
+    event.stopPropagation(); // 阻止事件冒泡到容器
+    setSelectedImage(image);
+    setIsModalOpen(true);
+  };
+
+  // 关闭模态框
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedImage(null), 300); // 延迟重置，等待动画完成
   };
 
   // 图片展开动画
@@ -260,11 +262,13 @@ const Projects = ({ id }) => {
         );
       }
 
-      // 4. 图片初始状态设置
-      const images = projectContainerRef.current?.querySelectorAll('.project-image');
+      // 4. 桌面端图片初始状态设置
+      const images = projectContainerRef.current?.querySelectorAll(
+        '.images-container .project-image'
+      );
       const container = projectContainerRef.current?.querySelector('.images-container');
 
-      if (images && container) {
+      if (images && container && !isMobile()) {
         // 设置容器初始状态
         gsap.set(container, {
           width: '400px',
@@ -333,6 +337,26 @@ const Projects = ({ id }) => {
     };
   }, []);
 
+  // 键盘事件监听 - ESC关闭模态框
+  useEffect(() => {
+    const handleKeyDown = event => {
+      if (event.key === 'Escape' && isModalOpen) {
+        handleCloseModal();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      // 阻止背景滚动
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isModalOpen]);
+
   return (
     <section
       id={id}
@@ -396,12 +420,12 @@ const Projects = ({ id }) => {
 
             {/* 图片展示区域 */}
             <div className='px-8 md:px-10 pb-8 md:pb-10'>
-              <div className='flex justify-center'>
+              {/* 桌面端 - 叠放展开效果 */}
+              <div className='hidden md:flex justify-center'>
                 <div
                   className='images-container relative mx-auto'
                   onMouseEnter={handleContainerEnter}
                   onMouseLeave={handleContainerLeave}
-                  onClick={handleMobileToggle}
                   style={{ cursor: 'pointer' }}
                 >
                   {project.images.map((image, index) => (
@@ -410,8 +434,9 @@ const Projects = ({ id }) => {
                       className='project-image w-full h-full overflow-hidden rounded-xl border border-gray-600 hover:border-purple-500/50 transition-all duration-300'
                       onMouseEnter={() => handleImageHover(index)}
                       onMouseLeave={() => handleImageLeave(index)}
+                      onClick={e => handleImageClick(image, e)}
                     >
-                      <div className='w-full h-full bg-gray-800 relative group'>
+                      <div className='w-full h-full bg-gray-800 relative group cursor-pointer'>
                         <img
                           src={image.placeholder}
                           alt={image.title}
@@ -428,10 +453,95 @@ const Projects = ({ id }) => {
                   ))}
                 </div>
               </div>
+
+              {/* 移动端 - 横向滚动显示 */}
+              <div className='md:hidden'>
+                <div
+                  className='overflow-x-auto overflow-y-hidden'
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  <div className='flex gap-4 pb-4' style={{ width: 'max-content' }}>
+                    {project.images.map((image, index) => (
+                      <div
+                        key={image.id}
+                        className='flex-shrink-0 w-72 h-48 overflow-hidden rounded-xl border border-gray-600 hover:border-purple-500/50 transition-all duration-300'
+                        onClick={e => handleImageClick(image, e)}
+                      >
+                        <div className='w-full h-full bg-gray-800 relative group cursor-pointer'>
+                          <img
+                            src={image.placeholder}
+                            alt={image.title}
+                            className='w-full h-full object-cover'
+                            draggable={false}
+                          />
+                          <div className='absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                            <div className='absolute bottom-4 left-4 right-4'>
+                              <h3 className='text-white font-semibold text-sm mb-1'>
+                                {image.title}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 移动端滚动提示 */}
+                <div className='flex items-center justify-center gap-3 mt-4 text-gray-400 text-sm'>
+                  <span className='animate-arrow-blink'>←</span>
+                  <span>Swipe to explore more images</span>
+                  <span className='animate-arrow-blink'>→</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* 图片预览模态框 */}
+      {isModalOpen && selectedImage && (
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-opacity duration-300 ${
+            isModalOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={handleCloseModal}
+        >
+          <div className='relative max-w-4xl max-h-[90vh] mx-4'>
+            {/* 关闭按钮 */}
+            <button
+              onClick={handleCloseModal}
+              className='absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors duration-200 z-10'
+            >
+              <div className='bg-black/50 backdrop-blur-sm rounded-full p-3 hover:bg-black/70 transition-all duration-200'>
+                <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M6 18L18 6M6 6l12 12'
+                  />
+                </svg>
+              </div>
+            </button>
+
+            {/* 图片容器 */}
+            <div
+              className={`bg-gray-800 rounded-xl overflow-hidden shadow-2xl transform transition-all duration-300 ${
+                isModalOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+              }`}
+              onClick={e => e.stopPropagation()}
+            >
+              <img
+                src={selectedImage.placeholder}
+                alt={selectedImage.title}
+                className='w-full h-auto max-h-[80vh] object-contain'
+                draggable={false}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

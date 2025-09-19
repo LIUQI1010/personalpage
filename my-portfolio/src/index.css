@@ -118,3 +118,63 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* 隐藏原生滚动条，使用自定义滚动条指示器 */
+.overflow-x-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-x-scroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  /* 优化滚轮滚动体验 */
+  scroll-behavior: auto; /* 禁用平滑滚动，避免与JS冲突 */
+}
+
+/* 证书卡片的滚动条隐藏 */
+.overflow-x-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 箭头闪烁动画 */
+@keyframes arrow-blink {
+  0%,
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  75% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-arrow-blink {
+  animation: arrow-blink 2s ease-in-out infinite;
+}
+
+/* 为左右箭头设置同步延迟 */
+.animate-arrow-blink:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.animate-arrow-blink:nth-child(3) {
+  animation-delay: 0s; /* 与左箭头同步 */
+}
+
+/* 确保图片hover效果正常工作 */
+.blog-card img {
+  transition: transform 0.5s ease !important;
+}
+
+.blog-card:hover img {
+  transform: scale(1.1) !important;
+}

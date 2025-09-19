@@ -14,12 +14,12 @@ const About = ({ id }) => {
   const introRef = useRef(null);
   const skillsRef = useRef(null);
   const skillsTitleRef = useRef(null);
-  const academicRef = useRef(null);
-  const academicTitleRef = useRef(null);
   const highlightsRef = useRef(null);
   const skillCategoriesRef = useRef([]);
   const certificationCardsRef = useRef([]);
   const decorationRef = useRef(null);
+  const certificationGridRef = useRef(null);
+  const certificationScrollIndicatorRef = useRef(null);
 
   // 技能数据
   const skills = {
@@ -72,31 +72,6 @@ const About = ({ id }) => {
     },
   };
 
-  // 学术表现数据
-  const academicPerformance = {
-    degree: 'Master of Computer Science',
-    university: 'Victoria University of Wellington',
-    expectedGraduation: 'November 2025',
-    currentGPA: 'Overall GPA: A-',
-    keySubjects: [
-      {
-        name: 'Advanced Programming Languages',
-        grade: 'A+',
-        description: 'Deep dive into programming language theory and advanced concepts',
-      },
-      {
-        name: 'Database System Engineering',
-        grade: 'A+',
-        description: 'SQL database design, query optimization, and relational database systems',
-      },
-      {
-        name: 'Automated Program Analysis',
-        grade: 'A+',
-        description: 'Java programming with automated testing frameworks and analysis tools',
-      },
-    ],
-  };
-
   // 证书数据 - 包含Credly徽章信息
   const certifications = {
     'AWS Certifications': [
@@ -124,6 +99,144 @@ const About = ({ id }) => {
         credlyVerifyUrl: '',
       },
     ],
+  };
+
+  // 处理证书滚动条
+  const handleCertificationScroll = () => {
+    if (!certificationGridRef.current || !certificationScrollIndicatorRef.current) return;
+
+    const container = certificationGridRef.current;
+    const indicator = certificationScrollIndicatorRef.current;
+
+    const scrollLeft = container.scrollLeft;
+    const scrollWidth = container.scrollWidth - container.clientWidth;
+    const scrollPercent = scrollWidth > 0 ? (scrollLeft / scrollWidth) * 100 : 0;
+
+    const trackElement = indicator.parentElement;
+    if (!trackElement) return;
+
+    const trackWidth = trackElement.getBoundingClientRect().width;
+
+    // 计算滑块的真实大小 - 反映可视区域与总内容的比例
+    const visibleRatio = container.clientWidth / container.scrollWidth;
+    const sliderWidth = Math.max(32, trackWidth * visibleRatio); // 最小32px
+
+    // 计算滑块位置
+    const maxSliderPosition = trackWidth - sliderWidth;
+    const clampedPercent = Math.max(0, Math.min(100, scrollPercent));
+    const sliderPosition = (clampedPercent / 100) * maxSliderPosition;
+
+    // 更新滑块样式
+    indicator.style.left = `${sliderPosition}px`;
+    indicator.style.width = `${sliderWidth}px`;
+  };
+
+  // 防抖计时器
+  const certificationWheelTimeoutRef = useRef(null);
+
+  // 处理证书区域鼠标滚轮事件
+  const handleCertificationWheel = e => {
+    if (!certificationGridRef.current) return;
+
+    const container = certificationGridRef.current;
+    const scrollAmount = e.deltaY * 0.8;
+    const currentScrollLeft = container.scrollLeft;
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+    // 添加容差值，避免浮点数精度问题
+    const tolerance = 2;
+
+    // 计算目标滚动位置
+    const targetScrollLeft = currentScrollLeft + scrollAmount;
+
+    // 更精确的边界检测
+    const isAtLeftEdge = currentScrollLeft <= tolerance && scrollAmount < 0;
+    const isAtRightEdge = currentScrollLeft >= maxScrollLeft - tolerance && scrollAmount > 0;
+
+    // 如果到达边界，允许垂直滚动
+    if (isAtLeftEdge || isAtRightEdge) {
+      // 清除防抖计时器
+      if (certificationWheelTimeoutRef.current) {
+        clearTimeout(certificationWheelTimeoutRef.current);
+        certificationWheelTimeoutRef.current = null;
+      }
+      // 不阻止默认行为，让页面垂直滚动
+      return;
+    }
+
+    // 否则阻止默认行为，进行横向滚动
+    e.preventDefault();
+
+    // 计算并设置新的滚动位置
+    const clampedScrollLeft = Math.max(0, Math.min(maxScrollLeft, targetScrollLeft));
+    container.scrollLeft = clampedScrollLeft;
+
+    // 立即更新滚动条
+    handleCertificationScroll();
+
+    // 防抖处理滚动条更新
+    if (certificationWheelTimeoutRef.current) {
+      clearTimeout(certificationWheelTimeoutRef.current);
+    }
+
+    certificationWheelTimeoutRef.current = setTimeout(() => {
+      handleCertificationScroll();
+      certificationWheelTimeoutRef.current = null;
+    }, 50);
+  };
+
+  // 处理证书滚动条拖动
+  const handleCertificationScrollbarClick = e => {
+    if (!certificationGridRef.current || !e.currentTarget) return;
+
+    const scrollbar = e.currentTarget;
+    const rect = scrollbar.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const scrollbarWidth = rect.width;
+    const clickPercent = (clickX / scrollbarWidth) * 100;
+
+    const container = certificationGridRef.current;
+    const scrollWidth = container.scrollWidth - container.clientWidth;
+    const targetScrollLeft = (clickPercent / 100) * scrollWidth;
+
+    container.scrollTo({
+      left: targetScrollLeft,
+      behavior: 'smooth',
+    });
+  };
+
+  // 处理证书滚动条滑块拖动
+  const handleCertificationScrollbarMouseDown = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const container = certificationGridRef.current;
+    const scrollbarTrack = e.currentTarget.parentElement;
+    if (!container || !scrollbarTrack) return;
+
+    const trackRect = scrollbarTrack.getBoundingClientRect();
+    const scrollWidth = container.scrollWidth - container.clientWidth;
+
+    // 计算当前滑块的实际大小
+    const visibleRatio = container.clientWidth / container.scrollWidth;
+    const sliderWidth = Math.max(32, trackRect.width * visibleRatio);
+    const maxSliderPosition = trackRect.width - sliderWidth;
+
+    const handleMouseMove = moveEvent => {
+      const mouseX = moveEvent.clientX - trackRect.left;
+      const sliderPosition = Math.max(0, Math.min(maxSliderPosition, mouseX - sliderWidth / 2));
+      const scrollPercent = maxSliderPosition > 0 ? sliderPosition / maxSliderPosition : 0;
+
+      container.scrollLeft = scrollPercent * scrollWidth;
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   useGSAP(() => {
@@ -277,57 +390,7 @@ const About = ({ id }) => {
         });
       });
 
-      // 6. 学术表现标题动画
-      if (academicTitleRef.current) {
-        gsap.fromTo(
-          academicTitleRef.current,
-          {
-            opacity: 0,
-            y: 60,
-            scale: 0.9,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: academicTitleRef.current,
-              start: 'top 80%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-      }
-
-      // 7. 学术表现内容动画
-      const academicCards = gsap.utils.toArray('.academic-card');
-      academicCards.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 30,
-            scale: 0.95,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-            },
-            delay: index * 0.1,
-          }
-        );
-      });
-
-      // 8. 认证区域标题动画
+      // 6. 认证区域标题动画
       if (highlightsRef.current) {
         const certTitle = highlightsRef.current.querySelector('h2');
         if (certTitle) {
@@ -354,7 +417,7 @@ const About = ({ id }) => {
         }
       }
 
-      // 9. 认证卡片动画 - 简单淡入效果
+      // 7. 认证卡片动画 - 简单淡入效果
       const certCards = gsap.utils.toArray('.certification-card');
       certCards.forEach((card, index) => {
         gsap.fromTo(
@@ -364,14 +427,14 @@ const About = ({ id }) => {
           },
           {
             opacity: 1,
-            duration: 0.8,
+            duration: 0.4,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: card,
-              start: 'top 85%',
+              start: 'top 90%',
               toggleActions: 'play reverse play reverse',
             },
-            delay: index * 0.1,
+            delay: index * 0.05,
           }
         );
       });
@@ -414,11 +477,34 @@ const About = ({ id }) => {
           ease: 'power1.out',
         }
       );
+
+      // 添加证书滚动条事件监听器
+      setTimeout(() => {
+        if (certificationGridRef.current && certificationScrollIndicatorRef.current) {
+          const container = certificationGridRef.current;
+
+          // 添加滚动事件监听器
+          container.addEventListener('scroll', handleCertificationScroll);
+
+          // 添加鼠标滚轮事件监听器
+          container.addEventListener('wheel', handleCertificationWheel, { passive: false });
+
+          // 初始化滚动条位置
+          handleCertificationScroll();
+        }
+      }, 500); // 延迟确保DOM完全渲染
     }, sectionRef.current);
 
     return () => {
       ctx.revert();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+      // 清理证书滚动事件监听器
+      const container = certificationGridRef.current;
+      if (container) {
+        container.removeEventListener('scroll', handleCertificationScroll);
+        container.removeEventListener('wheel', handleCertificationWheel);
+      }
     };
   }, []);
 
@@ -508,14 +594,24 @@ const About = ({ id }) => {
           <h2 className='text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent'>
             Certifications
           </h2>
-          <div className='max-w-5xl mx-auto'>
-            {Object.entries(certifications).map(([category, certs]) => (
-              <div key={category} className='certification-category'>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-                  {certs.map((cert, index) => (
+
+          {/* 横向滚动容器 */}
+          <div className='relative max-w-6xl mx-auto'>
+            {/* 滚动容器 */}
+            <div
+              ref={certificationGridRef}
+              className='overflow-x-scroll overflow-y-hidden'
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              <div className='flex gap-6 pb-4' style={{ width: 'max-content' }}>
+                {Object.entries(certifications).map(([category, certs]) =>
+                  certs.map((cert, index) => (
                     <div
                       key={cert.name}
-                      className={`certification-card relative overflow-hidden rounded-xl p-6 transition-all duration-500 group cursor-pointer ${
+                      className={`certification-card relative overflow-hidden rounded-xl p-6 transition-all duration-500 group cursor-pointer flex-shrink-0 ${
                         index === 0
                           ? 'border border-[#00b4d8]/30 hover:border-[#00b4d8]/50 hover:shadow-xl hover:shadow-[#00b4d8]/10'
                           : index === 1
@@ -523,6 +619,7 @@ const About = ({ id }) => {
                             : 'border border-[#90e0ef]/30 hover:border-[#90e0ef]/50 hover:shadow-xl hover:shadow-[#90e0ef]/10'
                       }`}
                       style={{
+                        width: '400px', // 增加宽度确保需要滚动
                         backgroundColor:
                           index === 0
                             ? 'rgba(0, 180, 216, 0.08)'
@@ -704,109 +801,39 @@ const About = ({ id }) => {
                         ></div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 学术表现展示 */}
-        <div ref={academicRef} className='mb-20'>
-          <h2
-            ref={academicTitleRef}
-            className='text-3xl md:text-4xl font-bold text-center mb-12 text-white'
-            style={{
-              background: 'linear-gradient(to right, #10b981, #3b82f6)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Academic Performance
-          </h2>
-
-          <div className='max-w-6xl mx-auto'>
-            {/* 学位信息卡片 */}
-            <div className='academic-card mb-6 p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-400/20 relative overflow-hidden'>
-              {/* VUW Logo作为背景 - 占满整个卡片 */}
-              <div
-                className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15'
-                style={{
-                  backgroundImage: 'url(/img/Full-logo-green.png)',
-                  backgroundSize: '70%',
-                }}
-              ></div>
-
-              {/* GPA徽章 - 桌面端右上角，与标题对齐，移动端隐藏 */}
-              <div className='hidden md:block absolute top-6 right-4 z-20'>
-                <div className='px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-bold shadow-lg'>
-                  {academicPerformance.currentGPA}
-                </div>
-              </div>
-
-              <div className='relative z-10'>
-                <div className='flex items-center mb-3'>
-                  {/* Shield图标 - 桌面端显示，移动端隐藏 */}
-                  <div className='hidden md:flex w-12 h-12 mr-4 overflow-hidden items-center justify-center'>
-                    <img
-                      src='/img/Shield.png'
-                      alt='Victoria University of Wellington Shield'
-                      className='h-full object-cover'
-                      style={{ objectPosition: 'center' }}
-                    />
-                  </div>
-                  <div>
-                    <h3 className='text-2xl font-bold text-white leading-tight mb-1'>
-                      {academicPerformance.degree}
-                    </h3>
-                    <p className='text-emerald-400 text-lg'>{academicPerformance.university}</p>
-                  </div>
-                </div>
-
-                <div className='ml-0 md:ml-16'>
-                  <p className='text-gray-400 text-base mt-2 mb-3'>
-                    Expected Graduation: {academicPerformance.expectedGraduation}
-                  </p>
-
-                  {/* GPA徽章 - 移动端显示在下方，桌面端隐藏 */}
-                  <div className='md:hidden inline-block px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-bold shadow-lg'>
-                    {academicPerformance.currentGPA}
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
             </div>
 
-            {/* 核心课程成绩 */}
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              {academicPerformance.keySubjects.map((subject, index) => (
+            {/* 自定义滚动条 */}
+            <div className='mt-6 px-4'>
+              {/* 滚动条轨道 */}
+              <div
+                className='w-full h-2 bg-gray-700/50 rounded-full relative cursor-pointer'
+                onClick={handleCertificationScrollbarClick}
+              >
+                {/* 滚动条滑块 */}
                 <div
-                  key={subject.name}
-                  className='academic-card p-6 rounded-xl border transition-all duration-300 hover:scale-105'
+                  ref={certificationScrollIndicatorRef}
+                  className='absolute top-0 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full cursor-grab active:cursor-grabbing hover:shadow-lg'
                   style={{
-                    backgroundColor: 'rgba(16, 185, 129, 0.08)',
-                    borderColor: 'rgba(16, 185, 129, 0.2)',
+                    left: '0px',
+                    width: '64px', // 初始宽度，将被JavaScript动态更新
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                   }}
-                >
-                  <div className='flex justify-between items-start mb-3'>
-                    <h4 className='text-lg font-semibold text-white leading-tight flex-1 mr-3'>
-                      {subject.name}
-                    </h4>
-                    <div
-                      className={`px-3 py-1 rounded-full text-sm font-bold ${
-                        subject.grade === 'A+'
-                          ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
-                          : subject.grade === 'A'
-                            ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white'
-                            : 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white'
-                      }`}
-                    >
-                      {subject.grade}
-                    </div>
-                  </div>
-                  <p className='text-gray-400 text-sm leading-relaxed'>{subject.description}</p>
-                </div>
-              ))}
+                  onMouseDown={handleCertificationScrollbarMouseDown}
+                ></div>
+              </div>
+            </div>
+
+            {/* 滚动提示文字 */}
+            <div className='text-center mt-4'>
+              <p className='text-gray-400 text-sm flex items-center justify-center gap-3'>
+                <span className='animate-arrow-blink text-green-400 font-bold'>←</span>
+                <span className='font-medium'>Swipe to explore certifications</span>
+                <span className='animate-arrow-blink text-green-400 font-bold'>→</span>
+              </p>
             </div>
           </div>
         </div>
