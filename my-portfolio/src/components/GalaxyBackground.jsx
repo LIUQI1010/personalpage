@@ -19,6 +19,58 @@ const GalaxyBackground = () => {
 
     const ctx = canvas.getContext('2d');
 
+    // 星星精灵预渲染系统（Safari性能优化）
+    const starSpritesCache = new Map(); // 缓存不同大小的星星精灵
+
+    const createStarSprite = (size, glowIntensity) => {
+      const spriteSize = Math.ceil(size * 6); // 预留光晕空间
+      const offscreen = new OffscreenCanvas(spriteSize, spriteSize);
+      const offCtx = offscreen.getContext('2d');
+
+      const centerX = spriteSize / 2;
+      const centerY = spriteSize / 2;
+      const glowRadius = Math.max(0.1, size) * 2.5;
+
+      // 绘制光晕
+      const gradient = offCtx.createRadialGradient(
+        centerX,
+        centerY,
+        0,
+        centerX,
+        centerY,
+        glowRadius
+      );
+      gradient.addColorStop(0, `rgba(255, 255, 255, ${glowIntensity})`);
+      gradient.addColorStop(0.5, `rgba(255, 255, 255, ${glowIntensity * 0.3})`);
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      offCtx.fillStyle = gradient;
+      offCtx.beginPath();
+      offCtx.arc(centerX, centerY, glowRadius, 0, Math.PI * 2);
+      offCtx.fill();
+
+      // 绘制星星核心
+      offCtx.fillStyle = 'white';
+      offCtx.beginPath();
+      offCtx.arc(centerX, centerY, size, 0, Math.PI * 2);
+      offCtx.fill();
+
+      return offscreen;
+    };
+
+    const getStarSprite = (size, glowIntensity) => {
+      // 量化大小和光晕强度以减少精灵数量
+      const quantizedSize = Math.round(size * 10) / 10; // 精确到0.1
+      const quantizedGlow = Math.round(glowIntensity * 10) / 10;
+      const key = `${quantizedSize}_${quantizedGlow}`;
+
+      if (!starSpritesCache.has(key)) {
+        starSpritesCache.set(key, createStarSprite(quantizedSize, quantizedGlow));
+      }
+
+      return starSpritesCache.get(key);
+    };
+
     // 设置Canvas尺寸
     const setCanvasSize = () => {
       canvas.width = window.innerWidth;
@@ -329,7 +381,7 @@ const GalaxyBackground = () => {
     });
     scrollTriggerRef.current = { outline: stOutline, inside: stInside };
 
-    // 绘制单个星星的函数
+    // 绘制单个星星的函数（使用预渲染精灵）
     const drawStar = star => {
       const { x, y, size, opacity, glowIntensity } = star;
 
@@ -338,28 +390,14 @@ const GalaxyBackground = () => {
       }
 
       ctx.save();
-
-      // 设置全局透明度
       ctx.globalAlpha = opacity;
 
-      // 创建径向渐变用于发光效果
-      const glowRadius = Math.max(0.1, size) * 2.5; // 减小光晕半径
-      const gradient = ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
-      gradient.addColorStop(0, `rgba(255, 255, 255, ${glowIntensity})`);
-      gradient.addColorStop(0.5, `rgba(255, 255, 255, ${glowIntensity * 0.3})`);
-      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      // 使用预渲染精灵（零径向渐变创建）
+      const sprite = getStarSprite(size, glowIntensity);
+      const spriteSize = sprite.width;
 
-      // 绘制外发光
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 绘制星星核心
-      ctx.fillStyle = 'white';
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fill();
+      // 将精灵中心对齐到星星位置
+      ctx.drawImage(sprite, x - spriteSize / 2, y - spriteSize / 2);
 
       ctx.restore();
     };
@@ -492,7 +530,7 @@ const GalaxyBackground = () => {
       // 绘制所有星星
       starsRef.current.forEach(drawStar);
 
-      // 强制流星循环（调试）
+      // 绘制流星
       updateAndRenderMeteors();
 
       // 请求下一帧
@@ -547,6 +585,11 @@ const GalaxyBackground = () => {
         scrollTriggerRef.current = { outline: null, inside: null };
       }
       meteorsRef.current = [];
+
+      // 清理星星精灵缓存
+      if (starSpritesCache) {
+        starSpritesCache.clear();
+      }
     };
   }, []);
 
