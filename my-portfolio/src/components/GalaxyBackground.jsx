@@ -95,13 +95,22 @@ const GalaxyBackground = () => {
       return 1 - inv * inv * inv;
     };
 
-    // 基于 nz_stars.json + svg 轮廓构建：轮廓1000 + 内部1000 + 外部1000
-    const buildCompositeStars = (
-      data,
-      outlineCount = 1000,
-      insideCount = 1000,
-      outsideCount = 1000
-    ) => {
+    // 检测移动设备
+    const isMobile =
+      window.innerWidth <= 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+    // 基于设备类型调整星星数量：桌面端(1000+1000+1000) vs 移动端(1000+300+300)
+    const getStarCounts = () => {
+      if (isMobile) {
+        return { outline: 1000, inside: 300, outside: 300 }; // 移动端：总计1600颗
+      } else {
+        return { outline: 1000, inside: 1000, outside: 1000 }; // 桌面端：总计3000颗
+      }
+    };
+
+    // 基于 nz_stars.json + svg 轮廓构建：根据设备类型调整星星数量
+    const buildCompositeStars = data => {
+      const { outline: outlineCount, inside: insideCount, outside: outsideCount } = getStarCounts();
       if (!data || !Array.isArray(data.stars)) return null;
       const { scale, offsetX, offsetY } = computeSvgTransform(data.svgSize);
 
@@ -294,7 +303,7 @@ const GalaxyBackground = () => {
           else if (northNames.has(name)) north.push(p2d);
         });
         islandPathsRef.current = { loaded: true, south, north };
-        // 若已加载星点，则立即重建为 600+1000+300 分布
+        // 若已加载星点，则立即重建为 响应式分布
         if (nzStarsDataRef.current) {
           const rebuilt = buildCompositeStars(nzStarsDataRef.current);
           if (rebuilt) starsRef.current = rebuilt;
@@ -538,7 +547,10 @@ const GalaxyBackground = () => {
     };
 
     // 开始动画
-    console.log('Starting galaxy animation...');
+    const { outline, inside, outside } = getStarCounts();
+    console.log(
+      `Starting galaxy animation... Device: ${isMobile ? 'Mobile' : 'Desktop'}, Stars: ${outline + inside + outside} (轮廓${outline}+内部${inside}+外部${outside})`
+    );
     // 首帧生成1颗，随后按概率生成
     spawnMeteor();
     render();
@@ -546,7 +558,7 @@ const GalaxyBackground = () => {
     // 窗口大小改变处理
     const handleResize = () => {
       setCanvasSize();
-      // 重新创建星星以适应新尺寸
+      // 重新检测设备类型并创建星星以适应新尺寸
       if (nzStarsDataRef.current && islandPathsRef.current.loaded) {
         const rebuilt = buildCompositeStars(nzStarsDataRef.current);
         if (rebuilt) return (starsRef.current = rebuilt);

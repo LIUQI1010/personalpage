@@ -405,24 +405,24 @@ const Experience = ({ id }) => {
                           </p>
                         </div>
                       </div>
-                      <div className='flex flex-col items-start md:items-end mt-3 md:mt-0'>
+                      <div className='flex flex-col sm:flex-row items-start sm:items-center md:items-end mt-3 md:mt-0 gap-2'>
                         <div className='px-3 py-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-full text-xs md:text-sm text-center'>
                           {educationData.master.period}
+                        </div>
+                        <div className='relative'>
+                          {/* 背景发光效果 - 减少半径 */}
+                          <div className='absolute inset-0 rounded-full bg-gradient-to-r from-slate-400 to-slate-500 blur-sm opacity-50 animate-pulse scale-105'></div>
+                          <div className='relative px-2 py-1 md:px-3 md:py-1 bg-gradient-to-r from-slate-500 to-slate-600 text-white font-bold rounded-full text-xs md:text-sm'>
+                            {educationData.master.currentGPA}
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className='ml-0 md:ml-16 flex flex-col md:flex-row md:items-end md:justify-between'>
-                      <p className='text-gray-400 text-base mt-2 mb-2 md:mb-0'>
+                    <div className='ml-0 md:ml-16'>
+                      <p className='text-gray-400 text-base mt-2'>
                         Expected Graduation: {educationData.master.expectedGraduation}
                       </p>
-                      <div className='relative'>
-                        {/* 背景发光效果 - 减少半径 */}
-                        <div className='absolute inset-0 rounded-full bg-gradient-to-r from-slate-400 to-slate-500 blur-sm opacity-50 animate-pulse scale-105'></div>
-                        <div className='relative px-2 py-1 md:px-3 md:py-1 bg-gradient-to-r from-slate-500 to-slate-600 text-white font-bold rounded-full text-xs md:text-sm mt-2 md:mt-0'>
-                          {educationData.master.currentGPA}
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
