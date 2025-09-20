@@ -6,6 +6,7 @@ import Experience from './components/Experience';
 import Blog from './components/Blog';
 import Contact from './components/Contact';
 import GalaxyBackground from './components/GalaxyBackground';
+import LikeButton from './components/LikeButton';
 
 function App() {
   useEffect(() => {
@@ -176,6 +177,7 @@ function App() {
       <Experience id='experience' />
       <Blog id='blog' />
       <Contact id='contact' />
+      <LikeButton />
     </main>
   );
 }
