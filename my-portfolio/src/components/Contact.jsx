@@ -169,17 +169,7 @@ const Contact = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-950 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
-      style={{
-        backgroundImage: `
-          radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
-          radial-gradient(circle at 80% 70%, rgba(255,255,255,0.012) 0.3px, transparent 0.3px),
-          radial-gradient(circle at 45% 15%, rgba(255,255,255,0.018) 0.4px, transparent 0.4px),
-          radial-gradient(circle at 15% 85%, rgba(255,255,255,0.01) 0.2px, transparent 0.2px)
-        `,
-        backgroundSize: '120px 120px, 80px 80px, 100px 100px, 60px 60px',
-        backgroundPosition: '0 0, 40px 40px, 20px 60px, 80px 20px',
-      }}
+      className='min-h-screen text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
     >
       <div className='max-w-6xl mx-auto'>
         {/* 标题部分 */}
@@ -253,7 +243,7 @@ const Contact = ({ id }) => {
           </div>
 
           {/* 社交媒体、位置和访问统计 */}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3'>
+          <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3'>
             {/* LinkedIn */}
             <div className='contact-card'>
               <a

@@ -44,83 +44,56 @@ export default function MyNavigation() {
     };
   }, []);
 
-  // Q字母滚动旋转效果
+  // 导航栏滚动隐藏/显示动画
   useGSAP(() => {
-    const qLetters = document.querySelectorAll('[data-letter="Q"]');
+    if (!navRef.current) return;
 
-    if (qLetters.length === 0) return;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
 
-    // 调色板：按顺序平滑轮换（更高对比度）
-    const palette = ['#006d77', '#83c5be', '#edf6f9', '#ffddd2', '#e29578'];
+    const handleNavScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
 
-    const hexToRgb = hex => {
-      const h = hex.replace('#', '');
-      const bigint = parseInt(h, 16);
-      return {
-        r: (bigint >> 16) & 255,
-        g: (bigint >> 8) & 255,
-        b: bigint & 255,
-      };
-    };
-
-    const rgbToHex = (r, g, b) => {
-      const toHex = v => v.toString(16).padStart(2, '0');
-      return `#${toHex(Math.round(r))}${toHex(Math.round(g))}${toHex(Math.round(b))}`;
-    };
-
-    const lerp = (a, b, t) => a + (b - a) * t;
-
-    const interpolateHex = (from, to, t) => {
-      const c1 = hexToRgb(from);
-      const c2 = hexToRgb(to);
-      const r = lerp(c1.r, c2.r, t);
-      const g = lerp(c1.g, c2.g, t);
-      const b = lerp(c1.b, c2.b, t);
-      return rgbToHex(r, g, b);
-    };
-
-    // 立即设置初始状态，避免页面刷新时的跳动
-    qLetters.forEach(q => {
-      gsap.set(q, {
-        rotation: 45, // 设置初始45度旋转
-        force3D: true, // 启用GPU加速
-      });
-      q.style.willChange = 'transform'; // 优化动画性能
-    });
-
-    const handleScrollRotation = () => {
-      const scrollY = window.scrollY;
-      const rotation = 45 + scrollY * 0.5; // 初始倾斜45度，并随滚动旋转
-
-      // 将旋转角映射到 [0, 1) 形成颜色循环进度
-      const t = (((rotation % 360) + 360) % 360) / 360;
-      const n = palette.length;
-      const seg = Math.floor(t * n) % n;
-      const next = (seg + 1) % n;
-      const localT = t * n - seg;
-      const color = interpolateHex(palette[seg], palette[next], localT);
-
-      qLetters.forEach(q => {
-        // 强制覆盖父级颜色，确保变色可见
-        q.style.setProperty('color', color, 'important');
-        q.style.setProperty('-webkit-text-fill-color', color, 'important');
-
-        gsap.to(q, {
-          rotation: rotation,
-          duration: 0.1,
-          ease: 'none',
-          force3D: true, // 确保使用GPU加速
+      // 在页面顶部时始终显示导航栏
+      if (currentScrollY <= 10) {
+        gsap.to(navRef.current, {
+          y: 0,
+          duration: 0.3,
+          ease: 'power2.out',
         });
-      });
+      } else {
+        // 向下滚动时隐藏导航栏，向上滚动时显示
+        if (scrollDirection === 'down' && currentScrollY > lastScrollY + 5) {
+          gsap.to(navRef.current, {
+            y: '-100%',
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        } else if (scrollDirection === 'up' && currentScrollY < lastScrollY - 5) {
+          gsap.to(navRef.current, {
+            y: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        }
+      }
+
+      lastScrollY = currentScrollY;
+      ticking = false;
     };
 
-    // 立即调用一次，设置基于当前滚动位置的正确状态
-    handleScrollRotation();
+    const requestTick = () => {
+      if (!ticking) {
+        requestAnimationFrame(handleNavScroll);
+        ticking = true;
+      }
+    };
 
-    window.addEventListener('scroll', handleScrollRotation, { passive: true });
+    window.addEventListener('scroll', requestTick, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScrollRotation);
+      window.removeEventListener('scroll', requestTick);
     };
   }, []);
 
@@ -229,6 +202,23 @@ export default function MyNavigation() {
     setIsMenuOpen(false);
   };
 
+  // 点击外部区域关闭菜单
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (isMenuOpen && navRef.current && !navRef.current.contains(event.target)) {
+        closeMenu();
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
   const navigationItems = [
     { href: '#about', label: 'About' },
     { href: '#projects', label: 'Projects' },
@@ -260,12 +250,12 @@ export default function MyNavigation() {
           <span className='md:hidden'>
             <span
               className='inline-block font-black'
-              data-letter='Q'
               style={{
                 fontFamily:
                   'Circular, "SF Pro Display", "Avenir Next", "Helvetica Neue", sans-serif',
                 fontWeight: '700',
-                transform: 'scale(1.1)',
+                transform: 'scale(1.1) rotate(45deg)',
+                color: '#9B8B7A', // 莫兰迪色 - 温暖的灰褐色
               }}
             >
               Q
@@ -275,12 +265,12 @@ export default function MyNavigation() {
           <span className='hidden md:inline'>
             <span
               className='inline-block font-black'
-              data-letter='Q'
               style={{
                 fontFamily:
                   'Circular, "SF Pro Display", "Avenir Next", "Helvetica Neue", sans-serif',
                 fontWeight: '700',
-                transform: 'scale(1.1)',
+                transform: 'scale(1.1) rotate(45deg)',
+                color: '#9B8B7A', // 莫兰迪色 - 温暖的灰褐色
               }}
             >
               Q
@@ -331,7 +321,18 @@ export default function MyNavigation() {
                 ref={el => (menuItemsRef.current[index] = el)}
                 href={item.href}
                 className='block px-6 py-3 text-sm font-medium text-white hover:bg-white/10 hover:text-white transition-colors'
-                onClick={closeMenu}
+                onClick={e => {
+                  e.preventDefault();
+                  // 立即关闭菜单，不检查动画状态
+                  setIsMenuOpen(false);
+                  // 让链接正常工作
+                  setTimeout(() => {
+                    const target = document.querySelector(item.href);
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }, 50);
+                }}
               >
                 {item.label}
               </a>

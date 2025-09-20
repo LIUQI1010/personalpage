@@ -134,9 +134,21 @@ const About = ({ id }) => {
   // 防抖计时器
   const certificationWheelTimeoutRef = useRef(null);
 
+  // 最简方案：完全依赖CSS scroll-snap，无JavaScript干预
+
+  // 简化：只需要判断是否为触摸设备
+  const isTouchDevice = () => {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  };
+
   // 处理证书区域鼠标滚轮事件
   const handleCertificationWheel = e => {
     if (!certificationGridRef.current) return;
+
+    // 触摸设备上禁用鼠标滚轮
+    if (isTouchDevice()) {
+      return;
+    }
 
     const container = certificationGridRef.current;
     const scrollAmount = e.deltaY * 0.8;
@@ -238,6 +250,8 @@ const About = ({ id }) => {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
+
+  // 移除了复杂的触摸事件处理，现在使用 react-swipeable
 
   useGSAP(() => {
     if (!sectionRef.current) return;
@@ -390,55 +404,54 @@ const About = ({ id }) => {
         });
       });
 
-      // 6. 认证区域整体动画
+      // 6. 认证区域动画 - 统一处理标题和卡片
       if (highlightsRef.current) {
-        gsap.fromTo(
-          highlightsRef.current,
-          {
+        // 先设置初始状态
+        gsap.set(highlightsRef.current, {
+          opacity: 0,
+          y: 40,
+        });
+
+        // 设置认证卡片初始状态
+        const certCards = gsap.utils.toArray('.certification-card');
+        certCards.forEach(card => {
+          gsap.set(card, {
             opacity: 0,
-            y: 40,
+            y: 30,
+            scale: 0.95,
+          });
+        });
+
+        // 认证区域整体动画
+        gsap.to(highlightsRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: highlightsRef.current,
+            start: 'top 95%',
+            toggleActions: 'play none none reverse',
           },
-          {
+        });
+
+        // 认证卡片依次动画
+        certCards.forEach((card, index) => {
+          gsap.to(card, {
             opacity: 1,
             y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: highlightsRef.current,
-              start: 'top 98%',
-              end: 'bottom 2%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
-        // 认证区域标题动画已由整体容器动画处理
-      }
-
-      // 7. 认证卡片动画 - 由整体容器动画处理，这里只添加轻微的延迟效果
-      const certCards = gsap.utils.toArray('.certification-card');
-      certCards.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 20,
-          },
-          {
-            opacity: 1,
-            y: 0,
+            scale: 1,
             duration: 0.6,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: highlightsRef.current,
-              start: 'top 98%',
-              end: 'bottom 2%',
+              start: 'top 95%',
               toggleActions: 'play none none reverse',
             },
-            delay: 0.3 + index * 0.1,
-          }
-        );
-      });
+            delay: 0.3 + index * 0.15,
+          });
+        });
+      }
 
       // 8. 装饰元素动画（保持原有的旋转效果）
       if (decorationRef.current) {
@@ -480,20 +493,21 @@ const About = ({ id }) => {
       );
 
       // 添加证书滚动条事件监听器
-      setTimeout(() => {
-        if (certificationGridRef.current && certificationScrollIndicatorRef.current) {
-          const container = certificationGridRef.current;
+      if (certificationGridRef.current && certificationScrollIndicatorRef.current) {
+        const container = certificationGridRef.current;
 
-          // 添加滚动事件监听器
-          container.addEventListener('scroll', handleCertificationScroll);
+        // 添加滚动事件监听器
+        container.addEventListener('scroll', handleCertificationScroll);
 
-          // 添加鼠标滚轮事件监听器
+        // 只在非触摸设备上添加鼠标滚轮事件监听器
+        if (!isTouchDevice()) {
           container.addEventListener('wheel', handleCertificationWheel, { passive: false });
-
-          // 初始化滚动条位置
-          handleCertificationScroll();
         }
-      }, 500); // 延迟确保DOM完全渲染
+        // 触摸设备：使用 react-swipeable 处理滑动
+
+        // 立即初始化滚动条位置，与其他进度条保持一致
+        handleCertificationScroll();
+      }
     }, sectionRef.current);
 
     return () => {
@@ -504,7 +518,11 @@ const About = ({ id }) => {
       const container = certificationGridRef.current;
       if (container) {
         container.removeEventListener('scroll', handleCertificationScroll);
-        container.removeEventListener('wheel', handleCertificationWheel);
+
+        // 只清理鼠标滚轮事件监听器（如果之前添加了）
+        if (!isTouchDevice()) {
+          container.removeEventListener('wheel', handleCertificationWheel);
+        }
       }
     };
   }, []);
@@ -515,17 +533,7 @@ const About = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-950 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
-      style={{
-        backgroundImage: `
-          radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
-          radial-gradient(circle at 80% 70%, rgba(255,255,255,0.012) 0.3px, transparent 0.3px),
-          radial-gradient(circle at 45% 15%, rgba(255,255,255,0.018) 0.4px, transparent 0.4px),
-          radial-gradient(circle at 15% 85%, rgba(255,255,255,0.01) 0.2px, transparent 0.2px)
-        `,
-        backgroundSize: '120px 120px, 80px 80px, 100px 100px, 60px 60px',
-        backgroundPosition: '0 0, 40px 40px, 20px 60px, 80px 20px',
-      }}
+      className='min-h-screen text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
     >
       <div className='max-w-6xl mx-auto'>
         {/* 标题部分 */}
@@ -589,10 +597,13 @@ const About = ({ id }) => {
             {/* 滚动容器 */}
             <div
               ref={certificationGridRef}
-              className='overflow-x-scroll overflow-y-hidden'
+              className='overflow-x-scroll overflow-y-hidden md:overflow-x-scroll'
               style={{
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch', // iOS smooth scrolling
+                // 触摸设备启用滚动吸附，非触摸设备禁用
+                scrollSnapType: isTouchDevice() ? 'x mandatory' : 'none',
               }}
             >
               <div className='flex gap-6 pb-4' style={{ width: 'max-content' }}>
@@ -600,7 +611,7 @@ const About = ({ id }) => {
                   certs.map((cert, index) => (
                     <div
                       key={cert.name}
-                      className={`certification-card relative overflow-hidden rounded-xl p-6 transition-all duration-500 group cursor-pointer flex-shrink-0 ${
+                      className={`certification-card relative overflow-hidden rounded-xl p-6 group cursor-pointer flex-shrink-0 ${
                         index === 0
                           ? 'border border-[#00b4d8]/30 hover:border-[#00b4d8]/50 hover:shadow-xl hover:shadow-[#00b4d8]/10'
                           : index === 1
@@ -608,13 +619,15 @@ const About = ({ id }) => {
                             : 'border border-[#90e0ef]/30 hover:border-[#90e0ef]/50 hover:shadow-xl hover:shadow-[#90e0ef]/10'
                       }`}
                       style={{
-                        width: '400px', // 增加宽度确保需要滚动
+                        width: '300px', // 缩小宽度
                         backgroundColor:
                           index === 0
                             ? 'rgba(0, 180, 216, 0.08)'
                             : index === 1
                               ? 'rgba(72, 202, 228, 0.08)'
                               : 'rgba(144, 224, 239, 0.08)',
+                        // 触摸设备启用卡片吸附，非触摸设备禁用
+                        scrollSnapAlign: isTouchDevice() ? 'start' : 'none',
                       }}
                     >
                       {/* AWS徽章区域 - 支持Credly官方徽章 */}
@@ -805,7 +818,7 @@ const About = ({ id }) => {
                   className='absolute top-0 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full cursor-grab active:cursor-grabbing hover:shadow-lg'
                   style={{
                     left: '0px',
-                    width: '64px', // 初始宽度，将被JavaScript动态更新
+                    width: '30%', // 使用百分比初始宽度，避免尺寸跳跃
                     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                   }}
                   onMouseDown={handleCertificationScrollbarMouseDown}

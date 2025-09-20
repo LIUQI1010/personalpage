@@ -189,7 +189,6 @@
   z-index: 9999;
   background: transparent;
 }
-body,
-section {
+body {
   background: oklch(0.13 0.03 261.7) !important;
 }

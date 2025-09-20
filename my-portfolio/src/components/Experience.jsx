@@ -15,6 +15,7 @@ const Experience = ({ id }) => {
   const educationTitleRef = useRef(null);
   const educationRef = useRef(null);
   const academicRef = useRef(null);
+  const courseCardsRef = useRef(null);
   const decorationRef = useRef(null);
 
   // 工作经验数据
@@ -138,27 +139,26 @@ const Experience = ({ id }) => {
 
       // 4. 工作经验卡片动画
       if (experienceRef.current) {
-        gsap.fromTo(
-          experienceRef.current,
-          {
-            opacity: 0,
-            x: -60,
-            scale: 0.95,
+        // 先设置初始状态
+        gsap.set(experienceRef.current, {
+          opacity: 0,
+          x: -60,
+          scale: 0.95,
+        });
+
+        gsap.to(experienceRef.current, {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: experienceRef.current,
+            start: 'top 95%',
+            toggleActions: 'play none none reverse',
           },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 0.25,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: experienceRef.current,
-              start: 'top 95%',
-              toggleActions: 'play none none reverse',
-            },
-            delay: 0,
-          }
-        );
+          delay: 0.3,
+        });
       }
 
       // 5. 教育背景标题动画
@@ -181,34 +181,89 @@ const Experience = ({ id }) => {
               start: 'top 95%',
               toggleActions: 'play none none reverse',
             },
-            delay: 0.3,
+            delay: 0.2,
           }
         );
       }
 
-      // 6. 学术表现卡片动画
-      const academicCards = gsap.utils.toArray('.academic-card');
-      academicCards.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
+      // 6. Master学位卡片动画 (第一个出现)
+      const masterCard = gsap.utils.toArray('.master-card')[0];
+      if (masterCard) {
+        // 先设置初始状态
+        gsap.set(masterCard, {
+          opacity: 0,
+          y: 30,
+          scale: 0.95,
+        });
+
+        gsap.to(masterCard, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: academicRef.current,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse',
           },
-          {
+          delay: 0.4,
+        });
+      }
+
+      // 7. 课程成绩卡片动画 (第二个出现)
+      if (courseCardsRef.current) {
+        const courseCards = gsap.utils.toArray('.course-card');
+        courseCards.forEach((card, index) => {
+          // 先设置初始状态
+          gsap.set(card, {
+            opacity: 0,
+            y: 40,
+            scale: 0.9,
+          });
+
+          gsap.to(card, {
             opacity: 1,
+            y: 0,
+            scale: 1,
             duration: 0.6,
             ease: 'power2.out',
             scrollTrigger: {
-              trigger: card,
-              start: 'top 95%',
+              trigger: academicRef.current,
+              start: 'top 90%',
               toggleActions: 'play none none reverse',
             },
-            delay: 0.5 + index * 0.1,
-          }
-        );
-      });
+            delay: 0.7 + index * 0.1,
+          });
+        });
+      }
 
-      // 7. 装饰元素动画
+      // 8. Bachelor学位卡片动画 (最后出现)
+      const bachelorCard = gsap.utils.toArray('.bachelor-card')[0];
+      if (bachelorCard) {
+        // 先设置初始状态
+        gsap.set(bachelorCard, {
+          opacity: 0,
+          y: 30,
+          scale: 0.95,
+        });
+
+        gsap.to(bachelorCard, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: academicRef.current,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: 1.0,
+        });
+      }
+
+      // 9. 装饰元素动画
       if (decorationRef.current) {
         const shapes = decorationRef.current.querySelectorAll('.decoration-shape');
 
@@ -234,18 +289,10 @@ const Experience = ({ id }) => {
         });
       }
 
-      // 8. 整体容器初始动画
-      gsap.fromTo(
-        sectionRef.current,
-        {
-          opacity: 0,
-        },
-        {
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power1.out',
-        }
-      );
+      // 10. 整体容器初始动画 - 设置初始状态但不影响子元素
+      gsap.set(sectionRef.current, {
+        opacity: 1,
+      });
     }, sectionRef.current);
 
     return () => {
@@ -258,17 +305,7 @@ const Experience = ({ id }) => {
     <section
       id={id}
       ref={sectionRef}
-      className='min-h-screen bg-gray-950 text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
-      style={{
-        backgroundImage: `
-          radial-gradient(circle at 20% 30%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
-          radial-gradient(circle at 80% 70%, rgba(255,255,255,0.012) 0.3px, transparent 0.3px),
-          radial-gradient(circle at 45% 15%, rgba(255,255,255,0.018) 0.4px, transparent 0.4px),
-          radial-gradient(circle at 15% 85%, rgba(255,255,255,0.01) 0.2px, transparent 0.2px)
-        `,
-        backgroundSize: '120px 120px, 80px 80px, 100px 100px, 60px 60px',
-        backgroundPosition: '0 0, 40px 40px, 20px 60px, 80px 20px',
-      }}
+      className='min-h-screen text-white pt-20 pb-20 px-4 md:px-8 relative overflow-hidden'
     >
       <div className='max-w-6xl mx-auto'>
         {/* 标题部分 */}
@@ -295,7 +332,7 @@ const Experience = ({ id }) => {
             </h2>
             <div
               ref={experienceRef}
-              className='bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-400/20 p-8 md:p-10 hover:border-orange-400/40 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-500'
+              className='bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-400/20 p-8 md:p-10'
             >
               <div className='flex flex-col md:flex-row md:items-start md:justify-between mb-4'>
                 <h3 className='text-2xl md:text-3xl font-bold text-white mb-2 md:mb-0'>
@@ -319,62 +356,10 @@ const Experience = ({ id }) => {
             </h2>
 
             <div className='max-w-6xl mx-auto space-y-8'>
-              {/* 硕士学位信息卡片容器 - 包含hover时显示的课程卡片 */}
-              <div className='relative group'>
-                {/* 全屏背景模糊遮罩 - 先出现 */}
-                <div className='fixed inset-0 bg-black/20 backdrop-blur-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in z-10 pointer-events-none'></div>
-                {/* hover时显示的课程卡片 - 延迟出现 */}
-                <div
-                  className='hover-cards-container absolute bottom-full left-0 w-full mb-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-700 ease-out transform translate-y-8 group-hover:translate-y-0 z-30'
-                  style={{ transitionDelay: '200ms' }}
-                >
-                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                    {educationData.master.keySubjects.map((subject, index) => {
-                      // 固定每张卡片的延迟时间，确保顺序一致
-                      const delays = ['300ms', '400ms', '500ms'];
-                      return (
-                        <div
-                          key={subject.name}
-                          className='course-card p-6 rounded-xl border transition-all duration-500 hover:scale-105 shadow-xl transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'
-                          style={{
-                            backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                            borderColor: 'rgba(16, 185, 129, 0.3)',
-                            backdropFilter: 'blur(8px)',
-                            transitionDelay: delays[index] || '300ms',
-                          }}
-                        >
-                          <div className='flex justify-between items-start mb-3'>
-                            <h4 className='text-lg font-semibold text-white leading-tight flex-1 mr-3'>
-                              {subject.name}
-                            </h4>
-                            <div
-                              className={`px-3 py-1 rounded-full text-sm font-bold ${
-                                subject.grade === 'A+'
-                                  ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
-                                  : subject.grade === 'A'
-                                    ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white'
-                                    : 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white'
-                              }`}
-                            >
-                              {subject.grade}
-                            </div>
-                          </div>
-                          <p className='text-gray-300 text-sm leading-relaxed'>
-                            {subject.description}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* 指向箭头 */}
-                  <div className='flex justify-center mt-4'>
-                    <div className='w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-emerald-400/50'></div>
-                  </div>
-                </div>
-
+              {/* 硕士学位信息卡片容器 */}
+              <div className='space-y-6'>
                 {/* 硕士学位信息卡片 */}
-                <div className='academic-card p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-400/20 relative overflow-hidden hover:border-emerald-400/40 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-500 cursor-pointer z-20'>
+                <div className='master-card p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-400/20 relative overflow-hidden'>
                   {/* VUW Logo作为背景 - 占满整个卡片 */}
                   <div
                     className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15'
@@ -426,10 +411,46 @@ const Experience = ({ id }) => {
                     </div>
                   </div>
                 </div>
+
+                {/* 课程成绩直接显示 */}
+                <div
+                  ref={courseCardsRef}
+                  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+                >
+                  {educationData.master.keySubjects.map((subject, index) => (
+                    <div
+                      key={subject.name}
+                      className='course-card p-4 rounded-lg border shadow-lg'
+                      style={{
+                        backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                        borderColor: 'rgba(16, 185, 129, 0.3)',
+                        backdropFilter: 'blur(8px)',
+                      }}
+                    >
+                      <div className='flex justify-between items-start mb-2'>
+                        <h4 className='text-base font-semibold text-white leading-tight flex-1 mr-2'>
+                          {subject.name}
+                        </h4>
+                        <div
+                          className={`px-2 py-1 rounded-full text-xs font-bold ${
+                            subject.grade === 'A+'
+                              ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
+                              : subject.grade === 'A'
+                                ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white'
+                                : 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white'
+                          }`}
+                        >
+                          {subject.grade}
+                        </div>
+                      </div>
+                      <p className='text-gray-300 text-xs leading-relaxed'>{subject.description}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* 学士学位信息卡片 */}
-              <div className='academic-card p-6 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-400/20 relative overflow-hidden'>
+              <div className='bachelor-card p-6 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-400/20 relative overflow-hidden'>
                 {/* 东南大学背景图片 - 占满整个卡片 */}
                 <div
                   className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-10'
