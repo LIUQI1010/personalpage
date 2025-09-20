@@ -1,13 +1,21 @@
 import { Redis } from '@upstash/redis';
 
-// Initialize Redis with explicit environment variables
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-});
-
 export default async function handler(request, response) {
   try {
+    // Initialize Redis inside the handler to ensure fresh env vars
+    const redis = new Redis({
+      url: process.env.KV_REST_API_URL,
+      token: process.env.KV_REST_API_TOKEN,
+    });
+
+    // 添加调试信息
+    console.log('Environment check:', {
+      url: process.env.KV_REST_API_URL ? 'SET' : 'MISSING',
+      token: process.env.KV_REST_API_TOKEN ? 'SET' : 'MISSING',
+      urlPreview: process.env.KV_REST_API_URL?.substring(0, 30) + '...',
+      tokenPreview: process.env.KV_REST_API_TOKEN?.substring(0, 10) + '...',
+    });
+
     // 测试写入一个简单的键值对
     const testKey = 'test:connection';
     const testValue = {
@@ -36,12 +44,16 @@ export default async function handler(request, response) {
       },
     });
   } catch (error) {
-    console.error('KV connection error:', error);
+    console.error('Redis connection error:', error);
 
     return response.status(500).json({
       success: false,
       message: 'Redis connection failed',
       error: error.message,
+      errorDetails: {
+        name: error.name,
+        stack: error.stack?.substring(0, 500),
+      },
       timestamp: new Date().toISOString(),
     });
   }
