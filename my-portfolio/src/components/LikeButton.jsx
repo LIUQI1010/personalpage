@@ -70,8 +70,12 @@ const LikeButton = () => {
     // 创建飘浮爱心（每次点击都会创建）
     createFloatingHeart();
 
-    // 检查是否可以记录点赞（本地检查，减少不必要的API调用）
+    // 检查是否可以记录点赞（本地检查）
     if (canRecordLike()) {
+      // 乐观更新：立即显示数字+1
+      const optimisticCount = likeCount + 1;
+      setLikeCount(optimisticCount);
+      
       setIsLoading(true);
       
       try {
@@ -85,17 +89,24 @@ const LikeButton = () => {
         const data = await response.json();
         
         if (data.success) {
+          // API成功：使用服务器返回的真实数字（可能与乐观更新不同）
           setLikeCount(data.likes);
           const now = Date.now();
           setLastRecordedClick(now);
           localStorage.setItem('lastLikeClick', now.toString());
           console.log('点赞已记录！当前总数:', data.likes);
         } else if (response.status === 429) {
+          // 服务器限制：回滚乐观更新
+          setLikeCount(likeCount);
           console.log('点赞过于频繁，服务器端限制');
         } else {
+          // 其他错误：回滚乐观更新
+          setLikeCount(likeCount);
           console.error('点赞失败:', data.message);
         }
       } catch (error) {
+        // 网络错误：回滚乐观更新
+        setLikeCount(likeCount);
         console.error('网络错误:', error);
       } finally {
         setIsLoading(false);
@@ -103,7 +114,7 @@ const LikeButton = () => {
     } else {
       console.log('点赞过于频繁，本地限制');
     }
-  }, [canRecordLike, createFloatingHeart, isLoading]);
+  }, [canRecordLike, createFloatingHeart, isLoading, likeCount]);
 
   // 检查是否在冷却期
   const isInCooldown = !canRecordLike();
