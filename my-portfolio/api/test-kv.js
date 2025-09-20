@@ -1,7 +1,10 @@
 import { Redis } from '@upstash/redis';
 
-// Initialize Redis using environment variables
-const redis = Redis.fromEnv();
+// Initialize Redis with explicit environment variables
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 export default async function handler(request, response) {
   try {
