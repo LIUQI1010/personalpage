@@ -612,32 +612,33 @@ const Blog = ({ id }) => {
         );
       }
 
-      // 6. 开发日志卡片动画
+      // 6. 开发日志区域动画 - 简化为单一动画避免冲突
       if (developmentLogsRef.current) {
-        const logCards = developmentLogsRef.current.querySelectorAll('.log-card');
-        logCards.forEach((card, index) => {
-          gsap.fromTo(
-            card,
-            {
-              opacity: 0,
-              y: 30,
-              scale: 0.95,
-            },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.6,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: card,
-                start: 'top 95%',
-                toggleActions: 'play none none reverse',
+        // 简单的淡入动画，不影响卡片尺寸
+        gsap.fromTo(
+          developmentLogsRef.current,
+          {
+            opacity: 0,
+            y: 20,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: developmentLogsRef.current,
+              start: 'top 95%',
+              toggleActions: 'play none none reverse',
+              onStart: () => {
+                // 动画开始时确保滚动位置正确
+                if (developmentLogsRef.current) {
+                  developmentLogsRef.current.scrollLeft = 0;
+                }
               },
-              delay: index * 0.1 + 0.3,
-            }
-          );
-        });
+            },
+          }
+        );
       }
 
       // 7. 装饰元素动画
@@ -709,8 +710,10 @@ const Blog = ({ id }) => {
           logsContainer.addEventListener('wheel', handleLogsWheel, { passive: false });
         }
 
-        // 立即初始化滚动条位置，与图片进度条保持一致
-        handleLogsScroll();
+        // 延迟初始化滚动条，确保DOM完全渲染
+        setTimeout(() => {
+          handleLogsScroll();
+        }, 100);
       }
     }, sectionRef.current);
 
@@ -935,7 +938,7 @@ const Blog = ({ id }) => {
                     className='absolute top-0 h-2 bg-gradient-to-r from-teal-400 to-emerald-500 rounded-full cursor-grab active:cursor-grabbing hover:shadow-lg'
                     style={{
                       left: '0px',
-                      width: '30%', // 使用百分比初始宽度，避免尺寸跳跃
+                      width: '32px', // 使用最小宽度作为初始值
                       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                     }}
                     onMouseDown={handleLogsScrollbarMouseDown}

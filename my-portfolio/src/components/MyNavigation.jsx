@@ -44,16 +44,30 @@ export default function MyNavigation() {
     };
   }, []);
 
-  // 导航栏滚动隐藏/显示动画
+  // 滚动状态管理
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // 合并的滚动处理 - 避免多个滚动监听器冲突
   useGSAP(() => {
     if (!navRef.current) return;
 
     let lastScrollY = window.scrollY;
     let ticking = false;
 
-    const handleNavScroll = () => {
+    const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+      const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+
+      // 更新滚动状态（用于样式变化）
+      setIsScrolled(currentScrollY > 50);
+
+      // 导航栏显示/隐藏逻辑 - 增加最小滚动距离避免抖动
+      if (scrollDelta < 3) {
+        // 滚动距离太小，忽略以避免抖动
+        ticking = false;
+        return;
+      }
 
       // 在页面顶部时始终显示导航栏
       if (currentScrollY <= 10) {
@@ -64,13 +78,13 @@ export default function MyNavigation() {
         });
       } else {
         // 向下滚动时隐藏导航栏，向上滚动时显示
-        if (scrollDirection === 'down' && currentScrollY > lastScrollY + 5) {
+        if (scrollDirection === 'down' && scrollDelta > 8) {
           gsap.to(navRef.current, {
             y: '-100%',
             duration: 0.3,
             ease: 'power2.out',
           });
-        } else if (scrollDirection === 'up' && currentScrollY < lastScrollY - 5) {
+        } else if (scrollDirection === 'up' && scrollDelta > 8) {
           gsap.to(navRef.current, {
             y: 0,
             duration: 0.3,
@@ -85,7 +99,7 @@ export default function MyNavigation() {
 
     const requestTick = () => {
       if (!ticking) {
-        requestAnimationFrame(handleNavScroll);
+        requestAnimationFrame(handleScroll);
         ticking = true;
       }
     };
@@ -95,19 +109,6 @@ export default function MyNavigation() {
     return () => {
       window.removeEventListener('scroll', requestTick);
     };
-  }, []);
-
-  // 滚动状态管理
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Animation functions - defined before useEffect
@@ -294,7 +295,7 @@ export default function MyNavigation() {
 
         {/* Mobile hamburger menu button - Hidden on desktop */}
         <button
-          className='md:hidden p-2 rounded-md text-white hover:bg-white/10 hover:text-white transition-colors'
+          className='md:hidden p-4 min-w-[48px] min-h-[48px] rounded-md text-white hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center'
           onClick={toggleMenu}
           aria-label='Toggle navigation menu'
           aria-expanded={isMenuOpen}

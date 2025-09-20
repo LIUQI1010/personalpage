@@ -404,25 +404,15 @@ const About = ({ id }) => {
         });
       });
 
-      // 6. 认证区域动画 - 统一处理标题和卡片
+      // 6. 认证区域动画 - 简化为单一动画避免冲突
       if (highlightsRef.current) {
-        // 先设置初始状态
+        // 设置初始状态 - 只设置容器，让卡片保持正常状态
         gsap.set(highlightsRef.current, {
           opacity: 0,
           y: 40,
         });
 
-        // 设置认证卡片初始状态
-        const certCards = gsap.utils.toArray('.certification-card');
-        certCards.forEach(card => {
-          gsap.set(card, {
-            opacity: 0,
-            y: 30,
-            scale: 0.95,
-          });
-        });
-
-        // 认证区域整体动画
+        // 统一的认证区域动画
         gsap.to(highlightsRef.current, {
           opacity: 1,
           y: 0,
@@ -432,24 +422,13 @@ const About = ({ id }) => {
             trigger: highlightsRef.current,
             start: 'top 95%',
             toggleActions: 'play none none reverse',
-          },
-        });
-
-        // 认证卡片依次动画
-        certCards.forEach((card, index) => {
-          gsap.to(card, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: highlightsRef.current,
-              start: 'top 95%',
-              toggleActions: 'play none none reverse',
+            onStart: () => {
+              // 动画开始时确保滚动位置正确
+              if (certificationGridRef.current) {
+                certificationGridRef.current.scrollLeft = 0;
+              }
             },
-            delay: 0.3 + index * 0.15,
-          });
+          },
         });
       }
 
@@ -505,8 +484,10 @@ const About = ({ id }) => {
         }
         // 触摸设备：使用 react-swipeable 处理滑动
 
-        // 立即初始化滚动条位置，与其他进度条保持一致
-        handleCertificationScroll();
+        // 立即初始化滚动条，使用正确的尺寸计算
+        setTimeout(() => {
+          handleCertificationScroll();
+        }, 100); // 短暂延迟确保DOM完全渲染
       }
     }, sectionRef.current);
 
@@ -818,7 +799,7 @@ const About = ({ id }) => {
                   className='absolute top-0 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full cursor-grab active:cursor-grabbing hover:shadow-lg'
                   style={{
                     left: '0px',
-                    width: '30%', // 使用百分比初始宽度，避免尺寸跳跃
+                    width: '32px', // 使用最小宽度作为初始值
                     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                   }}
                   onMouseDown={handleCertificationScrollbarMouseDown}
