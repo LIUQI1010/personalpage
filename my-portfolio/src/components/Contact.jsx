@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef } from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin, ExternalLink } from 'lucide-react';
+import VisitorStats from './VisitorStats';
 
 // 注册ScrollTrigger插件
 gsap.registerPlugin(ScrollTrigger);
@@ -251,8 +252,8 @@ const Contact = ({ id }) => {
             </div>
           </div>
 
-          {/* 社交媒体和位置 */}
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
+          {/* 社交媒体、位置和访问统计 */}
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3'>
             {/* LinkedIn */}
             <div className='contact-card'>
               <a
@@ -299,6 +300,9 @@ const Contact = ({ id }) => {
                 <p className='text-xs text-gray-400'>Wellington, NZ</p>
               </div>
             </div>
+
+            {/* Visitor Stats */}
+            <VisitorStats />
           </div>
         </div>
       </div>

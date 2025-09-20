@@ -7,6 +7,7 @@ import Blog from './components/Blog';
 import Contact from './components/Contact';
 import GalaxyBackground from './components/GalaxyBackground';
 import LikeButton from './components/LikeButton';
+import VisitTracker from './components/VisitTracker';
 
 function App() {
   useEffect(() => {
@@ -170,6 +171,7 @@ function App() {
 
   return (
     <main className='text-white relative'>
+      <VisitTracker />
       <GalaxyBackground />
       <MyNavigation />
       <About id='about' />
