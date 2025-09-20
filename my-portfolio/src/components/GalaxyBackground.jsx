@@ -99,10 +99,10 @@ const GalaxyBackground = () => {
     const isMobile =
       window.innerWidth <= 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-    // 基于设备类型调整星星数量：桌面端(1000+1000+1000) vs 移动端(1000+300+300)
+    // 基于设备类型调整星星数量：桌面端(1000+1000+1000) vs 移动端(500+300+300)
     const getStarCounts = () => {
       if (isMobile) {
-        return { outline: 1000, inside: 300, outside: 300 }; // 移动端：总计1600颗
+        return { outline: 500, inside: 300, outside: 300 }; // 移动端：总计1100颗
       } else {
         return { outline: 1000, inside: 1000, outside: 1000 }; // 桌面端：总计3000颗
       }
@@ -117,11 +117,19 @@ const GalaxyBackground = () => {
       // 将 SVG 坐标转换为 Canvas 坐标
       const toCanvas = pt => ({ x: offsetX + pt.x * scale, y: offsetY + pt.y * scale });
 
-      // 轮廓：从预生成1000个中等间距抽取 outlineCount 个
+      // 轮廓：从预生成的星点中随机选取 outlineCount 个
       const outlineStars = [];
       const totalOutline = data.stars.length;
-      for (let i = 0; i < outlineCount; i++) {
-        const index = Math.floor((i * totalOutline) / outlineCount);
+      const selectedIndices = new Set();
+
+      // 随机选取不重复的索引
+      while (selectedIndices.size < outlineCount && selectedIndices.size < totalOutline) {
+        const randomIndex = Math.floor(Math.random() * totalOutline);
+        selectedIndices.add(randomIndex);
+      }
+
+      // 根据选中的索引创建轮廓星星
+      Array.from(selectedIndices).forEach(index => {
         const p = toCanvas(data.stars[index]);
         const x0 = Math.random() * (canvas.width - 10) + 5;
         const y0 = Math.random() * (canvas.height - 10) + 5;
@@ -143,7 +151,7 @@ const GalaxyBackground = () => {
           twinklePhase: Math.random() * Math.PI * 2,
           glowIntensity: 0.6,
         });
-      }
+      });
 
       // 内外判断函数：基于 Path2D + 当前变换
       const isInsideNZ = (x, y) => {
@@ -313,51 +321,8 @@ const GalaxyBackground = () => {
       }
     };
 
-    // 星星数据结构
-    const galaxyStars = 375;
-    const scatteredStars = 225;
-    const totalStars = galaxyStars + scatteredStars;
-
-    // 创建星星数据
-    const createStars = () => {
-      const stars = [];
-
-      for (let i = 0; i < totalStars; i++) {
-        // 初始全部随机分布（避免“银河带”闪烁），稍留边距
-        const x = Math.random() * (canvas.width - 10) + 5;
-        const y = Math.random() * (canvas.height - 10) + 5;
-        const size = Math.random() * 0.4 + 0.2; // 0.2-0.6px
-        const type = 'scattered';
-
-        stars.push({
-          x,
-          y,
-          x0: x,
-          y0: y,
-          tx: x,
-          ty: y,
-          group: 'outside',
-          size,
-          type,
-          opacity: type === 'galaxy' ? 0.8 : 0.6,
-          baseOpacity: type === 'galaxy' ? 0.8 : 0.6,
-          maxOpacity: type === 'galaxy' ? 1 : 0.9,
-          minOpacity: type === 'galaxy' ? 0.1 : 0.05,
-          twinkleSpeed:
-            type === 'galaxy' ? Math.random() * 0.04 + 0.02 : Math.random() * 0.03 + 0.015,
-          twinklePhase: Math.random() * Math.PI * 2,
-          glowIntensity: type === 'galaxy' ? 0.6 : 0.3,
-        });
-      }
-
-      return stars;
-    };
-
-    // 初始化星星（先用默认，数据就绪后替换）
-    starsRef.current = createStars();
-    console.log(
-      `Created ${totalStars} stars with Canvas: ${galaxyStars} in galaxy + ${scatteredStars} scattered`
-    );
+    // 初始化空的星星数组，等待数据加载
+    starsRef.current = [];
     // 异步加载本地星点 & SVG轮廓
     loadNZStars();
     loadSvgPaths();
@@ -578,9 +543,8 @@ const GalaxyBackground = () => {
           glowIntensity: 0.6,
         }));
         return (starsRef.current = tmp);
-      } else {
-        starsRef.current = createStars();
       }
+      // 如果数据未加载完成，保持空数组
     };
 
     window.addEventListener('resize', handleResize);
@@ -616,7 +580,6 @@ const GalaxyBackground = () => {
         height: '100vh',
         pointerEvents: 'none',
         zIndex: 10,
-        filter: 'blur(0.3px)', // 轻微的整体模糊效果
       }}
     />
   );
