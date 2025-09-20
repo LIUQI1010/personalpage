@@ -1,4 +1,4 @@
-# Qi Liu - Portfolio
+# Qi Liu - Portfolio1
 
 Personal portfolio website built with React + Vite.
 
