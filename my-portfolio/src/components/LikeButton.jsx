@@ -28,7 +28,7 @@ const LikeButton = () => {
     }, 2000);
   }, []);
 
-  // 获取初始点赞数
+  // 获取初始点赞数和上次点击时间
   useEffect(() => {
     const fetchLikes = async () => {
       try {
@@ -41,6 +41,12 @@ const LikeButton = () => {
         console.error('Failed to fetch likes:', error);
       }
     };
+    
+    // 从localStorage恢复上次点击时间
+    const savedLastClick = localStorage.getItem('lastLikeClick');
+    if (savedLastClick) {
+      setLastRecordedClick(parseInt(savedLastClick));
+    }
     
     fetchLikes();
   }, []);
@@ -80,7 +86,9 @@ const LikeButton = () => {
         
         if (data.success) {
           setLikeCount(data.likes);
-          setLastRecordedClick(Date.now());
+          const now = Date.now();
+          setLastRecordedClick(now);
+          localStorage.setItem('lastLikeClick', now.toString());
           console.log('点赞已记录！当前总数:', data.likes);
         } else if (response.status === 429) {
           console.log('点赞过于频繁，服务器端限制');
