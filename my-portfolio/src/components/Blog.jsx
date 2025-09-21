@@ -16,6 +16,7 @@ const Blog = ({ id }) => {
   const developmentLogsRef = useRef(null);
   const logsScrollIndicatorRef = useRef(null);
   const photoTitleRef = useRef(null);
+  const photoSubtitleRef = useRef(null);
   const devTitleRef = useRef(null);
 
   // 图片加载状态管理
@@ -587,6 +588,29 @@ const Blog = ({ id }) => {
         );
       }
 
+      // 4.1. 照片模块副标题动画
+      if (photoSubtitleRef.current) {
+        gsap.fromTo(
+          photoSubtitleRef.current,
+          {
+            opacity: 0,
+            y: 30,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: photoSubtitleRef.current,
+              start: 'top 90%',
+              toggleActions: 'play none none reverse',
+            },
+            delay: 0.4,
+          }
+        );
+      }
+
       // 5. 开发日志模块标题动画
       if (devTitleRef.current) {
         gsap.fromTo(
@@ -770,6 +794,9 @@ const Blog = ({ id }) => {
             >
               Captured across Aotearoa New Zealand
             </h2>
+            <p ref={photoSubtitleRef} className='text-center text-gray-400 text-sm mt-2 italic'>
+              If I can find an internship, I'll take a road trip to the South Island.
+            </p>
 
             {/* 图片水平滚动 */}
             <div className='relative'>

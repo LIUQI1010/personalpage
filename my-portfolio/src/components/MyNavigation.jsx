@@ -159,14 +159,14 @@ export default function MyNavigation() {
       opacity: 0,
       duration: 0.2,
       stagger: 0.03,
-      ease: 'power2.in',
+      ease: 'power2.out',
     })
       // Then animate container out
       .to(mobileMenuRef.current, {
         y: -20,
         opacity: 0,
         duration: 0.2,
-        ease: 'power2.in',
+        ease: 'power2.out',
         onComplete: () => {
           setIsAnimating(false);
           setShouldRenderMenu(false);
@@ -231,11 +231,18 @@ export default function MyNavigation() {
   return (
     <nav
       ref={navRef}
-      className='fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300'
+      className='fixed left-0 right-0 w-full z-50 transition-all duration-300'
       style={{
+        top: 'env(safe-area-inset-top, 0px)',
+        paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
         backgroundColor: 'rgba(0, 0, 0, 0.25)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
+        // Safari iOS 优化
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
+        // 支持动态岛和紧凑标签栏模式
+        minHeight: 'max(44px, env(safe-area-inset-top, 0px) + 44px)',
       }}
     >
       {/* Main navigation bar */}
@@ -308,11 +315,15 @@ export default function MyNavigation() {
       {shouldRenderMenu && (
         <div
           ref={mobileMenuRef}
-          className='md:hidden absolute top-full left-0 w-full border-b border-white/20 shadow-lg z-50'
+          className='md:hidden absolute left-0 w-full border-b border-white/20 shadow-lg z-50'
           style={{
+            top: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
+            // Safari iOS 优化
+            WebkitTransform: 'translateZ(0)',
+            transform: 'translateZ(0)',
           }}
         >
           <nav className='py-4'>

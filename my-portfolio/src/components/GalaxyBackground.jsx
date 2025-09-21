@@ -71,10 +71,20 @@ const GalaxyBackground = () => {
       return starSpritesCache.get(key);
     };
 
-    // 设置Canvas尺寸
+    // 设置Canvas尺寸（高DPI清晰显示，坐标保持CSS像素）
     const setCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      canvas.style.width = vw + 'px';
+      canvas.style.height = vh + 'px';
+      canvas.width = Math.round(vw * dpr);
+      canvas.height = Math.round(vh * dpr);
+
+      // 固定绘制坐标到CSS像素系
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     setCanvasSize();
 
@@ -82,9 +92,11 @@ const GalaxyBackground = () => {
     const computeSvgTransform = svgSize => {
       const svgW = svgSize?.width || 1000;
       const svgH = svgSize?.height || 1330;
-      const scale = Math.min(canvas.width / svgW, canvas.height / svgH) * 0.9;
-      const offsetX = (canvas.width - svgW * scale) / 2;
-      const offsetY = (canvas.height - svgH * scale) / 2;
+      const vw = canvas.clientWidth || window.innerWidth;
+      const vh = canvas.clientHeight || window.innerHeight;
+      const scale = Math.min(vw / svgW, vh / svgH) * 0.9;
+      const offsetX = (vw - svgW * scale) / 2;
+      const offsetY = (vh - svgH * scale) / 2;
       return { scale, offsetX, offsetY, svgW, svgH };
     };
 
@@ -102,7 +114,7 @@ const GalaxyBackground = () => {
     // 基于设备类型调整星星数量：桌面端(1000+1000+1000) vs 移动端(500+300+300)
     const getStarCounts = () => {
       if (isMobile) {
-        return { outline: 500, inside: 300, outside: 300 }; // 移动端：总计1100颗
+        return { outline: 600, inside: 500, outside: 500 }; // 移动端：总计1600颗
       } else {
         return { outline: 1000, inside: 1000, outside: 1000 }; // 桌面端：总计3000颗
       }
@@ -129,10 +141,12 @@ const GalaxyBackground = () => {
       }
 
       // 根据选中的索引创建轮廓星星
+      const viewW = canvas.clientWidth || window.innerWidth;
+      const viewH = canvas.clientHeight || window.innerHeight;
       Array.from(selectedIndices).forEach(index => {
         const p = toCanvas(data.stars[index]);
-        const x0 = Math.random() * (canvas.width - 10) + 5;
-        const y0 = Math.random() * (canvas.height - 10) + 5;
+        const x0 = Math.random() * (viewW - 10) + 5;
+        const y0 = Math.random() * (viewH - 10) + 5;
         outlineStars.push({
           x: x0,
           y: y0,
@@ -158,6 +172,8 @@ const GalaxyBackground = () => {
         if (!islandPathsRef.current.loaded) return false;
         let inside = false;
         ctx.save();
+        // 中和 dpr 缩放，保证命中测试用 CSS 坐标
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.translate(offsetX, offsetY);
         ctx.scale(scale, scale);
         const { south, north } = islandPathsRef.current;
@@ -178,12 +194,12 @@ const GalaxyBackground = () => {
       while (insideStars.length < insideCount && guard < maxTries) {
         guard++;
         // 目标点需在新西兰内部
-        const tx = Math.random() * (canvas.width - 10) + 5;
-        const ty = Math.random() * (canvas.height - 10) + 5;
+        const tx = Math.random() * (viewW - 10) + 5;
+        const ty = Math.random() * (viewH - 10) + 5;
         if (isInsideNZ(tx, ty)) {
           // 初始点随机（全屏散开）
-          const x0 = Math.random() * (canvas.width - 10) + 5;
-          const y0 = Math.random() * (canvas.height - 10) + 5;
+          const x0 = Math.random() * (viewW - 10) + 5;
+          const y0 = Math.random() * (viewH - 10) + 5;
           insideStars.push({
             x: x0,
             y: y0,
@@ -210,8 +226,8 @@ const GalaxyBackground = () => {
       guard = 0;
       while (outsideStars.length < outsideCount && guard < outsideCount * 200) {
         guard++;
-        const x0 = Math.random() * (canvas.width - 10) + 5;
-        const y0 = Math.random() * (canvas.height - 10) + 5;
+        const x0 = Math.random() * (viewW - 10) + 5;
+        const y0 = Math.random() * (viewH - 10) + 5;
         if (!isInsideNZ(x0, y0)) {
           outsideStars.push({
             x: x0,
@@ -346,7 +362,8 @@ const GalaxyBackground = () => {
 
     // 2) 内部形变：从 #experience 到达中部后开始，到页面底部结束，进度 0 -> 1
     const stInside = ScrollTrigger.create({
-      start: '#experience top center',
+      trigger: '#experience',
+      start: 'top center',
       end: 'bottom bottom',
       scrub: true,
       onUpdate: self => {
@@ -386,8 +403,10 @@ const GalaxyBackground = () => {
       const width = 1 + Math.random() * 1.2;
       // 起点：顶部或左上，更靠近可视区
       const fromTop = Math.random() < 0.6;
-      const x0 = fromTop ? Math.random() * (canvas.width * 0.8) + canvas.width * 0.1 : -30;
-      const y0 = fromTop ? -20 : Math.random() * (canvas.height * 0.4);
+      const vw = canvas.clientWidth || window.innerWidth;
+      const vh = canvas.clientHeight || window.innerHeight;
+      const x0 = fromTop ? Math.random() * (vw * 0.8) + vw * 0.1 : -30;
+      const y0 = fromTop ? -20 : Math.random() * (vh * 0.4);
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
       meteorsRef.current.push({
@@ -452,8 +471,8 @@ const GalaxyBackground = () => {
         if (
           m.life > m.maxLife ||
           m.x < -100 ||
-          m.x > canvas.width + 100 ||
-          m.y > canvas.height + 120
+          m.x > (canvas.clientWidth || window.innerWidth) + 100 ||
+          m.y > (canvas.clientHeight || window.innerHeight) + 120
         ) {
           meteorsRef.current.splice(i, 1);
         }
@@ -471,8 +490,10 @@ const GalaxyBackground = () => {
 
     // 渲染函数
     const render = () => {
-      // 清空画布
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // 清空画布（CSS 像素尺寸）
+      const vw = canvas.clientWidth || window.innerWidth;
+      const vh = canvas.clientHeight || window.innerHeight;
+      ctx.clearRect(0, 0, vw, vh);
 
       // 更新星星位置（形变插值）与闪烁状态
       const pO = outlineProgressRef.current;

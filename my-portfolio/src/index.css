@@ -191,4 +191,29 @@
 }
 body {
   background: oklch(0.13 0.03 261.7) !important;
+  /* Safari iOS 导航栏优化 - 确保页面内容不被遮挡 */
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Safari iOS 26 导航栏顶部优化 */
+@supports (top: env(safe-area-inset-top)) {
+  /* 确保固定导航栏在安全区域内正确显示 */
+  .ios-navigation-offset {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 60px);
+  }
+
+  /* 为内容区域添加顶部边距，避免被导航栏遮挡 */
+  #root {
+    min-height: 100vh;
+    min-height: calc(100vh - env(safe-area-inset-top, 0px));
+  }
+}
+
+/* 针对有刘海屏的设备进行额外优化 */
+@media screen and (device-width: 393px) and (device-height: 852px),
+  /* iPhone 14 Pro */ screen and (device-width: 390px) and (device-height: 844px),
+  /* iPhone 14 */ screen and (device-width: 375px) and (device-height: 812px) /* iPhone X/XS */ {
+  .navigation-ios-notch {
+    padding-top: max(env(safe-area-inset-top, 0px), 44px);
+  }
 }
