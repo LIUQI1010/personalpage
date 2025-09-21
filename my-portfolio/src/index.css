@@ -212,8 +212,44 @@ body {
 /* 针对有刘海屏的设备进行额外优化 */
 @media screen and (device-width: 393px) and (device-height: 852px),
   /* iPhone 14 Pro */ screen and (device-width: 390px) and (device-height: 844px),
-  /* iPhone 14 */ screen and (device-width: 375px) and (device-height: 812px) /* iPhone X/XS */ {
+  /* iPhone 14 */ screen and (device-width: 375px) and (device-width: 375px) and (device-height: 812px) /* iPhone X/XS */ {
   .navigation-ios-notch {
     padding-top: max(env(safe-area-inset-top, 0px), 44px);
   }
+}
+
+/* 自定义细滚动条 - ImageStack组件 */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px; /* 滚动条整体高度 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+  height: 6px; /* 轨道高度与滚动条一致 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #a855f7, #ec4899);
+  border-radius: 3px;
+  height: 6px; /* 滑块高度与轨道一致 */
+  transition: all 0.2s ease; /* 平滑过渡动画 */
+  /* 确保圆角在所有情况下都显示 */
+  background-clip: padding-box;
+  border: 0px solid transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #9333ea, #db2777);
+  border-radius: 3px; /* 确保hover时也有圆角 */
+  background-clip: padding-box;
+  border: 0px solid transparent;
+  transform: scaleY(1.2); /* 垂直方向稍微放大 */
+  cursor: pointer;
+}
+
+/* Firefox 滚动条样式 */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #a855f7 transparent;
 }
