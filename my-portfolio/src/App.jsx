@@ -10,6 +10,28 @@ import LikeButton from './components/LikeButton';
 import VisitTracker from './components/VisitTracker';
 
 function App() {
+  // 控制页面刷新后的滚动位置
+  useEffect(() => {
+    // 禁用浏览器的滚动恢复功能
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // 确保页面加载时滚动到顶部
+    window.scrollTo(0, 0);
+
+    // 监听页面卸载，确保下次加载时从顶部开始
+    const handleBeforeUnload = () => {
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   useEffect(() => {
     // 创建Canvas元素用于绘制鼠标轨迹曲线
     const canvas = document.createElement('canvas');

@@ -195,6 +195,22 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
+/* 禁用浏览器自动滚动恢复 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 确保页面加载时的滚动控制 */
+html,
+body {
+  overflow-x: hidden; /* 防止水平滚动 */
+}
+
+/* 为根元素添加滚动控制 */
+#root {
+  overflow-x: hidden;
+}
+
 /* Safari iOS 26 导航栏顶部优化 */
 @supports (top: env(safe-area-inset-top)) {
   /* 确保固定导航栏在安全区域内正确显示 */

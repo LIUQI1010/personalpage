@@ -248,12 +248,17 @@ export default function MyNavigation() {
       {/* Main navigation bar */}
       <div className='flex items-center justify-between px-4 md:px-8 py-2'>
         {/* Left side - Logo */}
-        <div
-          className='text-lg font-semibold'
+        <button
+          className='text-lg font-semibold cursor-pointer hover:opacity-80 transition-opacity duration-200'
           ref={logoRef}
+          onClick={() => window.location.reload()}
           style={{
             color: 'white',
+            background: 'none',
+            border: 'none',
+            padding: 0,
           }}
+          aria-label='刷新页面'
         >
           <span className='md:hidden'>
             <span
@@ -285,7 +290,7 @@ export default function MyNavigation() {
             </span>
             i Liu
           </span>
-        </div>
+        </button>
 
         {/* Desktop navigation - Hidden on mobile */}
         <div className='hidden md:block'>
