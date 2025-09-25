@@ -253,3 +253,63 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #a855f7 transparent;
 }
+
+.qi-path {
+  fill: none;
+  stroke: rgb(229, 235, 240); /* 淡蓝白色，像星光 */
+  stroke-width: 5;
+  filter: drop-shadow(0 0 12px rgba(250, 252, 121, 0.5));
+  stroke-dasharray: var(--l);
+  stroke-dashoffset: var(--l);
+  animation: dash 0.15s ease-in-out forwards;
+}
+
+/* 为每个path设置不同的动画延迟，实现顺序执行 */
+.qi-path.p1 {
+  animation-delay: 0s;
+}
+.qi-path.p2 {
+  animation-delay: 0.15s;
+}
+.qi-path.p3 {
+  animation-delay: 0.3s;
+}
+.qi-path.p4 {
+  animation-delay: 0.45s;
+}
+.qi-path.p5 {
+  animation-delay: 0.6s;
+}
+.qi-path.p6 {
+  animation-delay: 0.75s;
+}
+.qi-path.p7 {
+  animation-delay: 0.9s;
+}
+.qi-path.p8 {
+  animation-delay: 1.05s;
+}
+.qi-path.p9 {
+  animation-delay: 1.2s;
+}
+.qi-path.p10 {
+  animation-delay: 1.35s;
+}
+.qi-path.p11 {
+  animation-delay: 1.5s;
+}
+.qi-path.p12 {
+  animation-delay: 1.65s;
+}
+.qi-path.p13 {
+  animation-delay: 1.8s;
+}
+.qi-path.p14 {
+  animation-delay: 1.95s;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
