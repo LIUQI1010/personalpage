@@ -270,14 +270,66 @@ body {
   scrollbar-color: #a855f7 transparent;
 }
 
+/* 容器设置 */
+.svg-container {
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+  min-width: 320px;
+}
+
+/* 两个SVG完全重叠 */
+.svg-stroke {
+  position: relative; /* 改为relative */
+  width: 100%;
+  height: auto;
+}
+
+.svg-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 描边SVG - 只显示描边 */
+.qi-path-stroke {
+  fill: none;
+  stroke: rgb(229, 235, 240);
+  stroke-width: 1;
+  filter: drop-shadow(0 0 2px rgba(250, 252, 121, 0.5));
+  stroke-dasharray: var(--l);
+  stroke-dashoffset: var(--l);
+  animation: dash 5s ease-in-out forwards;
+}
+
+/* 填充SVG - 只显示填充 */
+.qi-path-fill {
+  fill: rgba(229, 235, 240, 0.6);
+  stroke: none;
+  clip-path: inset(0 100% 0 0); /* 初始隐藏 */
+  animation: fill-reveal 4s ease-in-out 2s forwards;
+}
+
+/* 填充动画 - 从左到右 */
+@keyframes fill-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 .qi-path {
   fill: none;
   stroke: rgb(229, 235, 240); /* 淡蓝白色，像星光 */
-  stroke-width: 5;
-  filter: drop-shadow(0 0 12px rgba(250, 252, 121, 0.5));
+  stroke-width: 1;
+  filter: drop-shadow(0 0 2px rgba(250, 252, 121, 0.5));
   stroke-dasharray: var(--l);
   stroke-dashoffset: var(--l);
-  animation: dash 0.15s ease-in-out forwards;
+  animation: dash 5s ease-in-out forwards;
 }
 
 /* 为每个path设置不同的动画延迟，实现顺序执行 */
