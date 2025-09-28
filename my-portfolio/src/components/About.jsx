@@ -502,9 +502,9 @@ const About = ({ id }) => {
     >
       <div className='max-w-6xl mx-auto'>
         {/* 标题部分 */}
-        <div className='flex flex-col items-center justify-center'>
-          <div className='relative group w-4/5 md:w-1/2' style={{ minWidth: '420px' }}>
-            <svg viewBox='0 0 748 143' className='w-full h-auto cursor-pointer'>
+        <div className='flex flex-col items-center justify-center mb-10'>
+          <div className='relative group w-4/5 md:w-1/2' style={{ minWidth: '400px' }}>
+            <svg viewBox='0 0 700 143' className='w-full h-auto cursor-pointer'>
               <path
                 className='qi-path p1'
                 d='M70.6,75.1l13.2,-9.1l9.1,-9.2l5.4,-9.1l1.87,-8.5l-2.87,-7.6l-8.2,-6.3l-15.7,-1.2l-19.8,3.8l-21.8,12.6l-16.4,16l-6.58,12.6l-3.78,11.1l0.63,10.98l2.83,9.135l5,4.725l12.3,3.15l13.9,-0.94l18.9,-5.99l18.6,-12.26l13.8,-13.6l5.4,-14.5l-1.6,-11.9l-8.2,-9.2l-8.8,-4.7l-7.9,-1.3l-11.3,1.3M10.7,110.7l0.6,-8.18l4.8,-8.19l6.6,-2.52l10.1,3.15l44.7,27.74l9.1,3.1l6,-2.2l1.9,-2.8l-0.6,-5'
@@ -562,7 +562,7 @@ const About = ({ id }) => {
               <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-800'></div>
             </div>
           </div>
-          <p ref={subtitleRef} className='text-xl md:text-2xl text-gray-300 font-light'>
+          <p ref={subtitleRef} className='text-xl md:text-xl text-gray-300 font-light text-center'>
             AWS-Certified Solutions Architect & Full-Stack Developer
           </p>
         </div>
