@@ -2,29 +2,28 @@ import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
   NavigationMenuLink,
 } from './ui/navigation-menu';
-import { cn } from '@/lib/utils';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { SplitText } from 'gsap/SplitText';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { Menu, X } from 'lucide-react';
-
-// 注册ScrollTrigger插件
-gsap.registerPlugin(ScrollTrigger);
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function MyNavigation() {
-  const logoRef = useRef(null);
-  const mobileMenuRef = useRef(null);
-  const menuItemsRef = useRef([]);
-  const navRef = useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const logoRef = useRef(null); // Logo 文字元素的引用，用于 GSAP SplitText 动画
+  const mobileMenuRef = useRef(null); // 移动端菜单容器的引用，用于打开/关闭动画
+  const menuItemsRef = useRef([]); // 移动端菜单项的引用数组，用于错位动画效果
+  const navRef = useRef(null); // 导航栏容器的引用，用于滚动时的显示/隐藏动画
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // 控制移动端菜单的开关状态
+  const [shouldRenderMenu, setShouldRenderMenu] = useState(false); // 控制菜单是否渲染到DOM，确保关闭动画完整播放
+  const [isAnimating, setIsAnimating] = useState(false); // 防止动画过程中的重复操作，避免动画冲突
+
+  // 路由相关
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isComponentsPage = location.pathname === '/my-components';
 
   // Logo文字分割效果（无动画）
   useGSAP(() => {
@@ -44,9 +43,6 @@ export default function MyNavigation() {
     };
   }, []);
 
-  // 滚动状态管理
-  const [isScrolled, setIsScrolled] = useState(false);
-
   // 合并的滚动处理 - 避免多个滚动监听器冲突
   useGSAP(() => {
     if (!navRef.current) return;
@@ -59,8 +55,17 @@ export default function MyNavigation() {
       const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
       const scrollDelta = Math.abs(currentScrollY - lastScrollY);
 
-      // 更新滚动状态（用于样式变化）
-      setIsScrolled(currentScrollY > 50);
+      // 在组件页面禁用导航栏自动收起功能
+      if (isComponentsPage) {
+        // 在组件页面始终保持导航栏显示
+        gsap.to(navRef.current, {
+          y: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+        ticking = false;
+        return;
+      }
 
       // 导航栏显示/隐藏逻辑 - 增加最小滚动距离避免抖动
       if (scrollDelta < 3) {
@@ -109,7 +114,7 @@ export default function MyNavigation() {
     return () => {
       window.removeEventListener('scroll', requestTick);
     };
-  }, []);
+  }, [isComponentsPage]);
 
   // Animation functions - defined before useEffect
   const animateMenuOpen = useCallback(() => {
@@ -203,6 +208,26 @@ export default function MyNavigation() {
     setIsMenuOpen(false);
   };
 
+  // 处理导航点击事件
+  const handleNavigationClick = (item, e) => {
+    e.preventDefault();
+    closeMenu();
+
+    if (item.type === 'route') {
+      // 路由跳转
+      navigate(item.href);
+    } else if (item.type === 'anchor') {
+      // 当前页面锚点跳转
+      const target = document.querySelector(item.href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (item.type === 'home-anchor') {
+      // 跳转到主页的锚点
+      navigate(item.href);
+    }
+  };
+
   // 点击外部区域关闭菜单
   useEffect(() => {
     const handleClickOutside = event => {
@@ -220,13 +245,32 @@ export default function MyNavigation() {
     };
   }, [isMenuOpen]);
 
-  const navigationItems = [
-    { href: '#about', label: 'About' },
-    { href: '#projects', label: 'Projects' },
-    { href: '#experience', label: 'Experience' },
-    { href: '#blog', label: 'Blog' },
-    { href: '#contact', label: 'Contact' },
-  ];
+  // 根据当前页面返回不同的导航项
+  const getNavigationItems = () => {
+    if (isComponentsPage) {
+      // 在组件库页面，不显示主页，只显示锚点链接和当前页面
+      return [
+        { href: '/#about', label: 'About', type: 'home-anchor' },
+        { href: '/#projects', label: 'Projects', type: 'home-anchor' },
+        { href: '/#experience', label: 'Experience', type: 'home-anchor' },
+        { href: '/#blog', label: 'Blog', type: 'home-anchor' },
+        { href: '/#contact', label: 'Contact', type: 'home-anchor' },
+        { href: '/my-components', label: 'Components', type: 'route', active: true },
+      ];
+    } else {
+      // 在主页，显示锚点导航和组件库链接
+      return [
+        { href: '#about', label: 'About', type: 'anchor' },
+        { href: '#projects', label: 'Projects', type: 'anchor' },
+        { href: '#experience', label: 'Experience', type: 'anchor' },
+        { href: '#blog', label: 'Blog', type: 'anchor' },
+        { href: '#contact', label: 'Contact', type: 'anchor' },
+        { href: '/my-components', label: 'Components', type: 'route' },
+      ];
+    }
+  };
+
+  const navigationItems = getNavigationItems();
 
   return (
     <nav
@@ -275,21 +319,7 @@ export default function MyNavigation() {
             </span>
             i Liu
           </span>
-          <span className='hidden md:inline'>
-            <span
-              className='inline-block font-black'
-              style={{
-                fontFamily:
-                  'Circular, "SF Pro Display", "Avenir Next", "Helvetica Neue", sans-serif',
-                fontWeight: '700',
-                transform: 'scale(1.1) rotate(45deg)',
-                color: '#9B8B7A', // 莫兰迪色 - 温暖的灰褐色
-              }}
-            >
-              Q
-            </span>
-            i Liu
-          </span>
+          <span className='hidden md:inline'>Qi Liu</span>
         </button>
 
         {/* Desktop navigation - Hidden on mobile */}
@@ -298,7 +328,13 @@ export default function MyNavigation() {
             <NavigationMenuList>
               {navigationItems.map(item => (
                 <NavigationMenuItem key={item.href} className='desktop-menu-item'>
-                  <NavigationMenuLink href={item.href}>{item.label}</NavigationMenuLink>
+                  <NavigationMenuLink
+                    href={item.href}
+                    onClick={e => handleNavigationClick(item, e)}
+                    className={item.active ? 'text-blue-400 font-semibold' : ''}
+                  >
+                    {item.label}
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -337,19 +373,10 @@ export default function MyNavigation() {
                 key={item.href}
                 ref={el => (menuItemsRef.current[index] = el)}
                 href={item.href}
-                className='block px-6 py-3 text-sm font-medium text-white hover:bg-white/10 hover:text-white transition-colors'
-                onClick={e => {
-                  e.preventDefault();
-                  // 立即关闭菜单，不检查动画状态
-                  setIsMenuOpen(false);
-                  // 让链接正常工作
-                  setTimeout(() => {
-                    const target = document.querySelector(item.href);
-                    if (target) {
-                      target.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 50);
-                }}
+                className={`block px-6 py-3 text-sm font-medium hover:bg-white/10 hover:text-white transition-colors ${
+                  item.active ? 'text-blue-400 font-semibold bg-white/5' : 'text-white'
+                }`}
+                onClick={e => handleNavigationClick(item, e)}
               >
                 {item.label}
               </a>
