@@ -33,7 +33,7 @@ const Experience = ({ id }) => {
       university: 'Victoria University of Wellington',
       period: '2024–Present',
       expectedGraduation: 'November 2025',
-      currentGPA: 'Overall GPA: A-',
+      currentGPA: 'Overall GPA: over 85',
       keySubjects: [
         {
           name: 'Advanced Programming Languages',
