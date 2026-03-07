@@ -2,7 +2,7 @@ import { createClient } from 'redis';
 import crypto from 'crypto';
 
 export default async function handler(request, response) {
-  const client = createClient({ url: process.env.REDIS_URL });
+  const client = createClient({ url: process.env.KV_URL });
   
   try {
     await client.connect();
