@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 
 export default async function handler(request, response) {
-  const client = createClient({ url: process.env.kv_URL });
+  const client = createClient({ url: process.env.kv_REDIS_URL });
   
   try {
     await client.connect();
