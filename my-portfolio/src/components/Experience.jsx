@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef } from 'react';
+import { workExperience, educationData } from '../data/experience';
 
 // 注册ScrollTrigger插件
 gsap.registerPlugin(ScrollTrigger);
@@ -17,48 +18,6 @@ const Experience = ({ id }) => {
   const academicRef = useRef(null);
   const courseCardsRef = useRef(null);
   const decorationRef = useRef(null);
-
-  // 工作经验数据
-  const workExperience = {
-    title: 'Overseas Math Teacher',
-    period: '2015–2024',
-    description:
-      'Communicated complex mathematical concepts to diverse student groups, enhancing ability to explain difficult ideas clearly and effectively. Collaborated with colleagues to develop curricula and adapt to new educational technologies, demonstrating quick learning, flexibility, and problem-solving in dynamic environments.',
-  };
-
-  // 教育背景数据
-  const educationData = {
-    master: {
-      degree: 'Master of Computer Science',
-      university: 'Victoria University of Wellington',
-      period: '2024–Present',
-      expectedGraduation: 'November 2025',
-      currentGPA: 'Overall GPA: over 85',
-      keySubjects: [
-        {
-          name: 'Advanced Programming Languages',
-          grade: 'A+',
-          description: 'Deep dive into programming language theory and advanced concepts',
-        },
-        {
-          name: 'Database System Engineering',
-          grade: 'A+',
-          description: 'SQL database design, query optimization, and relational database systems',
-        },
-        {
-          name: 'Automated Program Analysis',
-          grade: 'A+',
-          description: 'Java programming with automated testing frameworks and analysis tools',
-        },
-      ],
-    },
-    bachelor: {
-      degree: 'BSc in Computer Science and Technology',
-      university: 'Southeast University',
-      graduationYear: '2015',
-      period: '2011–2015',
-    },
-  };
 
   useGSAP(() => {
     if (!sectionRef.current) return;

@@ -253,7 +253,7 @@ export default function MyNavigation() {
         { href: '/#about', label: 'About', type: 'home-anchor' },
         { href: '/#projects', label: 'Projects', type: 'home-anchor' },
         { href: '/#experience', label: 'Experience', type: 'home-anchor' },
-        { href: '/#blog', label: 'Blog', type: 'home-anchor' },
+        { href: '/#blog', label: 'Gallery', type: 'home-anchor' },
         { href: '/#contact', label: 'Contact', type: 'home-anchor' },
         { href: '/my-components', label: 'Components', type: 'route', active: true },
       ];
@@ -263,9 +263,8 @@ export default function MyNavigation() {
         { href: '#about', label: 'About', type: 'anchor' },
         { href: '#projects', label: 'Projects', type: 'anchor' },
         { href: '#experience', label: 'Experience', type: 'anchor' },
-        { href: '#blog', label: 'Blog', type: 'anchor' },
+        { href: '#blog', label: 'Gallery', type: 'anchor' },
         { href: '#contact', label: 'Contact', type: 'anchor' },
-        { href: '/my-components', label: 'Components', type: 'route' },
       ];
     }
   };
@@ -275,6 +274,7 @@ export default function MyNavigation() {
   return (
     <nav
       ref={navRef}
+      aria-label='Main navigation'
       className='fixed left-0 right-0 w-full z-50 transition-all duration-300'
       style={{
         top: 'env(safe-area-inset-top, 0px)',
@@ -302,7 +302,7 @@ export default function MyNavigation() {
             border: 'none',
             padding: 0,
           }}
-          aria-label='刷新页面'
+          aria-label='Refresh page'
         >
           <span className='md:hidden'>
             <span

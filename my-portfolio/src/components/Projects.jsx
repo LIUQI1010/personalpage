@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef, useState, useEffect } from 'react';
 import { ImageStack } from './ui/image-stack';
+import { projects } from '../data/projects';
 
 // 注册ScrollTrigger插件
 gsap.registerPlugin(ScrollTrigger);
@@ -15,46 +16,9 @@ const Projects = ({ id }) => {
   const decorationRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
 
-  // 项目数据
-  const project = {
-    title: 'Serverless Assignment Management Platform',
-    description:
-      'Developed a full-stack assignment management platform using AWS serverless architecture. Features include secure file upload/download, assignment submission tracking, and instructor feedback system. Implemented scalable backend with Lambda functions, DynamoDB for data persistence, and S3 for file storage, demonstrating modern cloud-native development practices.',
-    technologies: ['AWS Lambda', 'DynamoDB', 'S3', 'API Gateway', 'React', 'Python', 'Serverless'],
-    images: [
-      {
-        id: 'architecture',
-        title: 'System Architecture',
-        src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDQwMCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiMxYTFhMWEiLz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMmUyZTJlIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iNiIgZmlsbD0iI2ZmNWY1NiIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iMjAiIHI9IjYiIGZpbGw9IiNmZmJkMmUiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjIwIiByPSI2IiBmaWxsPSIjMjdjOTNmIi8+PHRleHQgeD0iMTAwIiB5PSIyNiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNhNGE0YTQiPkFXUyBBcmNoaXRlY3R1cmUgRGlhZ3JhbTwvdGV4dD48cmVjdCB4PSIyMCIgeT0iNjAiIHdpZHRoPSIzNjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMjYyNjI2IiByeD0iOCIvPjxyZWN0IHg9IjQwIiB5PSI4MCIgd2lkdGg9IjMyMCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzMzMzMzMyIgcng9IjQiLz48dGV4dCB4PSIyMDAiIHk9IjEwNSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNsb3VkIEFyY2hpdGVjdHVyZSBTY2hlbWE8L3RleHQ+PGNpcmNsZSBjeD0iMTgwIiBjeT0iMTQwIiByPSI0IiBmaWxsPSIjNjY2NjY2Ij48YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJvcGFjaXR5IiB2YWx1ZXM9IjAuMzsxOzAuMyIgZHVyPSIxLjVzIiByZXBlYXRDb3VudD0iaW5kZWZpbml0ZSIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjE0MCIgcj0iNCIgZmlsbD0iIzY2NjY2NiI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0ib3BhY2l0eSIgdmFsdWVzPSIwLjM7MTswLjMiIGR1cj0iMS41cyIgYmVnaW49IjAuMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjIwIiBjeT0iMTQwIiByPSI0IiBmaWxsPSIjNjY2NjY2Ij48YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJvcGFjaXR5IiB2YWx1ZXM9IjAuMzsxOzAuMyIgZHVyPSIxLjVzIiBiZWdpbj0iMC40cyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiLz48L2NpcmNsZT48dGV4dCB4PSIyMDAiIHk9IjE4MCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM3Nzc3NzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNvbWluZyBTb29uLi4uPC90ZXh0Pjwvc3ZnPg==',
-        alt: 'System Architecture Diagram',
-      },
-      {
-        id: 'login',
-        title: 'Login Interface',
-        src: '/img/siwei/login.png',
-        alt: 'Login Interface',
-      },
-      {
-        id: 'dashboard',
-        title: 'Main Dashboard',
-        src: '/img/siwei/main.png',
-        alt: 'Main Dashboard',
-      },
-      {
-        id: 'submit',
-        title: 'Assignment Submission',
-        src: '/img/siwei/submission.png',
-        alt: 'Assignment Submission',
-      },
-      {
-        id: 'grading',
-        title: 'Automated Grading',
-        src: '/img/siwei/grading.png',
-        alt: 'Automated Grading',
-      },
-    ],
-  };
+  const project = projects[activeProjectIndex];
 
   // 处理图片点击 - 打开模态框
   const handleImageClick = (image, index, event) => {
@@ -230,6 +194,23 @@ const Projects = ({ id }) => {
           </p>
         </div>
 
+        {/* 项目选择器 */}
+        <div className='flex justify-center gap-3 mb-8'>
+          {projects.map((p, index) => (
+            <button
+              key={p.id}
+              onClick={() => setActiveProjectIndex(index)}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                index === activeProjectIndex
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+                  : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:border-purple-500/30 hover:text-white'
+              }`}
+            >
+              {p.title.length > 30 ? p.title.substring(0, 30) + '...' : p.title}
+            </button>
+          ))}
+        </div>
+
         {/* 项目卡片展示 */}
         <div ref={projectContainerRef} className='max-w-4xl mx-auto'>
           <div className='bg-gradient-to-br from-gray-800/60 to-gray-900/60 rounded-2xl border border-gray-700/50 overflow-hidden hover:border-purple-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10'>
@@ -250,14 +231,16 @@ const Projects = ({ id }) => {
             </div>
 
             {/* 图片展示区域 */}
-            <div className='px-8 md:px-10 pb-8 md:pb-10'>
-              <ImageStack
-                images={project.images}
-                onImageClick={handleImageClick}
-                containerSize={{ width: 400, height: 240 }}
-                className='w-full'
-              />
-            </div>
+            {project.images && project.images.length > 0 && (
+              <div className='px-8 md:px-10 pb-8 md:pb-10'>
+                <ImageStack
+                  images={project.images}
+                  onImageClick={handleImageClick}
+                  containerSize={{ width: 400, height: 240 }}
+                  className='w-full'
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

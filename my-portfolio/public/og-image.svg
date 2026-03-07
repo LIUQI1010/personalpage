@@ -1,0 +1,9 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  <rect x="40" y="40" width="1120" height="550" rx="20" fill="#111111" stroke="#333333" stroke-width="1"/>
+  <text x="600" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="white" text-anchor="middle">Qi Liu</text>
+  <text x="600" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#9ca3af" text-anchor="middle">AWS-Certified Solutions Architect &amp; Full-Stack Developer</text>
+  <text x="600" y="380" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#6b7280" text-anchor="middle">Computer Science @ Victoria University of Wellington</text>
+  <line x1="400" y1="420" x2="800" y2="420" stroke="#22c55e" stroke-width="2" opacity="0.5"/>
+  <text x="600" y="470" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#4ade80" text-anchor="middle">React | AWS | Serverless | Cloud Architecture</text>
+</svg>

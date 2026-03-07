@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Home from './pages/Home';
 import MyComponents from './pages/MyComponents';
+import NotFound from './pages/NotFound';
 
 // 组件用于处理路由切换时的滚动重置
 function ScrollToTop() {
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/my-components' element={<MyComponents />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

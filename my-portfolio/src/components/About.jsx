@@ -3,6 +3,9 @@ import { useGSAP } from '@gsap/react';
 import { SplitText } from 'gsap/SplitText';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef, useEffect } from 'react';
+import { Download } from 'lucide-react';
+import HorizontalScrollContainer from './ui/HorizontalScrollContainer';
+import { skills, certifications } from '../data/skills';
 
 // 注册ScrollTrigger插件
 gsap.registerPlugin(ScrollTrigger);
@@ -17,240 +20,6 @@ const About = ({ id }) => {
   const skillCategoriesRef = useRef([]);
   const certificationCardsRef = useRef([]);
   const decorationRef = useRef(null);
-  const certificationGridRef = useRef(null);
-  const certificationScrollIndicatorRef = useRef(null);
-
-  // 技能数据
-  const skills = {
-    'Cloud & AWS': {
-      basic: ['AWS Lambda', 'DynamoDB', 'S3', 'API Gateway', 'Serverless'],
-      detailed: [
-        'Serverless Architecture',
-        'CloudFormation',
-        'IAM Policies',
-        'AWS Cognito Authentication',
-        'API Gateway + Lambda Integration',
-        'S3 Static Hosting',
-      ],
-    },
-    Programming: {
-      basic: ['Python', 'JavaScript', 'HTML', 'CSS', 'React', 'Java'],
-      detailed: [
-        'Python Flask/Django',
-        'JavaScript ES6+',
-        'HTML5 Semantic Elements',
-        'CSS3 & Flexbox/Grid',
-        'React Hooks & Context',
-        'Java Spring Boot',
-        'Responsive Design',
-      ],
-    },
-    Database: {
-      basic: ['MySQL', 'PostgreSQL', 'DynamoDB', 'SQL', 'NoSQL'],
-      detailed: [
-        'MySQL Query Optimization',
-        'PostgreSQL Advanced Features',
-        'DynamoDB Design Patterns',
-        'Complex SQL Joins',
-        'NoSQL Document Design',
-        'Database Indexing',
-        'Data Modeling',
-      ],
-    },
-    Tools: {
-      basic: ['Git', 'GitHub', 'VS Code', 'IntelliJ IDEA', 'PyCharm'],
-      detailed: [
-        'Git Workflow & Branching',
-        'GitHub Actions CI/CD',
-        'VS Code Extensions',
-        'IntelliJ IDEA Debugging',
-        'PyCharm Python Development',
-        'Unix/Linux CLI',
-        'Docker Basics',
-      ],
-    },
-  };
-
-  // 证书数据 - 包含Credly徽章信息
-  const certifications = {
-    'AWS Certifications': [
-      {
-        name: 'Solutions Architect Associate',
-        status: 'completed',
-        year: '2025',
-        credlyImageUrl:
-          'https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png',
-        credlyVerifyUrl: 'https://www.credly.com/badges/4f9b68d1-68e3-480f-857c-c63d6464694f',
-        credlyEmbedId: '4f9b68d1-68e3-480f-857c-c63d6464694f', // 用于嵌入代码的备用方案
-      },
-      {
-        name: 'Cloud Practitioner',
-        status: 'completed',
-        year: '2024',
-        credlyImageUrl: '/img/cloud foundation.png', // 使用本地图片
-        credlyVerifyUrl: '', // 如果有验证链接可以后续添加
-      },
-      {
-        name: 'Developer Associate',
-        status: 'preparing',
-        year: 'In Progress',
-        credlyImageUrl: '', // 暂时为空，获得认证后填入
-        credlyVerifyUrl: '',
-      },
-    ],
-  };
-
-  // 处理证书滚动条
-  const handleCertificationScroll = () => {
-    if (!certificationGridRef.current || !certificationScrollIndicatorRef.current) return;
-
-    const container = certificationGridRef.current;
-    const indicator = certificationScrollIndicatorRef.current;
-
-    const scrollLeft = container.scrollLeft;
-    const scrollWidth = container.scrollWidth - container.clientWidth;
-    const scrollPercent = scrollWidth > 0 ? (scrollLeft / scrollWidth) * 100 : 0;
-
-    const trackElement = indicator.parentElement;
-    if (!trackElement) return;
-
-    const trackWidth = trackElement.getBoundingClientRect().width;
-
-    // 计算滑块的真实大小 - 反映可视区域与总内容的比例
-    const visibleRatio = container.clientWidth / container.scrollWidth;
-    const sliderWidth = Math.max(32, trackWidth * visibleRatio); // 最小32px
-
-    // 计算滑块位置
-    const maxSliderPosition = trackWidth - sliderWidth;
-    const clampedPercent = Math.max(0, Math.min(100, scrollPercent));
-    const sliderPosition = (clampedPercent / 100) * maxSliderPosition;
-
-    // 更新滑块样式
-    indicator.style.left = `${sliderPosition}px`;
-    indicator.style.width = `${sliderWidth}px`;
-  };
-
-  // 防抖计时器
-  const certificationWheelTimeoutRef = useRef(null);
-
-  // 最简方案：完全依赖CSS scroll-snap，无JavaScript干预
-
-  // 简化：只需要判断是否为触摸设备
-  const isTouchDevice = () => {
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  };
-
-  // 处理证书区域鼠标滚轮事件
-  const handleCertificationWheel = e => {
-    if (!certificationGridRef.current) return;
-
-    // 触摸设备上禁用鼠标滚轮
-    if (isTouchDevice()) {
-      return;
-    }
-
-    const container = certificationGridRef.current;
-    const scrollAmount = e.deltaY * 0.8;
-    const currentScrollLeft = container.scrollLeft;
-    const maxScrollLeft = container.scrollWidth - container.clientWidth;
-
-    // 添加容差值，避免浮点数精度问题
-    const tolerance = 2;
-
-    // 计算目标滚动位置
-    const targetScrollLeft = currentScrollLeft + scrollAmount;
-
-    // 更精确的边界检测
-    const isAtLeftEdge = currentScrollLeft <= tolerance && scrollAmount < 0;
-    const isAtRightEdge = currentScrollLeft >= maxScrollLeft - tolerance && scrollAmount > 0;
-
-    // 如果到达边界，允许垂直滚动
-    if (isAtLeftEdge || isAtRightEdge) {
-      // 清除防抖计时器
-      if (certificationWheelTimeoutRef.current) {
-        clearTimeout(certificationWheelTimeoutRef.current);
-        certificationWheelTimeoutRef.current = null;
-      }
-      // 不阻止默认行为，让页面垂直滚动
-      return;
-    }
-
-    // 否则阻止默认行为，进行横向滚动
-    e.preventDefault();
-
-    // 计算并设置新的滚动位置
-    const clampedScrollLeft = Math.max(0, Math.min(maxScrollLeft, targetScrollLeft));
-    container.scrollLeft = clampedScrollLeft;
-
-    // 立即更新滚动条
-    handleCertificationScroll();
-
-    // 防抖处理滚动条更新
-    if (certificationWheelTimeoutRef.current) {
-      clearTimeout(certificationWheelTimeoutRef.current);
-    }
-
-    certificationWheelTimeoutRef.current = setTimeout(() => {
-      handleCertificationScroll();
-      certificationWheelTimeoutRef.current = null;
-    }, 50);
-  };
-
-  // 处理证书滚动条拖动
-  const handleCertificationScrollbarClick = e => {
-    if (!certificationGridRef.current || !e.currentTarget) return;
-
-    const scrollbar = e.currentTarget;
-    const rect = scrollbar.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const scrollbarWidth = rect.width;
-    const clickPercent = (clickX / scrollbarWidth) * 100;
-
-    const container = certificationGridRef.current;
-    const scrollWidth = container.scrollWidth - container.clientWidth;
-    const targetScrollLeft = (clickPercent / 100) * scrollWidth;
-
-    container.scrollTo({
-      left: targetScrollLeft,
-      behavior: 'smooth',
-    });
-  };
-
-  // 处理证书滚动条滑块拖动
-  const handleCertificationScrollbarMouseDown = e => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const container = certificationGridRef.current;
-    const scrollbarTrack = e.currentTarget.parentElement;
-    if (!container || !scrollbarTrack) return;
-
-    const trackRect = scrollbarTrack.getBoundingClientRect();
-    const scrollWidth = container.scrollWidth - container.clientWidth;
-
-    // 计算当前滑块的实际大小
-    const visibleRatio = container.clientWidth / container.scrollWidth;
-    const sliderWidth = Math.max(32, trackRect.width * visibleRatio);
-    const maxSliderPosition = trackRect.width - sliderWidth;
-
-    const handleMouseMove = moveEvent => {
-      const mouseX = moveEvent.clientX - trackRect.left;
-      const sliderPosition = Math.max(0, Math.min(maxSliderPosition, mouseX - sliderWidth / 2));
-      const scrollPercent = maxSliderPosition > 0 ? sliderPosition / maxSliderPosition : 0;
-
-      container.scrollLeft = scrollPercent * scrollWidth;
-    };
-
-    const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  // 移除了复杂的触摸事件处理，现在使用 react-swipeable
 
   useGSAP(() => {
     if (!sectionRef.current) return;
@@ -447,40 +216,11 @@ const About = ({ id }) => {
         }
       );
 
-      // 添加证书滚动条事件监听器
-      if (certificationGridRef.current && certificationScrollIndicatorRef.current) {
-        const container = certificationGridRef.current;
-
-        // 添加滚动事件监听器
-        container.addEventListener('scroll', handleCertificationScroll);
-
-        // 只在非触摸设备上添加鼠标滚轮事件监听器
-        if (!isTouchDevice()) {
-          container.addEventListener('wheel', handleCertificationWheel, { passive: false });
-        }
-        // 触摸设备：使用 react-swipeable 处理滑动
-
-        // 立即初始化滚动条，使用正确的尺寸计算
-        setTimeout(() => {
-          handleCertificationScroll();
-        }, 100); // 短暂延迟确保DOM完全渲染
-      }
     }, sectionRef.current);
 
     return () => {
       ctx.revert();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-
-      // 清理证书滚动事件监听器
-      const container = certificationGridRef.current;
-      if (container) {
-        container.removeEventListener('scroll', handleCertificationScroll);
-
-        // 只清理鼠标滚轮事件监听器（如果之前添加了）
-        if (!isTouchDevice()) {
-          container.removeEventListener('wheel', handleCertificationWheel);
-        }
-      }
     };
   }, []);
 
@@ -504,7 +244,8 @@ const About = ({ id }) => {
         {/* 标题部分 */}
         <div className='flex flex-col items-center justify-center mb-10'>
           <div className='relative group w-4/5 md:w-1/2' style={{ minWidth: '400px' }}>
-            <svg viewBox='0 0 700 143' className='w-full h-auto cursor-pointer'>
+            <svg viewBox='0 0 700 143' className='w-full h-auto cursor-pointer' aria-labelledby='name-title'>
+              <title id='name-title'>Qi (Chee) Liu</title>
               <path
                 className='qi-path p1'
                 d='M70.6,75.1l13.2,-9.1l9.1,-9.2l5.4,-9.1l1.87,-8.5l-2.87,-7.6l-8.2,-6.3l-15.7,-1.2l-19.8,3.8l-21.8,12.6l-16.4,16l-6.58,12.6l-3.78,11.1l0.63,10.98l2.83,9.135l5,4.725l12.3,3.15l13.9,-0.94l18.9,-5.99l18.6,-12.26l13.8,-13.6l5.4,-14.5l-1.6,-11.9l-8.2,-9.2l-8.8,-4.7l-7.9,-1.3l-11.3,1.3M10.7,110.7l0.6,-8.18l4.8,-8.19l6.6,-2.52l10.1,3.15l44.7,27.74l9.1,3.1l6,-2.2l1.9,-2.8l-0.6,-5'
@@ -570,11 +311,23 @@ const About = ({ id }) => {
         {/* 个人介绍 */}
         <div ref={introRef} className='max-w-4xl mx-auto mb-20'>
           <p className='text-lg md:text-xl text-gray-300 leading-relaxed text-center'>
-            Computer Science graduate student at VUW seeking internship opportunities in full-stack
-            development or cloud computing. I have hands-on experience with AWS serverless
-            architectures and modern web development, combined with strong communication and
-            problem-solving skills from my teaching background.
+            I'm a Computer Science graduate student at Victoria University of Wellington, passionate
+            about building elegant cloud-native applications. With years of teaching experience,
+            I bring clarity to both code and communication — making complex technical concepts
+            accessible and actionable. Currently seeking internship opportunities in full-stack
+            development and cloud computing.
           </p>
+          <div className='flex justify-center mt-6'>
+            <a
+              href='/Qi-Liu-CV.pdf'
+              download='Qi-Liu-CV.pdf'
+              className='inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25'
+              aria-label="Download Qi Liu's CV as PDF"
+            >
+              <Download size={20} />
+              Download CV
+            </a>
+          </div>
         </div>
 
         {/* 技能展示 */}
@@ -612,19 +365,12 @@ const About = ({ id }) => {
 
           {/* 横向滚动容器 */}
           <div className='relative max-w-6xl mx-auto'>
-            {/* 滚动容器 */}
-            <div
-              ref={certificationGridRef}
-              className='overflow-x-scroll overflow-y-hidden md:overflow-x-scroll'
-              style={{
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
-                WebkitOverflowScrolling: 'touch', // iOS smooth scrolling
-                // 触摸设备启用滚动吸附，非触摸设备禁用
-                scrollSnapType: isTouchDevice() ? 'x mandatory' : 'none',
-              }}
+            <HorizontalScrollContainer
+              hintText='Swipe to explore certifications'
+              gradientFrom='from-green-400'
+              gradientTo='to-blue-500'
+              arrowColor='text-green-400'
             >
-              <div className='flex gap-6 pb-4' style={{ width: 'max-content' }}>
                 {Object.entries(certifications).map(([category, certs]) =>
                   certs.map((cert, index) => (
                     <div
@@ -644,8 +390,7 @@ const About = ({ id }) => {
                             : index === 1
                               ? 'rgba(72, 202, 228, 0.08)'
                               : 'rgba(144, 224, 239, 0.08)',
-                        // 触摸设备启用卡片吸附，非触摸设备禁用
-                        scrollSnapAlign: isTouchDevice() ? 'start' : 'none',
+                        scrollSnapAlign: 'start',
                       }}
                     >
                       {/* AWS徽章区域 - 支持Credly官方徽章 */}
@@ -820,38 +565,7 @@ const About = ({ id }) => {
                     </div>
                   ))
                 )}
-              </div>
-            </div>
-
-            {/* 自定义滚动条 */}
-            <div className='mt-6 px-4'>
-              {/* 滚动条轨道 */}
-              <div
-                className='w-full h-2 bg-gray-700/50 rounded-full relative cursor-pointer'
-                onClick={handleCertificationScrollbarClick}
-              >
-                {/* 滚动条滑块 */}
-                <div
-                  ref={certificationScrollIndicatorRef}
-                  className='absolute top-0 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full cursor-grab active:cursor-grabbing hover:shadow-lg'
-                  style={{
-                    left: '0px',
-                    width: '32px', // 使用最小宽度作为初始值
-                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                  }}
-                  onMouseDown={handleCertificationScrollbarMouseDown}
-                ></div>
-              </div>
-            </div>
-
-            {/* 滚动提示文字 */}
-            <div className='text-center mt-4'>
-              <p className='text-gray-400 text-sm flex items-center justify-center gap-3'>
-                <span className='animate-arrow-blink text-green-400 font-bold'>←</span>
-                <span className='font-medium'>Swipe to explore certifications</span>
-                <span className='animate-arrow-blink text-green-400 font-bold'>→</span>
-              </p>
-            </div>
+            </HorizontalScrollContainer>
           </div>
         </div>
       </div>

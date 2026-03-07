@@ -171,10 +171,11 @@ function Home() {
     };
 
     // 动画循环
+    let animationId;
     const animate = () => {
       manageTrail();
       drawTrail();
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     };
 
     // 窗口大小改变时重新设置画布尺寸
@@ -183,17 +184,30 @@ function Home() {
       canvas.height = window.innerHeight;
     };
 
+    // 页面可见性变化时暂停/恢复动画
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationId);
+      } else {
+        trailPoints.length = 0;
+        animationId = requestAnimationFrame(animate);
+      }
+    };
+
     // 添加事件监听器
     document.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('resize', handleResize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // 开始动画
-    animate();
+    animationId = requestAnimationFrame(animate);
 
     // 清理函数
     return () => {
+      cancelAnimationFrame(animationId);
       document.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
 
       // 移除Canvas元素
       if (canvas.parentNode) {
