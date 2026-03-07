@@ -55,6 +55,13 @@ const Blog = ({ id }) => {
         'Fixed various bugs and significantly improved the mobile user experience. Enhanced responsive design and optimized touch interactions for better mobile performance.',
       type: 'improvement',
     },
+    {
+      date: '2026-03-07',
+      title: 'Database Reconnection',
+      description:
+        'Restored Redis database connectivity after the previous instance expired due to inactivity. Migrated to a new Vercel KV store and updated environment variable bindings.',
+      type: 'fix',
+    },
   ];
 
   // 预加载所有图片
