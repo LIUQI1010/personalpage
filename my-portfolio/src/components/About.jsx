@@ -311,11 +311,11 @@ const About = ({ id }) => {
         {/* 个人介绍 */}
         <div ref={introRef} className='max-w-4xl mx-auto mb-20'>
           <p className='text-lg md:text-xl text-gray-300 leading-relaxed text-center'>
-            I'm a Computer Science graduate student at Victoria University of Wellington, passionate
-            about building elegant cloud-native applications. With years of teaching experience,
-            I bring clarity to both code and communication — making complex technical concepts
-            accessible and actionable. Currently seeking internship opportunities in full-stack
-            development and cloud computing.
+            I am a Computer Science Master's graduate from Victoria University of Wellington, passionate
+            about software development and building reliable systems that solve real problems. With eight
+            years of teaching experience, I bring clarity to both code and communication — making complex
+            technical concepts accessible and actionable. Currently seeking full-stack or backend
+            development roles where technology makes a real difference.
           </p>
           <div className='flex justify-center mt-6'>
             <a
