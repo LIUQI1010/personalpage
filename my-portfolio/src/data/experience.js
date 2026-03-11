@@ -11,7 +11,7 @@ export const educationData = {
     university: 'Victoria University of Wellington',
     period: '2024-Present',
     expectedGraduation: 'November 2025',
-    currentGPA: 'Overall GPA: over 85',
+    currentGPA: 'Overall GPA: 7.5/9',
     keySubjects: [
       {
         name: 'Advanced Programming Languages',

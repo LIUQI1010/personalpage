@@ -204,7 +204,7 @@ const Contact = ({ id }) => {
             {/* 邮箱 - 主要联系方式 */}
             <div className='contact-card'>
               <a
-                href='mailto:qiliu.1122@icloud.com'
+                href='mailto:qiliu.codes@gmail.com'
                 className='block bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-2xl border border-gray-700/30 p-6 transition-all duration-300 hover:border-slate-400/50 hover:shadow-xl group'
               >
                 <div className='flex items-center space-x-4'>
@@ -214,7 +214,7 @@ const Contact = ({ id }) => {
                   <div className='flex items-center space-x-3'>
                     <h3 className='text-xl font-semibold text-white'>Email:</h3>
                     <p className='text-gray-300 group-hover:text-white transition-colors duration-300'>
-                      qiliu.1122@icloud.com
+                      qiliu.codes@gmail.com
                     </p>
                   </div>
                 </div>
