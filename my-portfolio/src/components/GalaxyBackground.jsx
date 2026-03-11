@@ -343,16 +343,16 @@ const GalaxyBackground = () => {
     loadNZStars();
     loadSvgPaths();
 
-    // 启用滚动驱动形变：在滚动到 #experience 顶部靠近中部时进度为1
+    // 启用滚动驱动形变：在滚动到 #blog (Gallery & Journal) 顶部靠近中部时进度为1
     try {
       if (!gsap.core.globals().ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
     } catch (_) {
       // ignore
     }
-    // 1) 轮廓形变：从页面顶部滚动到 #experience 顶部到达视窗中部时，进度 0 -> 1
+    // 1) 轮廓形变：从页面顶部滚动到 #blog 顶部到达视窗中部时，进度 0 -> 1
     const stOutline = ScrollTrigger.create({
       start: 'top top',
-      endTrigger: '#experience',
+      endTrigger: '#blog',
       end: 'top center',
       scrub: true,
       onUpdate: self => {
@@ -360,9 +360,9 @@ const GalaxyBackground = () => {
       },
     });
 
-    // 2) 内部形变：从 #experience 到达中部后开始，到页面底部结束，进度 0 -> 1
+    // 2) 内部形变：从 #blog 到达中部后开始，到页面底部结束，进度 0 -> 1
     const stInside = ScrollTrigger.create({
-      trigger: '#experience',
+      trigger: '#blog',
       start: 'top center',
       end: 'bottom bottom',
       scrub: true,

@@ -188,7 +188,7 @@ const Contact = ({ id }) => {
           <div ref={statusRef} className='flex justify-center flex-wrap gap-3'>
             <div className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-200/20 to-teal-200/20 rounded-full border border-emerald-200/30'>
               <div className='w-2 h-2 bg-emerald-300 rounded-full mr-2 animate-pulse'></div>
-              <span className='text-emerald-200 font-medium'>Available for internships</span>
+              <span className='text-emerald-200 font-medium'>Open to opportunities</span>
             </div>
             <div className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-200/20 to-slate-200/20 rounded-full border border-blue-200/30'>
               <div className='w-2 h-2 bg-blue-300 rounded-full mr-2'></div>
