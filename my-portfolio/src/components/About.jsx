@@ -2,7 +2,8 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { SplitText } from 'gsap/SplitText';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Download } from 'lucide-react';
 import HorizontalScrollContainer from './ui/HorizontalScrollContainer';
 import { skills, certifications } from '../data/skills';
@@ -11,6 +12,7 @@ import { skills, certifications } from '../data/skills';
 gsap.registerPlugin(ScrollTrigger);
 
 const About = ({ id }) => {
+  const [lightboxImage, setLightboxImage] = useState(null);
   const sectionRef = useRef(null);
   const subtitleRef = useRef(null);
   const introRef = useRef(null);
@@ -235,6 +237,7 @@ const About = ({ id }) => {
   // hover功能已移除
 
   return (
+    <>
     <section
       id={id}
       ref={sectionRef}
@@ -371,10 +374,10 @@ const About = ({ id }) => {
               gradientTo='to-blue-500'
               arrowColor='text-green-400'
             >
-                {Object.entries(certifications).map(([category, certs]) =>
-                  certs.map((cert, index) => (
+                {certifications.map((cert, index) => (
                     <div
                       key={cert.name}
+                      onClick={() => cert.credlyImageUrl && setLightboxImage(cert.credlyImageUrl)}
                       className={`certification-card relative overflow-hidden rounded-xl p-6 group cursor-pointer flex-shrink-0 ${
                         index === 0
                           ? 'border border-[#00b4d8]/30 hover:border-[#00b4d8]/50 hover:shadow-xl hover:shadow-[#00b4d8]/10'
@@ -397,27 +400,14 @@ const About = ({ id }) => {
                       <div className='flex justify-center mb-4'>
                         {cert.credlyImageUrl ? (
                           // 使用Credly官方徽章
-                          <div className='relative group-hover:scale-150 group-hover:translate-y-3 transition-all duration-500 ease-out'>
-                            {cert.credlyVerifyUrl ? (
-                              <a
-                                href={cert.credlyVerifyUrl}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='block'
-                              >
-                                <img
-                                  src={cert.credlyImageUrl}
-                                  alt={`AWS ${cert.name} Certification Badge`}
-                                  className='w-20 h-20 object-contain rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-500'
-                                />
-                              </a>
-                            ) : (
+                          <div
+                            className='relative group-hover:scale-150 group-hover:translate-y-3 transition-all duration-500 ease-out'
+                          >
                               <img
                                 src={cert.credlyImageUrl}
-                                alt={`AWS ${cert.name} Certification Badge`}
-                                className='w-20 h-20 object-contain rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-300'
+                                alt={`${cert.issuer} ${cert.name} Certification Badge`}
+                                className='w-20 h-20 object-contain rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-500'
                               />
-                            )}
                           </div>
                         ) : (
                           // 备用设计（没有Credly徽章时）
@@ -531,7 +521,7 @@ const About = ({ id }) => {
                         {/* 证书名称 */}
                         <div className='text-center mb-3'>
                           <h4 className='text-base font-bold text-white mb-1 leading-tight'>
-                            AWS Certified
+                            {cert.issuer} Certified
                           </h4>
                           <h5 className='text-lg font-extrabold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent leading-tight'>
                             {cert.name.toUpperCase()}
@@ -563,13 +553,38 @@ const About = ({ id }) => {
                         ></div>
                       </div>
                     </div>
-                  ))
-                )}
+                  ))}
             </HorizontalScrollContainer>
           </div>
         </div>
       </div>
     </section>
+
+    {/* Lightbox 弹窗 - 通过 Portal 渲染到 body */}
+    {lightboxImage && createPortal(
+      <div
+        className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer'
+        onClick={() => setLightboxImage(null)}
+      >
+        <div className='relative' onClick={(e) => e.stopPropagation()}>
+          <button
+            className='absolute -top-3 -right-3 w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors z-10'
+            onClick={() => setLightboxImage(null)}
+          >
+            <svg className='w-4 h-4 text-gray-800' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+            </svg>
+          </button>
+          <img
+            src={lightboxImage}
+            alt='Certificate'
+            className='max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl'
+          />
+        </div>
+      </div>,
+      document.body
+    )}
+    </>
   );
 };
 
