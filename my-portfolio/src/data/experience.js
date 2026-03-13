@@ -9,8 +9,8 @@ export const educationData = {
   master: {
     degree: 'Master of Computer Science',
     university: 'Victoria University of Wellington',
-    period: '2024-Present',
-    expectedGraduation: 'November 2025',
+    period: '2024-2025',
+    graduation: 'November 2025',
     currentGPA: 'Overall GPA: 7.5/9',
     keySubjects: [
       {
@@ -29,6 +29,11 @@ export const educationData = {
         description: 'Java programming with automated testing frameworks and analysis tools',
       },
     ],
+    academicProject: {
+      name: 'SQL Query Optimizer for PostgreSQL',
+      grade: 'A+',
+      description: 'Built a cost-based query optimizer for PostgreSQL with join reordering and index selection strategies',
+    },
   },
   bachelor: {
     degree: 'BSc in Computer Science and Technology',

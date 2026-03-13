@@ -365,7 +365,7 @@ const Experience = ({ id }) => {
 
                     <div className='ml-0 md:ml-16'>
                       <p className='text-gray-400 text-base mt-2'>
-                        Expected Graduation: {educationData.master.expectedGraduation}
+                        Graduated: {educationData.master.graduation}
                       </p>
                     </div>
                   </div>
@@ -374,7 +374,7 @@ const Experience = ({ id }) => {
                 {/* 课程成绩直接显示 */}
                 <div
                   ref={courseCardsRef}
-                  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+                  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'
                 >
                   {educationData.master.keySubjects.map((subject, index) => (
                     <div
@@ -405,6 +405,29 @@ const Experience = ({ id }) => {
                       <p className='text-gray-300 text-xs leading-relaxed'>{subject.description}</p>
                     </div>
                   ))}
+
+                  {/* Academic Project 卡片 */}
+                  {educationData.master.academicProject && (
+                    <div
+                      className='course-card p-4 rounded-lg border shadow-lg'
+                      style={{
+                        backgroundColor: 'rgba(139, 92, 246, 0.12)',
+                        borderColor: 'rgba(139, 92, 246, 0.3)',
+                        backdropFilter: 'blur(8px)',
+                      }}
+                    >
+                      <div className='flex justify-between items-start mb-2'>
+                        <h4 className='text-base font-semibold text-white leading-tight flex-1 mr-2'>
+                          {educationData.master.academicProject.name}
+                        </h4>
+                        <div className='px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white'>
+                          {educationData.master.academicProject.grade}
+                        </div>
+                      </div>
+                      <p className='text-gray-300 text-xs leading-relaxed'>{educationData.master.academicProject.description}</p>
+                      <p className='text-purple-300 text-xs mt-1 font-medium'>Academic Project</p>
+                    </div>
+                  )}
                 </div>
               </div>
 

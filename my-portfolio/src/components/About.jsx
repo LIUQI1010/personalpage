@@ -13,6 +13,16 @@ gsap.registerPlugin(ScrollTrigger);
 
 const About = ({ id }) => {
   const [lightboxImage, setLightboxImage] = useState(null);
+  const [downloadCount, setDownloadCount] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/cv-downloads')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setDownloadCount(data.downloads);
+      })
+      .catch(() => {});
+  }, []);
   const sectionRef = useRef(null);
   const subtitleRef = useRef(null);
   const introRef = useRef(null);
@@ -320,16 +330,29 @@ const About = ({ id }) => {
             technical concepts accessible and actionable. Currently seeking full-stack or backend
             development roles where technology makes a real difference.
           </p>
-          <div className='flex justify-center mt-6'>
+          <div className='flex justify-center items-center gap-3 mt-6'>
             <a
               href='/Qi-Liu-CV.pdf'
               download='Qi-Liu-CV.pdf'
               className='inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25'
               aria-label="Download Qi Liu's CV as PDF"
+              onClick={() => {
+                fetch('/api/cv-downloads', { method: 'POST' })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    if (data.success) setDownloadCount(data.downloads);
+                  })
+                  .catch(() => {});
+              }}
             >
               <Download size={20} />
               Download CV
             </a>
+            {downloadCount !== null && (
+              <span className='text-sm text-gray-400'>
+                {downloadCount} downloads
+              </span>
+            )}
           </div>
         </div>
 
