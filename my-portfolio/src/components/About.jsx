@@ -330,11 +330,11 @@ const About = ({ id }) => {
             technical concepts accessible and actionable. Currently seeking full-stack or backend
             development roles where technology makes a real difference.
           </p>
-          <div className='flex justify-center items-center gap-3 mt-6'>
+          <div className='flex justify-center mt-6'>
             <a
               href='/Qi-Liu-CV.pdf'
               download='Qi-Liu-CV.pdf'
-              className='inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25'
+              className='group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25'
               aria-label="Download Qi Liu's CV as PDF"
               onClick={() => {
                 fetch('/api/cv-downloads', { method: 'POST' })
@@ -347,12 +347,12 @@ const About = ({ id }) => {
             >
               <Download size={20} />
               Download CV
+              {downloadCount !== null && (
+                <span className='absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-gray-300 bg-gray-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none'>
+                  {downloadCount} downloads
+                </span>
+              )}
             </a>
-            {downloadCount !== null && (
-              <span className='text-sm text-gray-400'>
-                {downloadCount} downloads
-              </span>
-            )}
           </div>
         </div>
 
