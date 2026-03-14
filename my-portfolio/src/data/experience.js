@@ -1,6 +1,6 @@
 export const workExperience = {
   title: 'Overseas Math Teacher',
-  period: '2015-2024',
+  period: '2015-2023',
   description:
     'Communicated complex mathematical concepts to diverse student groups, enhancing ability to explain difficult ideas clearly and effectively. Collaborated with colleagues to develop curricula and adapt to new educational technologies, demonstrating quick learning, flexibility, and problem-solving in dynamic environments.',
 };

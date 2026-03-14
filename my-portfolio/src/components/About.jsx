@@ -334,7 +334,7 @@ const About = ({ id }) => {
             <a
               href='/Qi-Liu-CV.pdf'
               download='Qi-Liu-CV.pdf'
-              className='group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25'
+              className='group relative inline-flex items-center gap-2 px-5 py-2.5 border border-gray-500 text-gray-300 text-sm tracking-wide rounded-md hover:bg-white/10 hover:border-gray-300 hover:text-white transition-all duration-200'
               aria-label="Download Qi Liu's CV as PDF"
               onClick={() => {
                 fetch('/api/cv-downloads', { method: 'POST' })
