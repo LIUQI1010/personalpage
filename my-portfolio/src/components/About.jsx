@@ -258,50 +258,46 @@ const About = ({ id }) => {
         <div className='flex flex-col items-center justify-center mb-10'>
           <div className='relative group w-4/5 md:w-1/2' style={{ minWidth: '400px' }}>
             <svg viewBox='0 0 700 143' className='w-full h-auto cursor-pointer' aria-labelledby='name-title'>
-              <title id='name-title'>Qi (Chee) Liu</title>
+              <title id='name-title'>Qi Logan Liu</title>
               <path
                 className='qi-path p1'
-                d='M70.6,75.1l13.2,-9.1l9.1,-9.2l5.4,-9.1l1.87,-8.5l-2.87,-7.6l-8.2,-6.3l-15.7,-1.2l-19.8,3.8l-21.8,12.6l-16.4,16l-6.58,12.6l-3.78,11.1l0.63,10.98l2.83,9.135l5,4.725l12.3,3.15l13.9,-0.94l18.9,-5.99l18.6,-12.26l13.8,-13.6l5.4,-14.5l-1.6,-11.9l-8.2,-9.2l-8.8,-4.7l-7.9,-1.3l-11.3,1.3M10.7,110.7l0.6,-8.18l4.8,-8.19l6.6,-2.52l10.1,3.15l44.7,27.74l9.1,3.1l6,-2.2l1.9,-2.8l-0.6,-5'
+                d='M122.7,26.0 L122.7,33.3 119.1,40.6 115.5,44.2 108.2,47.9 100.9,47.9 97.3,40.6 97.3,33.3 100.9,22.4 108.2,15.1 119.1,11.5 130.0,11.5 137.3,15.1 140.9,22.4 140.9,37.0 137.3,47.9 130.0,58.8 115.5,73.3 104.5,80.6 97.3,84.2 86.4,87.9 79.1,87.9 75.5,84.2 75.5,77.0 79.1,73.3 86.4,73.3 93.6,77.0 104.5,84.2 115.5,87.9 126.4,87.9 133.6,84.2 140.9,77.0 M130.0,11.5 L133.6,15.1 137.3,22.4 137.3,37.0 133.6,47.9 126.4,58.8 115.5,69.7 100.9,80.6 86.4,87.9'
               ></path>
               <path
                 className='qi-path p2'
-                d='M112.78,67.2l-11.03,13l-5.98,12.56v6.925l6.295,2.835l12.615,-6.93l9.7,-10.09M120.68,53.4l0.3,3.4l3.1,-0.6v-1.9l-3.4,-0.9'
+                d='M148.2,33.3 L144.5,37.0 148.2,40.6 151.8,37.0 148.2,33.3 M140.9,55.1 L133.6,77.0 133.6,84.2 140.9,87.9 148.2,84.2 151.8,80.6 159.1,69.7 M144.5,55.1 L137.3,77.0 137.3,84.2 140.9,87.9'
               ></path>
               <path
                 className='qi-path p3'
-                d='M240.38,8.6l-23,6l-19.2,10.4l-16.1,14.8l-9.45,15.2l-4.41,13.2l-0.95,16.7l3.78,8.8l7.83,7.88l4.8,2.52l6.3,0.31'
+                d='M224.5,22.4 L220.9,29.7 220.9,37.0 224.5,44.2 231.8,47.9 242.7,47.9 253.6,44.2 260.9,40.6 271.8,29.7 275.5,18.8 275.5,15.1 271.8,11.5 268.2,11.5 260.9,15.1 257.3,18.8 250.0,29.7 235.5,66.0 231.8,73.3 224.5,84.2 217.3,87.9 M257.3,18.8 L250.0,33.3 242.7,58.8 239.1,69.7 235.5,77.0 228.2,84.2 217.3,87.9 210.0,87.9 206.4,84.2 206.4,77.0 210.0,73.3 217.3,73.3 224.5,77.0 235.5,84.2 242.7,87.9 253.6,87.9 260.9,84.2 268.2,77.0'
               ></path>
               <path
                 className='qi-path p4'
-                d='M274.68,42l-7.2,6.3l-1.6,5.1l0.3,3.8l3.2,4.7l6.3,3.5l9.1,0.3l8.8,-1.9l9.5,-6.6l6.3,-8.2l2.2,-7.3l-0.3,-6.9l-3.8,-6.9l-6.6,-3.8l-7.9,-2.2l-11,0.3l-19.6,6.3l-11.9,6.9l-12.9,11.4l-9.8,13.2l-4.41,12l-1.89,14.8l3.15,9.74l6.65,7.24l15.1,4.41l13.8,-1.26l7.9,-2.21l13.6,-6.61l8.2,-5.67l6.3,-6.34'
+                d='M282.7,55.1 L275.5,55.1 268.2,58.8 264.5,62.4 260.9,69.7 260.9,77.0 264.5,84.2 271.8,87.9 279.1,87.9 286.4,84.2 290.0,80.6 293.6,73.3 293.6,66.0 290.0,58.8 282.7,55.1 279.1,58.8 279.1,66.0 282.7,73.3 290.0,77.0 297.3,77.0 304.5,73.3 308.2,69.7 M275.5,55.1 L268.2,62.4 264.5,69.7 264.5,80.6 271.8,87.9'
               ></path>
               <path
                 className='qi-path p5'
-                d='M335.48,42.4l-17.28,22.3l-20.12,34.985l12.88,-15.485l11.92,-9.4l8.5,-6l9.2,-4.1l2.5,0.7l-7.6,10.7l-5.9,9.1l-2.2,5.66v5.05l2.2,2.51l3.7,1.265l15.8,-14.185'
+                d='M333.6,66.0 L330.0,58.8 322.7,55.1 315.5,55.1 308.2,58.8 304.5,62.4 300.9,69.7 300.9,77.0 304.5,84.2 311.8,87.9 319.1,87.9 326.4,84.2 330.0,77.0 M315.5,55.1 L308.2,62.4 304.5,69.7 304.5,80.6 311.8,87.9 M337.3,55.1 L315.5,120.6 M340.9,55.1 L330.0,87.9 322.7,106.0 315.5,120.6 311.8,127.9 304.5,131.5 300.9,127.9 300.9,120.6 304.5,109.7 311.8,102.4 322.7,95.1 337.3,87.9 348.2,80.6 355.5,69.7'
               ></path>
               <path
                 className='qi-path p6'
-                d='M350.92,84.9l6.93,1.2l12.33,-5.9l7.2,-6.7l1.9,-4.1l-1.3,-4l-5.6,-1l-13.27,7.6l-9.13,10.7l-3.47,9.11l1.89,7.875l8.5,2.205l12.28,-5.98l11.7,-10.41'
+                d='M380.9,66.0 L377.3,58.8 370.0,55.1 362.7,55.1 355.5,58.8 351.8,62.4 348.2,69.7 348.2,77.0 351.8,84.2 359.1,87.9 366.4,87.9 373.6,84.2 377.3,77.0 M362.7,55.1 L355.5,62.4 351.8,69.7 351.8,80.6 359.1,87.9 M384.5,55.1 L377.3,77.0 377.3,84.2 384.5,87.9 391.8,84.2 395.5,80.6 402.7,69.7 M388.2,55.1 L380.9,77.0 380.9,84.2 384.5,87.9'
               ></path>
               <path
                 className='qi-path p7'
-                d='M382.72,84.9l6.93,1.2l12.33,-5.9l7.2,-6.7l1.9,-4.1l-1.3,-4l-5.6,-1l-13.27,7.6l-9.13,10.7l-3.47,9.11l1.89,7.875l8.5,2.205l12.28,-5.98l11.7,-10.41'
+                d='M391.8,69.7 L399.1,58.8 406.4,55.1 413.6,58.8 413.6,66.0 406.4,87.9 M406.4,55.1 L410.0,58.8 410.0,66.0 402.7,87.9 M413.6,66.0 L420.9,58.8 428.2,55.1 431.8,55.1 439.1,58.8 439.1,66.0 435.5,77.0 435.5,84.2 439.1,87.9 M431.8,55.1 L435.5,58.8 435.5,66.0 431.8,77.0 431.8,84.2 439.1,87.9 446.4,84.2 450.0,80.6 457.3,69.7'
               ></path>
               <path
                 className='qi-path p8'
-                d='M418.93,105.04l15.75,-3.46l13.9,-5.99l15.4,-10.09l10.1,-10.1l8.8,-11l6.6,-13.5l2.8,-10.7l-0.3,-12.6l-6.6,-11.4l-7.9,-5.3l-7.8,-1.6'
+                d='M504.5,22.4 L500.9,29.7 500.9,37.0 504.5,44.2 511.8,47.9 522.7,47.9 533.6,44.2 540.9,40.6 551.8,29.7 555.5,18.8 555.5,15.1 551.8,11.5 548.2,11.5 540.9,15.1 537.3,18.8 530.0,29.7 515.5,66.0 511.8,73.3 504.5,84.2 497.3,87.9 M537.3,18.8 L530.0,33.3 522.7,58.8 519.1,69.7 515.5,77.0 508.2,84.2 497.3,87.9 490.0,87.9 486.4,84.2 486.4,77.0 490.0,73.3 497.3,73.3 504.5,77.0 515.5,84.2 522.7,87.9 533.6,87.9 540.9,84.2 548.2,77.0'
               ></path>
               <path
                 className='qi-path p9'
-                d='M586.18,46.4l-4.1,-2.2l-6.3,2.2l-3.5,4.1l-1.6,6.7l2.6,7.2l7.5,4.7l8.5,4.1l11.4,-1.2l18.6,-8.5l12.9,-12.6l8.79,-15.2l1.58,-11l-4.1,-5.3l-5.67,-1.6l-10.7,4.1l-14.5,14.5l-10.1,15.4l-28.6,38.1l-9.5,10.1l-7.6,5.35l-8.78,-0.31l-3.14,-6.3l1.57,-11.34l3.78,-8.5l5.07,-6.6l2.2,-1.3l15.4,26.16l15.8,11.66l14.1,4.08l14.2,-0.3l7.6,-3.46l3.1,-4.1l0.3,-5.04'
+                d='M555.5,33.3 L551.8,37.0 555.5,40.6 559.1,37.0 555.5,33.3 M548.2,55.1 L540.9,77.0 540.9,84.2 548.2,87.9 555.5,84.2 559.1,80.6 566.4,69.7 M551.8,55.1 L544.5,77.0 544.5,84.2 548.2,87.9'
               ></path>
               <path
                 className='qi-path p10'
-                d='M635.98,67.2l-11.03,13l-5.98,12.56v6.925l6.295,2.835l12.615,-6.93l9.7,-10.09M643.88,53.4l0.3,3.4l3.1,-0.6v-1.9l-3.4,-0.9'
-              ></path>
-              <path
-                className='qi-path p11'
-                d='M647.63,85.5l6.61,-5.7l10.74,-12.9l3.1,-1.9l-10.69,15.5l-7.555,12.89l-0.635,4.09l1.895,2.835l5.035,0.945l4.75,-2.84l7.2,-6.93l24.6,-26.49l1.9,-0.6l0.3,2.5l-17.3,20.8l-1.9,7.26l1.2,4.41l5.1,1.575l5,-3.155l9.5,-8.49l3.4,-3.8'
+                d='M577.3,55.1 L570.0,77.0 570.0,84.2 577.3,87.9 580.9,87.9 588.2,84.2 595.5,77.0 602.7,66.0 M580.9,55.1 L573.6,77.0 573.6,84.2 577.3,87.9 M606.4,55.1 L599.1,77.0 599.1,84.2 606.4,87.9 613.6,84.2 617.3,80.6 624.5,69.7 M610.0,55.1 L602.7,77.0 602.7,84.2 606.4,87.9'
               ></path>
             </svg>
             {/* Tooltip */}
@@ -332,10 +328,10 @@ const About = ({ id }) => {
           </p>
           <div className='flex justify-center mt-6'>
             <a
-              href='/Qi-Liu-CV.pdf'
-              download='Qi-Liu-CV.pdf'
+              href='/Logan-CV.pdf'
+              download='Logan-CV.pdf'
               className='group relative inline-flex items-center gap-2 px-5 py-2.5 border border-gray-500 text-gray-300 text-sm tracking-wide rounded-md hover:bg-white/10 hover:border-gray-300 hover:text-white transition-all duration-200'
-              aria-label="Download Qi Liu's CV as PDF"
+              aria-label="Download Logan's CV as PDF"
               onClick={() => {
                 fetch('/api/cv-downloads', { method: 'POST' })
                   .then((res) => res.json())
@@ -364,22 +360,92 @@ const About = ({ id }) => {
           >
             Technical Skills
           </h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
-            {Object.entries(skills).map(([category, skillData], categoryIndex) => (
-              <div key={category} className='skill-category'>
-                <h3 className='text-xl font-semibold mb-4 text-center'>{category}</h3>
-                <div className='flex flex-wrap gap-2 justify-center'>
-                  {skillData.basic.map((skill, skillIndex) => (
-                    <span
-                      key={skill}
-                      className='skill-tag px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full text-sm border border-blue-500/30 hover:border-blue-400 hover:scale-105 transition-all duration-300 cursor-default'
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
+          <div className='relative'>
+            {/* 背景星点 */}
+            {Array.from({ length: 18 }, (_, i) => (
+              <span
+                key={i}
+                className='absolute rounded-full pointer-events-none'
+                style={{
+                  left: `${((i * 47 + 13) % 97) + 1.5}%`,
+                  top: `${((i * 31 + 7) % 93) + 3}%`,
+                  width: i % 5 === 0 ? '2px' : '1px',
+                  height: i % 5 === 0 ? '2px' : '1px',
+                  backgroundColor: 'white',
+                  opacity: 0.1 + (i % 5) * 0.06,
+                }}
+              />
             ))}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12'>
+              {Object.entries(skills).map(([category, skillData], categoryIndex) => {
+                const categoryStyles = {
+                  'Cloud & AWS': {
+                    title: 'from-cyan-400 to-teal-400',
+                    dot: 'bg-cyan-400',
+                    dotGlow: '0 0 6px rgba(34, 211, 238, 0.8)',
+                    line: 'from-cyan-400/30 to-transparent',
+                    tagBorder: 'hover:border-cyan-500/50',
+                    tagDot: 'bg-cyan-400',
+                  },
+                  Programming: {
+                    title: 'from-green-400 to-emerald-400',
+                    dot: 'bg-green-400',
+                    dotGlow: '0 0 6px rgba(74, 222, 128, 0.8)',
+                    line: 'from-green-400/30 to-transparent',
+                    tagBorder: 'hover:border-green-500/50',
+                    tagDot: 'bg-green-400',
+                  },
+                  Database: {
+                    title: 'from-orange-400 to-amber-400',
+                    dot: 'bg-orange-400',
+                    dotGlow: '0 0 6px rgba(251, 146, 60, 0.8)',
+                    line: 'from-orange-400/30 to-transparent',
+                    tagBorder: 'hover:border-orange-500/50',
+                    tagDot: 'bg-orange-400',
+                  },
+                  Tools: {
+                    title: 'from-purple-400 to-pink-400',
+                    dot: 'bg-purple-400',
+                    dotGlow: '0 0 6px rgba(196, 181, 253, 0.8)',
+                    line: 'from-purple-400/30 to-transparent',
+                    tagBorder: 'hover:border-purple-500/50',
+                    tagDot: 'bg-purple-400',
+                  },
+                };
+                const tagRotations = ['rotate-1', '-rotate-1', 'rotate-2', '-rotate-2', 'rotate-0', 'rotate-1', '-rotate-2'];
+                const style = categoryStyles[category] ?? categoryStyles['Tools'];
+                return (
+                  <div
+                    key={category}
+                    className={`skill-category ${categoryIndex % 2 === 1 ? 'md:mt-10' : ''}`}
+                  >
+                    {/* 星座簇标题 */}
+                    <div className='flex items-center gap-3 mb-5'>
+                      <div
+                        className={`w-2 h-2 rounded-full flex-shrink-0 ${style.dot}`}
+                        style={{ boxShadow: style.dotGlow }}
+                      />
+                      <h3 className={`text-xs font-semibold tracking-[0.25em] uppercase bg-gradient-to-r ${style.title} bg-clip-text text-transparent`}>
+                        {category}
+                      </h3>
+                      <div className={`flex-1 h-px bg-gradient-to-r ${style.line}`} />
+                    </div>
+                    {/* 技能标签 */}
+                    <div className='flex flex-wrap gap-2'>
+                      {skillData.basic.map((skill, skillIndex) => (
+                        <span
+                          key={skill}
+                          className={`skill-tag flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-sm border border-white/10 ${style.tagBorder} bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-default ${tagRotations[skillIndex % tagRotations.length]}`}
+                        >
+                          <span className={`w-1 h-1 rounded-full flex-shrink-0 ${style.tagDot} opacity-60`} />
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -397,25 +463,42 @@ const About = ({ id }) => {
               gradientTo='to-blue-500'
               arrowColor='text-green-400'
             >
-                {certifications.map((cert, index) => (
+                {certifications.map((cert, index) => {
+                  const certThemes = {
+                    'Foundational C# with Microsoft': {
+                      border: 'border-purple-500/30 hover:border-purple-500/60 hover:shadow-xl hover:shadow-purple-500/10',
+                      bg: 'rgba(168, 85, 247, 0.08)',
+                      nameGradient: 'from-purple-400 to-violet-300',
+                      decorBg: 'bg-gradient-to-br from-purple-400 to-violet-500',
+                    },
+                    'Solutions Architect Associate': {
+                      border: 'border-orange-500/30 hover:border-orange-500/60 hover:shadow-xl hover:shadow-orange-500/10',
+                      bg: 'rgba(249, 115, 22, 0.08)',
+                      nameGradient: 'from-orange-400 to-yellow-400',
+                      decorBg: 'bg-gradient-to-br from-orange-400 to-yellow-500',
+                    },
+                    'Cloud Practitioner': {
+                      border: 'border-cyan-500/30 hover:border-cyan-500/60 hover:shadow-xl hover:shadow-cyan-500/10',
+                      bg: 'rgba(6, 182, 212, 0.08)',
+                      nameGradient: 'from-cyan-400 to-blue-400',
+                      decorBg: 'bg-gradient-to-br from-cyan-400 to-blue-500',
+                    },
+                    'Developer Associate': {
+                      border: 'border-blue-500/30 hover:border-blue-500/60 hover:shadow-xl hover:shadow-blue-500/10',
+                      bg: 'rgba(59, 130, 246, 0.05)',
+                      nameGradient: 'from-blue-400 to-indigo-400',
+                      decorBg: 'bg-gradient-to-br from-blue-400 to-indigo-500',
+                    },
+                  };
+                  const theme = certThemes[cert.name] ?? certThemes['Cloud Practitioner'];
+                  return (
                     <div
                       key={cert.name}
                       onClick={() => cert.credlyImageUrl && setLightboxImage(cert.credlyImageUrl)}
-                      className={`certification-card relative overflow-hidden rounded-xl p-6 group cursor-pointer flex-shrink-0 ${
-                        index === 0
-                          ? 'border border-[#00b4d8]/30 hover:border-[#00b4d8]/50 hover:shadow-xl hover:shadow-[#00b4d8]/10'
-                          : index === 1
-                            ? 'border border-[#48cae4]/30 hover:border-[#48cae4]/50 hover:shadow-xl hover:shadow-[#48cae4]/10'
-                            : 'border border-[#90e0ef]/30 hover:border-[#90e0ef]/50 hover:shadow-xl hover:shadow-[#90e0ef]/10'
-                      }`}
+                      className={`certification-card relative overflow-hidden rounded-xl p-6 group cursor-pointer flex-shrink-0 border ${theme.border}`}
                       style={{
-                        width: '300px', // 缩小宽度
-                        backgroundColor:
-                          index === 0
-                            ? 'rgba(0, 180, 216, 0.08)'
-                            : index === 1
-                              ? 'rgba(72, 202, 228, 0.08)'
-                              : 'rgba(144, 224, 239, 0.08)',
+                        width: '300px',
+                        backgroundColor: theme.bg,
                         scrollSnapAlign: 'start',
                       }}
                     >
@@ -546,37 +629,39 @@ const About = ({ id }) => {
                           <h4 className='text-base font-bold text-white mb-1 leading-tight'>
                             {cert.issuer} Certified
                           </h4>
-                          <h5 className='text-lg font-extrabold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent leading-tight'>
+                          <h5 className={`text-lg font-extrabold bg-gradient-to-r ${theme.nameGradient} bg-clip-text text-transparent leading-tight`}>
                             {cert.name.toUpperCase()}
                           </h5>
                         </div>
 
-                        {/* 年份已隐藏 */}
+                        {/* 验证链接 */}
+                        {cert.credlyVerifyUrl && (
+                          <div className='flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                            <a
+                              href={cert.credlyVerifyUrl}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              onClick={(e) => e.stopPropagation()}
+                              className={`text-xs bg-gradient-to-r ${theme.nameGradient} bg-clip-text text-transparent hover:underline`}
+                            >
+                              Verify →
+                            </a>
+                          </div>
+                        )}
                       </div>
 
                       {/* 装饰性背景元素 */}
                       <div className='absolute top-0 right-0 w-24 h-24 opacity-5'>
-                        <div
-                          className={`w-full h-full rounded-full ${
-                            cert.status === 'completed'
-                              ? 'bg-gradient-to-br from-orange-400 to-yellow-500'
-                              : 'bg-gradient-to-br from-blue-400 to-purple-500'
-                          }`}
-                        ></div>
+                        <div className={`w-full h-full rounded-full ${theme.decorBg}`}></div>
                       </div>
 
                       {/* Hover效果的光晕 */}
-                      <div className='absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
-                        <div
-                          className={`absolute inset-0 rounded-xl ${
-                            cert.status === 'completed'
-                              ? 'bg-gradient-to-br from-orange-500/5 to-yellow-500/5'
-                              : 'bg-gradient-to-br from-blue-500/5 to-purple-500/5'
-                          }`}
-                        ></div>
+                      <div className='absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none'>
+                        <div className={`absolute inset-0 rounded-xl ${theme.decorBg} opacity-5`}></div>
                       </div>
                     </div>
-                  ))}
+                  );
+                })}
             </HorizontalScrollContainer>
           </div>
         </div>

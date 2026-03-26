@@ -3,7 +3,19 @@
     "allow": [
       "Bash(npm run dev)",
       "Bash(npm run build)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(grep -i \"brand\\\\|logo\\\\|color\\\\|theme\" /d/MyProjects/personalpage/my-portfolio/public/img/*.svg)",
+      "Bash(grep -r \"bg-gradient\\\\|text-gradient\\\\|from-\\\\|to-\" /d/MyProjects/personalpage/my-portfolio/src/components/*.jsx)",
+      "Bash(wc -l /d/MyProjects/personalpage/my-portfolio/src/components/*.jsx)",
+      "WebFetch(domain:jvolker.github.io)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npx -y hersheytext --help)",
+      "Bash(node -e \"const h = require\\(''hersheytext''\\); console.log\\(Object.keys\\(h\\)\\);\")",
+      "Bash(npm install:*)",
+      "Bash(node -e \":*)",
+      "Bash(npm uninstall:*)"
     ]
   }
 }

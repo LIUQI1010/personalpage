@@ -1,5 +1,23 @@
 export const projects = [
   {
+    id: 'mosotea',
+    title: 'Moso Tea',
+    description:
+      'Paid freelance commercial website for a NZ tea studio',
+    technologies: ['Next.js', 'TypeScript', 'Supabase'],
+    badge: 'Paid Freelance',
+    liveUrl: 'https://mosotea.co.nz',
+    detailPage: '/projects/mosotea',
+    images: [
+      {
+        id: 'hero',
+        title: 'Homepage',
+        src: '/img/mosotea/hero-placeholder.svg',
+        alt: 'Moso Tea Homepage',
+      },
+    ],
+  },
+  {
     id: 'siwei',
     title: 'Serverless Assignment Management Platform',
     description:

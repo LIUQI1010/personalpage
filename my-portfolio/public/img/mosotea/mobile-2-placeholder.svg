@@ -1,0 +1,6 @@
+<svg width="375" height="667" viewBox="0 0 375 667" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="375" height="667" fill="#1a1a1a"/>
+  <rect x="15" y="15" width="345" height="637" rx="20" fill="#262626" stroke="#333" stroke-width="1"/>
+  <text x="187" y="320" font-family="sans-serif" font-size="16" fill="#555" text-anchor="middle">Mobile Screenshot</text>
+  <text x="187" y="345" font-family="sans-serif" font-size="12" fill="#444" text-anchor="middle">Replace with actual image</text>
+</svg>

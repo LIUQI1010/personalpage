@@ -311,9 +311,6 @@ body {
 .qi-path.p10 {
   animation-delay: 1.35s;
 }
-.qi-path.p11 {
-  animation-delay: 1.5s;
-}
 
 @keyframes dash {
   to {

@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ImageStack } from './ui/image-stack';
 import { projects } from '../data/projects';
 
@@ -17,8 +18,26 @@ const Projects = ({ id }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const navigate = useNavigate();
+  const navRef = useRef(null);
+  const buttonRefs = useRef([]);
+  const [underline, setUnderline] = useState({ left: 0, width: 0 });
 
   const project = projects[activeProjectIndex];
+
+  // 计算选中横线位置
+  useEffect(() => {
+    const btn = buttonRefs.current[activeProjectIndex];
+    const nav = navRef.current;
+    if (btn && nav) {
+      const navRect = nav.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      setUnderline({
+        left: btnRect.left - navRect.left,
+        width: btnRect.width,
+      });
+    }
+  }, [activeProjectIndex]);
 
   // 处理图片点击 - 打开模态框
   const handleImageClick = (image, index, event) => {
@@ -194,40 +213,82 @@ const Projects = ({ id }) => {
           </p>
         </div>
 
-        {/* 项目选择器 */}
-        <div className='flex justify-center gap-3 mb-8'>
+        {/* 项目选择器 — 星座导航 */}
+        <div ref={navRef} className='relative flex items-center justify-center mb-12'>
           {projects.map((p, index) => (
-            <button
-              key={p.id}
-              onClick={() => setActiveProjectIndex(index)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                index === activeProjectIndex
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
-                  : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:border-purple-500/30 hover:text-white'
-              }`}
-            >
-              {p.title.length > 30 ? p.title.substring(0, 30) + '...' : p.title}
-            </button>
+            <div key={p.id} className='flex items-center'>
+              {index > 0 && <div className='w-8 h-px bg-white/15 mx-1' />}
+              <button
+                ref={(el) => (buttonRefs.current[index] = el)}
+                onClick={() => setActiveProjectIndex(index)}
+                className={`flex items-center gap-2 px-3 pt-1.5 pb-3 text-sm font-medium transition-colors duration-300 ${
+                  index === activeProjectIndex ? 'text-white' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                <span
+                  className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
+                    index === activeProjectIndex
+                      ? 'bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.9)]'
+                      : 'bg-gray-500'
+                  }`}
+                />
+                {p.title.length > 20 ? p.title.substring(0, 20) + '...' : p.title}
+                {p.badge && (
+                  <span className='px-1.5 py-0.5 text-[9px] font-bold tracking-wide uppercase text-amber-400/70 border border-amber-500/20 rounded-sm'>
+                    {p.badge}
+                  </span>
+                )}
+              </button>
+            </div>
           ))}
+          {/* 滑动横线 */}
+          <span
+            className='absolute bottom-0 h-[2px] bg-purple-400 rounded-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]'
+            style={{ left: underline.left, width: underline.width }}
+          />
         </div>
 
         {/* 项目卡片展示 */}
         <div ref={projectContainerRef} className='max-w-4xl mx-auto'>
-          <div className='bg-gradient-to-br from-gray-800/60 to-gray-900/60 rounded-2xl border border-gray-700/50 overflow-hidden hover:border-purple-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10'>
+          <div className='rounded-xl border border-white/10 overflow-hidden hover:border-purple-500/20 transition-all duration-500 bg-white/[0.03]'>
             {/* 项目标题和描述 */}
             <div className='p-8 md:p-10'>
-              <h2 className='text-2xl md:text-3xl font-bold text-white mb-4'>{project.title}</h2>
+              <div className='flex items-baseline gap-3 mb-4 flex-wrap'>
+                <h2 className='text-2xl md:text-3xl font-bold text-white'>{project.title}</h2>
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='text-sm text-blue-400 underline underline-offset-2 decoration-blue-400/40 hover:text-blue-300 hover:decoration-blue-300 transition-colors duration-200'
+                  >
+                    {project.liveUrl.replace(/^https?:\/\//, '')} &#8599;
+                  </a>
+                )}
+              </div>
               <p className='text-lg text-gray-300 mb-6 leading-relaxed'>{project.description}</p>
-              <div className='flex flex-wrap gap-3 mb-8'>
-                {project.technologies.map((tech, index) => (
+              <div className='flex flex-wrap gap-2 mb-8'>
+                {project.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className='px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-sm border border-purple-500/30 hover:border-purple-400 hover:scale-105 transition-all duration-300 cursor-default'
+                    className='flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-sm border border-white/10 hover:border-purple-500/40 bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-default'
                   >
+                    <span className='w-1 h-1 rounded-full bg-purple-400 opacity-60 flex-shrink-0' />
                     {tech}
                   </span>
                 ))}
               </div>
+              {project.detailPage && (
+                <button
+                  onClick={() => navigate(project.detailPage)}
+                  className='inline-flex items-center gap-2 px-4 py-2 text-sm text-purple-400 border border-purple-500/30 hover:border-purple-400 hover:bg-purple-500/10 rounded-sm transition-all duration-300'
+                >
+                  View Project Details
+                  <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M13 7l5 5m0 0l-5 5m5-5H6' />
+                  </svg>
+                </button>
+              )}
             </div>
 
             {/* 图片展示区域 */}
