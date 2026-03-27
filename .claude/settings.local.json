@@ -15,7 +15,9 @@
       "Bash(node -e \"const h = require\\(''hersheytext''\\); console.log\\(Object.keys\\(h\\)\\);\")",
       "Bash(npm install:*)",
       "Bash(node -e \":*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(mkdir -p ~/.claude/skills)",
+      "Bash(git clone:*)"
     ]
   }
 }
