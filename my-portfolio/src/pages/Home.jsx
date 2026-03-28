@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import MyNavigation from '../components/MyNavigation';
 import About from '../components/About';
 import Projects from '../components/Projects';
@@ -8,6 +8,7 @@ import Contact from '../components/Contact';
 import GalaxyBackground from '../components/GalaxyBackground';
 import LikeButton from '../components/LikeButton';
 import VisitTracker from '../components/VisitTracker';
+import LoadingAnimation from '../components/LoadingAnimation';
 
 function Home() {
   // 控制页面刷新后的滚动位置
@@ -218,6 +219,7 @@ function Home() {
 
   return (
     <main className='text-white relative'>
+      <LoadingAnimation />
       <VisitTracker />
       <GalaxyBackground />
       <MyNavigation />

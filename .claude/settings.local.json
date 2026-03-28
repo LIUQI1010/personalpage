@@ -17,7 +17,8 @@
       "Bash(node -e \":*)",
       "Bash(npm uninstall:*)",
       "Bash(mkdir -p ~/.claude/skills)",
-      "Bash(git clone:*)"
+      "Bash(git clone:*)",
+      "Bash(node -e \"try { require\\(''gsap/MotionPathPlugin''\\); console.log\\(''OK''\\); } catch\\(e\\) { console.log\\(''NOT FOUND:'', e.message\\); }\")"
     ]
   }
 }
