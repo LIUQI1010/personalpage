@@ -238,13 +238,22 @@ const Experience = ({ id }) => {
           });
         });
 
-        gsap.to(shapes, {
+        const spinTween = gsap.to(shapes, {
           rotation: '+=360',
           duration: 22,
           ease: 'none',
           repeat: -1,
           transformOrigin: '50% 50%',
           force3D: true,
+        });
+        ScrollTrigger.create({
+          trigger: decorationRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          onEnter: () => spinTween.play(),
+          onLeave: () => spinTween.pause(),
+          onEnterBack: () => spinTween.play(),
+          onLeaveBack: () => spinTween.pause(),
         });
       }
 
@@ -256,7 +265,6 @@ const Experience = ({ id }) => {
 
     return () => {
       ctx.revert();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
@@ -323,7 +331,7 @@ const Experience = ({ id }) => {
                   <div
                     className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15'
                     style={{
-                      backgroundImage: 'url(/img/Full-logo-green.png)',
+                      backgroundImage: 'url(/img/Full-logo-green.webp)',
                       backgroundSize: '70%',
                     }}
                   ></div>
@@ -334,8 +342,10 @@ const Experience = ({ id }) => {
                         {/* Shield图标 - 桌面端显示，移动端隐藏 */}
                         <div className='hidden md:flex w-12 h-12 mr-4 overflow-hidden items-center justify-center'>
                           <img
-                            src='/img/Shield.png'
+                            src='/img/Shield.webp'
                             alt='Victoria University of Wellington Shield'
+                            loading='lazy'
+                            decoding='async'
                             className='h-full object-cover'
                             style={{ objectPosition: 'center' }}
                           />
@@ -437,7 +447,7 @@ const Experience = ({ id }) => {
                 <div
                   className='absolute inset-0 bg-center bg-no-repeat bg-contain opacity-10'
                   style={{
-                    backgroundImage: 'url(/img/logo/校标文字组合.png)',
+                    backgroundImage: 'url(/img/logo/校标文字组合.webp)',
                     backgroundSize: '70%',
                   }}
                 ></div>
@@ -448,8 +458,10 @@ const Experience = ({ id }) => {
                       {/* 东南大学Logo图标 - 桌面端显示，移动端隐藏 */}
                       <div className='hidden md:flex w-12 h-12 mr-4 overflow-hidden items-center justify-center'>
                         <img
-                          src='/img/logo/东南大学logo.svg.png'
+                          src='/img/logo/东南大学logo.svg.webp'
                           alt='Southeast University Logo'
+                          loading='lazy'
+                          decoding='async'
                           className='h-full object-contain'
                           style={{ objectPosition: 'center' }}
                         />

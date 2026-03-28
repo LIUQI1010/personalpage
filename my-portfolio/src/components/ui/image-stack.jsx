@@ -227,6 +227,8 @@ const ImageStack = ({
                   <img
                     src={image.src || image.placeholder}
                     alt={image.alt || image.title || `Image ${index + 1}`}
+                    loading='lazy'
+                    decoding='async'
                     className='w-full h-full object-cover'
                     draggable={false}
                   />
@@ -278,6 +280,8 @@ const ImageStack = ({
               <img
                 src={image.src || image.placeholder}
                 alt={image.alt || image.title || `Image ${index + 1}`}
+                loading='lazy'
+                decoding='async'
                 className='w-full h-full object-cover'
                 draggable={false}
               />

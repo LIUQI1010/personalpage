@@ -135,13 +135,22 @@ const Contact = ({ id }) => {
           });
         });
 
-        gsap.to(shapes, {
+        const spinTween = gsap.to(shapes, {
           rotation: '+=360',
           duration: 30,
           ease: 'none',
           repeat: -1,
           transformOrigin: '50% 50%',
           force3D: true,
+        });
+        ScrollTrigger.create({
+          trigger: decorationRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          onEnter: () => spinTween.play(),
+          onLeave: () => spinTween.pause(),
+          onEnterBack: () => spinTween.play(),
+          onLeaveBack: () => spinTween.pause(),
         });
       }
 
@@ -161,7 +170,6 @@ const Contact = ({ id }) => {
 
     return () => {
       ctx.revert();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 

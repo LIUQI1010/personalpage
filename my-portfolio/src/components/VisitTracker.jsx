@@ -12,7 +12,7 @@ const VisitTracker = () => {
           },
         });
         
-        console.log('Visit recorded');
+        // Visit recorded
       } catch (error) {
         console.error('Failed to record visit:', error);
       }

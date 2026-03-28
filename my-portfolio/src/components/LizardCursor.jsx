@@ -250,28 +250,20 @@ const LizardCursor = () => {
       return { x: -dy / len, y: dx / len };
     };
 
-    // Apply 3-layer glow to a path-building function
+    // Apply 2-layer glow to a path-building function (no filter blur)
     const glowStroke = (buildPath, w, op) => {
-      ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      ctx.strokeStyle = `rgba(0,255,255,${op * 0.1})`;
-      ctx.lineWidth = w * 3;
-      ctx.lineCap = ctx.lineJoin = 'round';
-      ctx.filter = 'blur(4px)';
-      buildPath();
-      ctx.stroke();
-      ctx.restore();
-
+      // Main line with shadow glow
       ctx.save();
       ctx.strokeStyle = `rgba(0,255,255,${op * 0.3})`;
       ctx.lineWidth = w;
       ctx.lineCap = ctx.lineJoin = 'round';
-      ctx.shadowColor = `rgba(0,255,255,${op * 0.2})`;
-      ctx.shadowBlur = 6;
+      ctx.shadowColor = `rgba(0,255,255,${op * 0.4})`;
+      ctx.shadowBlur = 8;
       buildPath();
       ctx.stroke();
       ctx.restore();
 
+      // Inner bright
       ctx.save();
       ctx.strokeStyle = `rgba(255,255,255,${op * 0.3})`;
       ctx.lineWidth = Math.max(0.5, w * 0.4);
@@ -281,17 +273,8 @@ const LizardCursor = () => {
       ctx.restore();
     };
 
-    // Apply 3-layer glow fill + stroke for closed shapes
+    // Apply 2-layer glow fill + stroke for closed shapes
     const glowShape = (buildPath, strokeW, op) => {
-      // Glow fill
-      ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      ctx.fillStyle = `rgba(0,255,255,${op * 0.04})`;
-      ctx.filter = 'blur(3px)';
-      buildPath();
-      ctx.fill();
-      ctx.restore();
-
       // Subtle fill
       ctx.save();
       ctx.fillStyle = `rgba(0,255,255,${op * 0.06})`;

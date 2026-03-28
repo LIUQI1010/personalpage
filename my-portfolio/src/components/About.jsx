@@ -205,13 +205,22 @@ const About = ({ id }) => {
           });
         });
 
-        gsap.to(shapes, {
+        const spinTween = gsap.to(shapes, {
           rotation: '+=360',
           duration: 20,
           ease: 'none',
           repeat: -1,
           transformOrigin: '50% 50%',
           force3D: true,
+        });
+        ScrollTrigger.create({
+          trigger: decorationRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          onEnter: () => spinTween.play(),
+          onLeave: () => spinTween.pause(),
+          onEnterBack: () => spinTween.play(),
+          onLeaveBack: () => spinTween.pause(),
         });
       }
 
@@ -232,7 +241,6 @@ const About = ({ id }) => {
 
     return () => {
       ctx.revert();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
@@ -512,6 +520,8 @@ const About = ({ id }) => {
                               <img
                                 src={cert.credlyImageUrl}
                                 alt={`${cert.issuer} ${cert.name} Certification Badge`}
+                                loading='lazy'
+                                decoding='async'
                                 className='w-20 h-20 object-contain rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow duration-500'
                               />
                           </div>

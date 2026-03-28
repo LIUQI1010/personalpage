@@ -66,7 +66,7 @@ export const certifications = [
     issuer: 'AWS',
     status: 'completed',
     year: '2024',
-    credlyImageUrl: '/img/cloud foundation.png',
+    credlyImageUrl: '/img/cloud foundation.webp',
     credlyVerifyUrl: '',
   },
   {

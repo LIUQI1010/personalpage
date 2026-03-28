@@ -94,11 +94,10 @@ const LikeButton = () => {
           const now = Date.now();
           setLastRecordedClick(now);
           localStorage.setItem('lastLikeClick', now.toString());
-          console.log('点赞已记录！当前总数:', data.likes);
+          // 点赞已记录
         } else if (response.status === 429) {
           // 服务器限制：回滚乐观更新
           setLikeCount(likeCount);
-          console.log('点赞过于频繁，服务器端限制');
         } else {
           // 其他错误：回滚乐观更新
           setLikeCount(likeCount);
@@ -112,7 +111,7 @@ const LikeButton = () => {
         setIsLoading(false);
       }
     } else {
-      console.log('点赞过于频繁，本地限制');
+      // 点赞过于频繁，本地限制
     }
   }, [canRecordLike, createFloatingHeart, isLoading, likeCount]);
 

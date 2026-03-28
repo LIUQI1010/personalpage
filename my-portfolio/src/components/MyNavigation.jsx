@@ -279,9 +279,9 @@ export default function MyNavigation() {
       style={{
         top: 'env(safe-area-inset-top, 0px)',
         paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
-        backgroundColor: 'rgba(0, 0, 0, 0.25)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         // Safari iOS 优化
         WebkitTransform: 'translateZ(0)',
         transform: 'translateZ(0)',

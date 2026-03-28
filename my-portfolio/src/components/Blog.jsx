@@ -278,13 +278,22 @@ const Blog = ({ id }) => {
           });
         });
 
-        gsap.to(shapes, {
+        const spinTween = gsap.to(shapes, {
           rotation: '+=360',
           duration: 25,
           ease: 'none',
           repeat: -1,
           transformOrigin: '50% 50%',
           force3D: true,
+        });
+        ScrollTrigger.create({
+          trigger: decorationRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          onEnter: () => spinTween.play(),
+          onLeave: () => spinTween.pause(),
+          onEnterBack: () => spinTween.play(),
+          onLeaveBack: () => spinTween.pause(),
         });
       }
 
@@ -305,7 +314,6 @@ const Blog = ({ id }) => {
 
     return () => {
       ctx.revert();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
@@ -360,6 +368,8 @@ const Blog = ({ id }) => {
                         <img
                           src={image.src}
                           alt={`${image.location} - New Zealand`}
+                          loading='lazy'
+                          decoding='async'
                           className='w-full h-full object-cover transition-all duration-500 group-hover:scale-110'
                           style={{
                             opacity: index < 3 ? 1 : 0,

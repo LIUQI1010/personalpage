@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import Home from './pages/Home';
-import MosoTea from './pages/MosoTea';
-import MyComponents from './pages/MyComponents';
-import NotFound from './pages/NotFound';
+
+const MosoTea = lazy(() => import('./pages/MosoTea'));
+const MyComponents = lazy(() => import('./pages/MyComponents'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // 组件用于处理路由切换时的滚动重置
 function ScrollToTop() {
@@ -24,12 +25,14 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/projects/mosotea' element={<MosoTea />} />
-        <Route path='/my-components' element={<MyComponents />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/projects/mosotea' element={<MosoTea />} />
+          <Route path='/my-components' element={<MyComponents />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

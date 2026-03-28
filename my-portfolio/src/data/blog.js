@@ -1,10 +1,10 @@
 export const blogImages = [
-  { src: '/img/blogs/Blue%20Spring.jpg', location: 'Blue Spring' },
-  { src: '/img/blogs/Rotorua01.jpg', location: 'Rotorua' },
-  { src: '/img/blogs/Taopo01.jpg', location: 'Taopo' },
-  { src: '/img/blogs/Taopo02.jpg', location: 'Taopo' },
-  { src: '/img/blogs/Wellington01.JPG', location: 'Wellington' },
-  { src: '/img/blogs/Wellington02.JPG', location: 'Wellington' },
+  { src: '/img/blogs/Blue%20Spring.webp', location: 'Blue Spring' },
+  { src: '/img/blogs/Rotorua01.webp', location: 'Rotorua' },
+  { src: '/img/blogs/Taopo01.webp', location: 'Taopo' },
+  { src: '/img/blogs/Taopo02.webp', location: 'Taopo' },
+  { src: '/img/blogs/Wellington01.webp', location: 'Wellington' },
+  { src: '/img/blogs/Wellington02.webp', location: 'Wellington' },
 ];
 
 export const developmentLogs = [

@@ -282,7 +282,7 @@ const GalaxyBackground = () => {
           }));
           starsRef.current = tmp;
         }
-        console.log(`Loaded NZ stars: ${data.total || data.stars.length}`);
+        // NZ stars loaded
       } catch (e) {
         console.error('Load nz_stars.json failed:', e);
       }
@@ -488,8 +488,26 @@ const GalaxyBackground = () => {
       });
     };
 
+    // 帧率控制：空闲时降至 ~15fps，滚动时恢复 60fps
+    let lastScrollTime = Date.now();
+    let lastRenderTime = 0;
+    const IDLE_FRAME_INTERVAL = 66; // ~15fps when idle
+    const IDLE_TIMEOUT = 2000; // 2s after last scroll = idle
+
+    const onScroll = () => {
+      lastScrollTime = Date.now();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
     // 渲染函数
-    const render = () => {
+    const render = (timestamp) => {
+      animationRef.current = requestAnimationFrame(render);
+
+      // Throttle when idle
+      const isIdle = Date.now() - lastScrollTime > IDLE_TIMEOUT;
+      if (isIdle && timestamp - lastRenderTime < IDLE_FRAME_INTERVAL) return;
+      lastRenderTime = timestamp;
+
       // 清空画布（CSS 像素尺寸）
       const vw = canvas.clientWidth || window.innerWidth;
       const vh = canvas.clientHeight || window.innerHeight;
@@ -525,18 +543,13 @@ const GalaxyBackground = () => {
       // 绘制所有星星
       starsRef.current.forEach(drawStar);
 
-      // 绘制流星
+      // 绘制流星（空闲时跳过生成新流星）
       updateAndRenderMeteors();
-
-      // 请求下一帧
-      animationRef.current = requestAnimationFrame(render);
     };
 
     // 开始动画
     const { outline, inside, outside } = getStarCounts();
-    console.log(
-      `Starting galaxy animation... Device: ${isMobile ? 'Mobile' : 'Desktop'}, Stars: ${outline + inside + outside} (轮廓${outline}+内部${inside}+外部${outside})`
-    );
+    // Galaxy animation started
     // 首帧生成1颗，随后按概率生成
     spawnMeteor();
     render();
@@ -570,9 +583,38 @@ const GalaxyBackground = () => {
 
     window.addEventListener('resize', handleResize);
 
+    // 页面可见性暂停/恢复
+    let isVisible = true;
+    const handleVisibility = () => {
+      if (document.hidden) {
+        isVisible = false;
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      } else {
+        isVisible = true;
+        animationRef.current = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    // Canvas 离屏暂停（IntersectionObserver）
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && isVisible) {
+          animationRef.current = requestAnimationFrame(render);
+        } else {
+          if (animationRef.current) cancelAnimationFrame(animationRef.current);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
     // 清理函数
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      observer.disconnect();
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
