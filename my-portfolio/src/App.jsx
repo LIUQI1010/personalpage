@@ -1,39 +1,26 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect, lazy, Suspense } from 'react';
-import Home from './pages/Home';
-
-const MosoTea = lazy(() => import('./pages/MosoTea'));
-const MyComponents = lazy(() => import('./pages/MyComponents'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-
-// 组件用于处理路由切换时的滚动重置
-function ScrollToTop() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    // 路由切换时清除锚点并滚动到顶部
-    if (window.location.hash) {
-      window.history.replaceState(null, null, pathname);
-    }
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
+import LizardCursor from './components/LizardCursor';
 
 function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <Suspense fallback={null}>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/projects/mosotea' element={<MosoTea />} />
-          <Route path='/my-components' element={<MyComponents />} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <div className='relative min-h-screen overflow-hidden'>
+      <LizardCursor />
+
+      {/* 维护页面 */}
+      <div className='flex min-h-screen items-center justify-center'>
+        <div className='text-center px-6'>
+          <h1 className='text-4xl sm:text-6xl font-bold text-white/90 mb-6 tracking-tight'>
+            Under Reconstruction
+          </h1>
+          <p className='text-lg sm:text-xl text-white/50 mb-2'>
+            This site is being rebuilt from the ground up.
+          </p>
+          <p className='text-lg sm:text-xl text-white/50'>
+            Expected back online{' '}
+            <span className='text-cyan-400/80 font-semibold'>April 1, 2026</span>.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 
