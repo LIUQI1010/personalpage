@@ -4,37 +4,34 @@ Personal portfolio for Qi (Chee) Liu, deployed on Vercel.
 
 ## Tech Stack
 
-- **Framework**: React 19 + Vite 7 (SPA)
-- **Styling**: Tailwind CSS 4 (Vite plugin, not PostCSS)
+- **Framework**: Next.js 16 (App Router, SSR/SSG)
+- **Styling**: Tailwind CSS 4 (`@tailwindcss/postcss`)
 - **Animation**: GSAP 3.13 (ScrollTrigger, MotionPathPlugin, SplitText)
-- **Routing**: React Router DOM 7
 - **UI**: Radix UI primitives, lucide-react icons, shadcn/ui components
-- **Backend**: Vercel Serverless Functions (api/) + Redis (Vercel KV)
-- **Deployment**: Vercel (vercel.json, SPA rewrites)
+- **Backend**: Next.js Route Handlers (app/api/) + Redis (Vercel KV)
+- **Deployment**: Vercel
 
 ## Project Structure
 
 ```
-my-portfolio/
-  src/
-    components/       # React components
-    components/ui/    # shadcn/ui base components
-    data/             # Static data (blog, experience, projects, skills)
-    lib/              # Utilities (cn helper)
-    pages/            # Route-level pages (Home, MosoTea, MyComponents, NotFound)
-  api/                # Vercel serverless functions (likes, visitor-stats, cv-downloads)
+personalpage/
+  app/                # Next.js App Router pages + API routes
+    api/              # Route handlers (likes, visitor-stats, cv-downloads)
+    projects/         # Project detail pages (mosotea)
+    my-components/    # Component library page
+  components/         # React components
+  components/ui/      # shadcn/ui base components
+  data/               # Static data (blog, experience, projects, skills)
+  lib/                # Utilities (cn helper)
   public/img/         # Static images
 ```
 
 ## Commands
 
 ```bash
-cd my-portfolio
-npm run dev           # Start dev server (localhost:5173)
+npm run dev           # Start dev server (localhost:3000)
 npm run build         # Production build
 npm run lint          # ESLint
-npm run format        # Prettier format
-npm run format:check  # Prettier check
 ```
 
 ## Code Conventions
@@ -45,17 +42,11 @@ npm run format:check  # Prettier check
 - **Functional components only** - no class components
 - **Hooks for state/effects** - useRef for imperative DOM/canvas, useState for reactive state
 - **Named exports for data**, default exports for components
-- **Path alias**: `@/` maps to `src/`
+- **Path alias**: `@/` maps to project root
 - **Chinese comments** are common in the codebase - keep this style when modifying existing files
-
-### Formatting (Prettier)
-
-- Single quotes, JSX single quotes
-- Semicolons: yes
-- Tab width: 2, spaces (no tabs)
-- Trailing commas: ES5
-- Print width: 100
-- Arrow parens: avoid when possible
+- **`'use client'`** directive required for components using hooks, browser APIs, or event handlers
+- **`next/dynamic`** with `{ ssr: false }` for Canvas/browser-API-only components (GalaxyBackground, LizardCursor, LoadingAnimation)
+- **`next/navigation`** (`useRouter`, `usePathname`) instead of react-router-dom
 
 ### Styling
 
@@ -72,12 +63,14 @@ npm run format:check  # Prettier check
 - **CSS animations** for simple loops (arrow-blink, pulse)
 - Always clean up GSAP timelines and ScrollTrigger instances in useEffect return
 - Always cancelAnimationFrame in cleanup
+- `gsap.registerPlugin()` must be called inside `useGSAP()` or `useEffect()`, NOT at module level (SSR safety)
 
 ### Data
 
-- Static content lives in `src/data/*.js` as exported arrays/objects
+- Static content lives in `data/*.js` as exported arrays/objects
 - Images served from `public/img/` with absolute paths (`/img/...`)
-- API endpoints at `/api/*` (Vercel serverless, Redis-backed)
+- API endpoints at `/api/*` (Next.js Route Handlers, Redis-backed)
+- Redis graceful fallback: return zero counts when `kv_REDIS_URL` is not set
 
 ### Component Patterns
 
