@@ -49,6 +49,23 @@ export default function RootLayout({ children }) {
   return (
     <html lang='en'>
       <body>
+        {/* SSR 遮罩：防止开屏动画加载前看到主页内容，由 LoadingAnimation 客户端接管后移除 */}
+        <div
+          id='ssr-loading-overlay'
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 10000,
+            background: 'oklch(0.13 0.03 261.7)',
+            pointerEvents: 'none',
+          }}
+        />
+        {/* 如果动画已播放过或非首页，立即移除遮罩；否则等 LoadingAnimation 接管 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem('loading-played')||location.pathname!=='/'){var e=document.getElementById('ssr-loading-overlay');if(e)e.remove()}}catch(e){}`,
+          }}
+        />
         {children}
         <SpeedInsights />
       </body>

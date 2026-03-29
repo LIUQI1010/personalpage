@@ -11,16 +11,22 @@ const LoadingAnimation = ({ onComplete }) => {
   const [shouldPlay, setShouldPlay] = useState(false);
 
   useEffect(() => {
+    const ssrOverlay = document.getElementById('ssr-loading-overlay');
     if (!sessionStorage.getItem('loading-played')) {
       setShouldPlay(true);
       sessionStorage.setItem('loading-played', '1');
     } else {
+      // 不播放动画时，立即移除 SSR 遮罩
+      ssrOverlay?.remove();
       onComplete?.();
     }
   }, []);
 
   useEffect(() => {
     if (!shouldPlay) return;
+
+    // 动画组件已挂载，移除 SSR 遮罩（自身 overlay 接管）
+    document.getElementById('ssr-loading-overlay')?.remove();
 
     const overlay = overlayRef.current;
     const canvas = canvasRef.current;
