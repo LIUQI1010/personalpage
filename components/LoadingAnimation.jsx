@@ -43,9 +43,7 @@ const LoadingAnimation = ({ onComplete }) => {
     const centerY = vh / 2;
     const maxRadius = Math.sqrt(vw * vw + vh * vh) / 2;
 
-    // --- 竖屏/横屏适配 ---
-    const isPortrait = vw < vh;
-    const scale = isPortrait ? 0.7 : 1;
+    const scale = vw < vh ? 0.7 : 1;
 
     // --- Lizard Config ---
     const LERP = 0.15;
@@ -61,25 +59,22 @@ const LoadingAnimation = ({ onComplete }) => {
     const MAX_BEND = 0.5;
 
     // --- Lizard State ---
-    // 竖屏：从底部居中开始；横屏：从左下角开始
-    const startX = isPortrait ? vw * 0.5 : vw * 0.05;
-    const startY = vh * 0.92;
-    let mx = startX;
-    let my = startY;
+    let mx = centerX;
+    let my = centerY;
 
     const spine = Array.from({ length: SPINE_COUNT }, (_, i) => ({
-      x: startX,
-      y: startY + i * SPINE_GAP,
+      x: centerX,
+      y: centerY + i * SPINE_GAP,
     }));
     const tail = Array.from({ length: TAIL_GAPS.length + 1 }, () => ({
-      x: startX,
-      y: startY + SPINE_COUNT * SPINE_GAP,
+      x: centerX,
+      y: centerY + SPINE_COUNT * SPINE_GAP,
     }));
 
     const makeLeg = (si, side) => ({
       si,
       side,
-      foot: { x: startX, y: startY },
+      foot: { x: centerX, y: centerY },
       rest: { x: 0, y: 0 },
       stepping: false,
       stepT: 0,
@@ -401,55 +396,7 @@ const LoadingAnimation = ({ onComplete }) => {
     };
     updateMask(0);
 
-    // --- 贝塞尔曲线路径 ---
-    const pathPoints = isPortrait
-      ? [ // 竖屏：从底部居中向上 S 形游到中心
-          { x: startX, y: startY },
-          { x: vw * 0.3, y: vh * 0.7 },
-          { x: vw * 0.7, y: vh * 0.45 },
-          { x: centerX, y: centerY },
-        ]
-      : [ // 横屏：从左下角到中心
-          { x: startX, y: startY },
-          { x: vw * 0.2, y: vh * 0.65 },
-          { x: vw * 0.4, y: vh * 0.35 },
-          { x: centerX, y: centerY },
-        ];
-
-    // 三次贝塞尔插值
-    const cubicBezier = (p0, p1, p2, p3, t) => {
-      const u = 1 - t;
-      return {
-        x: u * u * u * p0.x + 3 * u * u * t * p1.x + 3 * u * t * t * p2.x + t * t * t * p3.x,
-        y: u * u * u * p0.y + 3 * u * u * t * p1.y + 3 * u * t * t * p2.y + t * t * t * p3.y,
-      };
-    };
-
-    // 贝塞尔切线（一阶导数）
-    const cubicBezierTangent = (p0, p1, p2, p3, t) => {
-      const u = 1 - t;
-      return {
-        x: 3 * u * u * (p1.x - p0.x) + 6 * u * t * (p2.x - p1.x) + 3 * t * t * (p3.x - p2.x),
-        y: 3 * u * u * (p1.y - p0.y) + 6 * u * t * (p2.y - p1.y) + 3 * t * t * (p3.y - p2.y),
-      };
-    };
-
-    // 沿路径叠加正弦横向摆动，模拟蜥蜴 S 形爬行
-    const UNDULATION_FREQ = isPortrait ? 3 : 3.5;
-    const UNDULATION_AMP = isPortrait ? 16 : 28;
-    const pathWithUndulation = (p0, p1, p2, p3, t) => {
-      const pos = cubicBezier(p0, p1, p2, p3, t);
-      const tan = cubicBezierTangent(p0, p1, p2, p3, t);
-      const tanLen = Math.sqrt(tan.x * tan.x + tan.y * tan.y) || 1;
-      const nx = -tan.y / tanLen;
-      const ny = tan.x / tanLen;
-      const envelope = Math.sin(Math.PI * t) * (1 - t * t);
-      const offset = UNDULATION_AMP * envelope * Math.sin(2 * Math.PI * UNDULATION_FREQ * t);
-      return { x: pos.x + nx * offset, y: pos.y + ny * offset };
-    };
-
-    const progress = { value: 0 };
-    const spiral = { angle: 0, radius: isPortrait ? 25 : 35, phase: 'crawl' };
+    const spiral = { angle: 0, radius: (vw < vh) ? 25 : 35 };
     let arrived = false;
     let animId;
 
@@ -461,14 +408,8 @@ const LoadingAnimation = ({ onComplete }) => {
     }
 
     const loop = () => {
-      if (spiral.phase === 'crawl') {
-        const pos = pathWithUndulation(pathPoints[0], pathPoints[1], pathPoints[2], pathPoints[3], progress.value);
-        mx = pos.x;
-        my = pos.y;
-      } else {
-        mx = centerX + Math.cos(spiral.angle) * spiral.radius;
-        my = centerY + Math.sin(spiral.angle) * spiral.radius;
-      }
+      mx = centerX + Math.cos(spiral.angle) * spiral.radius;
+      my = centerY + Math.sin(spiral.angle) * spiral.radius;
       updateSpine();
       updateTail();
       updateLegs(performance.now());
@@ -490,20 +431,12 @@ const LoadingAnimation = ({ onComplete }) => {
       },
     });
 
-    // 阶段一：驱动进度 0→1，蜥蜴沿贝塞尔曲线爬行到中心
-    tl.to(progress, {
-      value: 1,
-      duration: 2,
-      ease: 'power2.inOut',
-    });
-
-    // 阶段二：蜥蜴在中心盘旋并逐渐消失
+    // 蜥蜴在中心盘旋并逐渐消失
     tl.to(spiral, {
       angle: Math.PI * 2,
       radius: 0,
       duration: 1.2,
       ease: 'power1.in',
-      onStart: () => { spiral.phase = 'spiral'; },
       onUpdate: function () { lizardOpacity = 1 - this.progress(); },
       onComplete: () => {
         arrived = true;

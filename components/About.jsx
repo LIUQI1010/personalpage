@@ -245,10 +245,14 @@ const About = ({ id }) => {
   }, []);
 
   useEffect(() => {
-    const qiPaths = document.querySelectorAll('.qi-path, .qi-path-stroke, .qi-path-fill');
+    const qiPaths = document.querySelectorAll('.qi-path');
     qiPaths.forEach(path => {
       const length = path.getTotalLength();
       path.style.setProperty('--l', length);
+    });
+    // 等 --l 生效后再触发动画
+    requestAnimationFrame(() => {
+      qiPaths.forEach(path => path.classList.add('animate'));
     });
   }, []);
 
@@ -264,75 +268,63 @@ const About = ({ id }) => {
       <div className='max-w-6xl mx-auto'>
         {/* 标题部分 */}
         <div className='flex flex-col items-center justify-center mb-10'>
-          <div className='relative group w-4/5 md:w-1/2' style={{ minWidth: '400px' }}>
-            <svg viewBox='0 0 700 143' className='w-full h-auto cursor-pointer' aria-labelledby='name-title'>
+          <div className='relative w-4/5 md:w-1/2' style={{ minWidth: '400px' }}>
+            <svg viewBox='0 0 700 160' className='w-full h-auto' aria-labelledby='name-title'>
               <title id='name-title'>Qi Logan Liu</title>
-              <path
-                className='qi-path p1'
-                d='M122.7,26.0 L122.7,33.3 119.1,40.6 115.5,44.2 108.2,47.9 100.9,47.9 97.3,40.6 97.3,33.3 100.9,22.4 108.2,15.1 119.1,11.5 130.0,11.5 137.3,15.1 140.9,22.4 140.9,37.0 137.3,47.9 130.0,58.8 115.5,73.3 104.5,80.6 97.3,84.2 86.4,87.9 79.1,87.9 75.5,84.2 75.5,77.0 79.1,73.3 86.4,73.3 93.6,77.0 104.5,84.2 115.5,87.9 126.4,87.9 133.6,84.2 140.9,77.0 M130.0,11.5 L133.6,15.1 137.3,22.4 137.3,37.0 133.6,47.9 126.4,58.8 115.5,69.7 100.9,80.6 86.4,87.9'
-              ></path>
-              <path
-                className='qi-path p2'
-                d='M148.2,33.3 L144.5,37.0 148.2,40.6 151.8,37.0 148.2,33.3 M140.9,55.1 L133.6,77.0 133.6,84.2 140.9,87.9 148.2,84.2 151.8,80.6 159.1,69.7 M144.5,55.1 L137.3,77.0 137.3,84.2 140.9,87.9'
-              ></path>
-              <path
-                className='qi-path p3'
-                d='M224.5,22.4 L220.9,29.7 220.9,37.0 224.5,44.2 231.8,47.9 242.7,47.9 253.6,44.2 260.9,40.6 271.8,29.7 275.5,18.8 275.5,15.1 271.8,11.5 268.2,11.5 260.9,15.1 257.3,18.8 250.0,29.7 235.5,66.0 231.8,73.3 224.5,84.2 217.3,87.9 M257.3,18.8 L250.0,33.3 242.7,58.8 239.1,69.7 235.5,77.0 228.2,84.2 217.3,87.9 210.0,87.9 206.4,84.2 206.4,77.0 210.0,73.3 217.3,73.3 224.5,77.0 235.5,84.2 242.7,87.9 253.6,87.9 260.9,84.2 268.2,77.0'
-              ></path>
-              <path
-                className='qi-path p4'
-                d='M282.7,55.1 L275.5,55.1 268.2,58.8 264.5,62.4 260.9,69.7 260.9,77.0 264.5,84.2 271.8,87.9 279.1,87.9 286.4,84.2 290.0,80.6 293.6,73.3 293.6,66.0 290.0,58.8 282.7,55.1 279.1,58.8 279.1,66.0 282.7,73.3 290.0,77.0 297.3,77.0 304.5,73.3 308.2,69.7 M275.5,55.1 L268.2,62.4 264.5,69.7 264.5,80.6 271.8,87.9'
-              ></path>
-              <path
-                className='qi-path p5'
-                d='M333.6,66.0 L330.0,58.8 322.7,55.1 315.5,55.1 308.2,58.8 304.5,62.4 300.9,69.7 300.9,77.0 304.5,84.2 311.8,87.9 319.1,87.9 326.4,84.2 330.0,77.0 M315.5,55.1 L308.2,62.4 304.5,69.7 304.5,80.6 311.8,87.9 M337.3,55.1 L315.5,120.6 M340.9,55.1 L330.0,87.9 322.7,106.0 315.5,120.6 311.8,127.9 304.5,131.5 300.9,127.9 300.9,120.6 304.5,109.7 311.8,102.4 322.7,95.1 337.3,87.9 348.2,80.6 355.5,69.7'
-              ></path>
-              <path
-                className='qi-path p6'
-                d='M380.9,66.0 L377.3,58.8 370.0,55.1 362.7,55.1 355.5,58.8 351.8,62.4 348.2,69.7 348.2,77.0 351.8,84.2 359.1,87.9 366.4,87.9 373.6,84.2 377.3,77.0 M362.7,55.1 L355.5,62.4 351.8,69.7 351.8,80.6 359.1,87.9 M384.5,55.1 L377.3,77.0 377.3,84.2 384.5,87.9 391.8,84.2 395.5,80.6 402.7,69.7 M388.2,55.1 L380.9,77.0 380.9,84.2 384.5,87.9'
-              ></path>
-              <path
-                className='qi-path p7'
-                d='M391.8,69.7 L399.1,58.8 406.4,55.1 413.6,58.8 413.6,66.0 406.4,87.9 M406.4,55.1 L410.0,58.8 410.0,66.0 402.7,87.9 M413.6,66.0 L420.9,58.8 428.2,55.1 431.8,55.1 439.1,58.8 439.1,66.0 435.5,77.0 435.5,84.2 439.1,87.9 M431.8,55.1 L435.5,58.8 435.5,66.0 431.8,77.0 431.8,84.2 439.1,87.9 446.4,84.2 450.0,80.6 457.3,69.7'
-              ></path>
-              <path
-                className='qi-path p8'
-                d='M504.5,22.4 L500.9,29.7 500.9,37.0 504.5,44.2 511.8,47.9 522.7,47.9 533.6,44.2 540.9,40.6 551.8,29.7 555.5,18.8 555.5,15.1 551.8,11.5 548.2,11.5 540.9,15.1 537.3,18.8 530.0,29.7 515.5,66.0 511.8,73.3 504.5,84.2 497.3,87.9 M537.3,18.8 L530.0,33.3 522.7,58.8 519.1,69.7 515.5,77.0 508.2,84.2 497.3,87.9 490.0,87.9 486.4,84.2 486.4,77.0 490.0,73.3 497.3,73.3 504.5,77.0 515.5,84.2 522.7,87.9 533.6,87.9 540.9,84.2 548.2,77.0'
-              ></path>
-              <path
-                className='qi-path p9'
-                d='M555.5,33.3 L551.8,37.0 555.5,40.6 559.1,37.0 555.5,33.3 M548.2,55.1 L540.9,77.0 540.9,84.2 548.2,87.9 555.5,84.2 559.1,80.6 566.4,69.7 M551.8,55.1 L544.5,77.0 544.5,84.2 548.2,87.9'
-              ></path>
-              <path
-                className='qi-path p10'
-                d='M577.3,55.1 L570.0,77.0 570.0,84.2 577.3,87.9 580.9,87.9 588.2,84.2 595.5,77.0 602.7,66.0 M580.9,55.1 L573.6,77.0 573.6,84.2 577.3,87.9 M606.4,55.1 L599.1,77.0 599.1,84.2 606.4,87.9 613.6,84.2 617.3,80.6 624.5,69.7 M610.0,55.1 L602.7,77.0 602.7,84.2 606.4,87.9'
-              ></path>
+              {/* Q oval */}
+              <path className='qi-path' style={{ '--d': '0s' }}
+                d='M 80,62 C 78,30 108,16 130,24 C 150,32 155,58 148,78 C 142,98 118,112 96,108 C 78,104 72,82 80,62' />
+              {/* Q tail */}
+              <path className='qi-path' style={{ '--d': '0.28s' }}
+                d='M 128,96 C 140,108 156,110 168,100' />
+              {/* i stem */}
+              <path className='qi-path' style={{ '--d': '0.42s' }}
+                d='M 185,55 C 183,72 181,90 180,105' />
+              {/* i dot */}
+              <path className='qi-path' style={{ '--d': '0.62s' }}
+                d='M 186,39 L 187,42' />
+              {/* L */}
+              <path className='qi-path' style={{ '--d': '0.82s' }}
+                d='M 230,28 C 229,52 228,78 227,105 C 242,106 258,106 272,105' />
+              {/* o */}
+              <path className='qi-path' style={{ '--d': '1.08s' }}
+                d='M 298,56 C 310,54 320,66 318,80 C 316,96 304,106 292,104 C 280,102 274,88 276,74 C 278,60 288,54 298,56' />
+              {/* g */}
+              <path className='qi-path' style={{ '--d': '1.3s' }}
+                d='M 358,58 C 348,52 334,54 328,66 C 322,78 324,94 334,102 C 344,108 358,104 362,92 C 364,82 360,68 358,58 C 357,78 356,102 354,122 C 352,138 340,146 328,138' />
+              {/* a */}
+              <path className='qi-path' style={{ '--d': '1.62s' }}
+                d='M 406,72 C 404,58 392,52 382,56 C 374,62 372,78 376,90 C 382,102 396,106 406,98 C 410,92 408,72 406,55 C 406,72 404,90 404,105' />
+              {/* n */}
+              <path className='qi-path' style={{ '--d': '1.88s' }}
+                d='M 428,55 C 427,72 425,90 424,105 C 427,82 442,52 458,56 C 468,60 470,76 468,105' />
+              {/* L */}
+              <path className='qi-path' style={{ '--d': '2.2s' }}
+                d='M 510,28 C 509,52 508,78 507,105 C 522,106 538,106 552,105' />
+              {/* i stem */}
+              <path className='qi-path' style={{ '--d': '2.46s' }}
+                d='M 572,55 C 570,72 568,90 567,105' />
+              {/* i dot */}
+              <path className='qi-path' style={{ '--d': '2.66s' }}
+                d='M 574,39 L 575,42' />
+              {/* u */}
+              <path className='qi-path' style={{ '--d': '2.78s' }}
+                d='M 595,55 C 593,72 590,86 594,96 C 600,106 614,106 622,96 C 628,88 630,72 632,55 C 630,72 628,90 627,105' />
             </svg>
-            {/* Tooltip */}
-            <div className='absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10'>
-              <div className='text-center'>
-                <div className='font-medium'>Created with Single Line Font Renderer</div>
-                <div className='text-xs text-gray-300 mt-1'>
-                  jvolker.github.io/single-line-font-renderer
-                </div>
-              </div>
-              {/* Arrow */}
-              <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-800'></div>
-            </div>
           </div>
           <p ref={subtitleRef} className='text-xl md:text-xl text-gray-300 font-light text-center'>
-            AWS-Certified Solutions Architect & Full-Stack Developer
+            CS Master's Graduate · Full-Stack Developer · AWS Certified
           </p>
         </div>
 
         {/* 个人介绍 */}
         <div ref={introRef} className='max-w-4xl mx-auto mb-20'>
           <p className='text-lg md:text-xl text-gray-300 leading-relaxed text-center'>
-            I am a Computer Science Master's graduate from Victoria University of Wellington, passionate
-            about software development and building reliable systems that solve real problems. With eight
-            years of teaching experience, I bring clarity to both code and communication — making complex
-            technical concepts accessible and actionable. Currently seeking full-stack or backend
-            development roles where technology makes a real difference.
+            Master's in Computer Science from Victoria University of Wellington (weighted average ~83%).
+            I've shipped a commercial freelance website for a real business, built a serverless AWS platform
+            with zero downtime, and developed a PostgreSQL query optimizer using Genetic Programming.
+            Before tech, I taught Maths for 8 years — turns out explaining recursion to a hiring manager
+            isn't that different from explaining algebra to a room of 15-year-olds.
           </p>
           <div className='flex justify-center mt-6'>
             <a

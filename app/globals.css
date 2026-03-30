@@ -260,23 +260,17 @@ body {
 .qi-path {
   fill: none;
   stroke: rgb(229, 235, 240);
-  stroke-width: 4;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   filter: drop-shadow(0 0 2px rgba(250, 252, 121, 0.5));
-  stroke-dasharray: var(--l);
-  stroke-dashoffset: var(--l);
-  animation: dash 0.3s ease-in-out forwards;
+  stroke-dasharray: var(--l, 9999);
+  stroke-dashoffset: var(--l, 9999);
 }
 
-.qi-path.p1 { animation-delay: 0s; }
-.qi-path.p2 { animation-delay: 0.15s; }
-.qi-path.p3 { animation-delay: 0.3s; }
-.qi-path.p4 { animation-delay: 0.45s; }
-.qi-path.p5 { animation-delay: 0.6s; }
-.qi-path.p6 { animation-delay: 0.75s; }
-.qi-path.p7 { animation-delay: 0.9s; }
-.qi-path.p8 { animation-delay: 1.05s; }
-.qi-path.p9 { animation-delay: 1.2s; }
-.qi-path.p10 { animation-delay: 1.35s; }
+.qi-path.animate {
+  animation: dash 0.4s ease-in-out var(--d, 0s) forwards;
+}
 
 @keyframes dash {
   to {

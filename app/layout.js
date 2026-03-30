@@ -4,7 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 export const metadata = {
   metadataBase: new URL('https://qiliu.dev'),
   title: 'Qi Liu - Portfolio',
-  description: "Qi Liu's portfolio - AWS-Certified Solutions Architect & Full-Stack Developer",
+  description: "Qi Liu's portfolio - CS Master's Graduate, Full-Stack Developer & AWS Certified",
   authors: [{ name: 'Qi Liu' }],
   keywords: [
     'Qi Liu',
@@ -19,14 +19,14 @@ export const metadata = {
     type: 'website',
     title: 'Qi Liu - Portfolio',
     description:
-      'AWS-Certified Solutions Architect & Full-Stack Developer. Computer Science graduate student at VUW.',
+      'CS Master\'s Graduate, Full-Stack Developer & AWS Certified. Victoria University of Wellington.',
     images: ['/og-image.svg'],
     siteName: 'Qi Liu Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Qi Liu - Portfolio',
-    description: 'AWS-Certified Solutions Architect & Full-Stack Developer',
+    description: 'CS Master\'s Graduate, Full-Stack Developer & AWS Certified',
     images: ['/og-image.svg'],
   },
   other: {
