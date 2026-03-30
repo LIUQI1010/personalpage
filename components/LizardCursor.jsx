@@ -28,7 +28,10 @@ const LizardCursor = () => {
     // --- State ---
     let mx = -200,
       my = -200,
+      prevMx = -200,
+      prevMy = -200,
       active = false;
+    let tailSwayIntensity = 0; // 尾巴摆动强度，跟随移动速度
     const spine = Array.from({ length: SPINE_COUNT }, () => ({
       x: -200,
       y: -200,
@@ -308,7 +311,27 @@ const LizardCursor = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (!active) return;
 
-      const joints = [...spine, ...tail];
+      // 根据移动速度调整尾巴摆动强度
+      const speed = Math.sqrt((mx - prevMx) ** 2 + (my - prevMy) ** 2);
+      const targetSway = Math.min(speed / 12, 1);
+      tailSwayIntensity = lerpVal(tailSwayIntensity, targetSway, 0.06);
+      prevMx = mx; prevMy = my;
+
+      const time = performance.now() / 1000;
+      const rawJoints = [...spine, ...tail];
+
+      // 身体末端+尾巴摆动
+      const totalLen = spine.length + tail.length;
+      const swayStart = Math.floor(spine.length * 0.5); // 从身体中后段开始
+      const joints = rawJoints.map((j, i) => {
+        if (i < swayStart) return j;
+        const perp = jointPerp(rawJoints, i);
+        const t = (i - swayStart) / (totalLen - swayStart); // 0→1
+        const amp = (0.8 + 3.5 * tailSwayIntensity) * t;
+        const wave = Math.sin(time * 4 - (i - swayStart) * 0.9) * amp;
+        return { x: j.x + perp.x * wave, y: j.y + perp.y * wave };
+      });
+
       const hd = spineDir(0);
 
       // --- Build body contour ---
@@ -363,25 +386,6 @@ const LizardCursor = () => {
           ctx.lineTo(l.foot.x, l.foot.y);
         }, 1.8, 0.6);
 
-        // Toes (4 per foot)
-        const fdx = l.foot.x - ex;
-        const fdy = l.foot.y - ey;
-        const flen = Math.sqrt(fdx * fdx + fdy * fdy) || 1;
-        const fDirX = fdx / flen;
-        const fDirY = fdy / flen;
-        const toeLen = 5;
-        const toeAngles = [-0.5, -0.17, 0.17, 0.5];
-
-        glowStroke(() => {
-          ctx.beginPath();
-          for (const ang of toeAngles) {
-            const cos = Math.cos(ang), sin = Math.sin(ang);
-            const tx = fDirX * cos - fDirY * sin;
-            const ty = fDirX * sin + fDirY * cos;
-            ctx.moveTo(l.foot.x, l.foot.y);
-            ctx.lineTo(l.foot.x + tx * toeLen, l.foot.y + ty * toeLen);
-          }
-        }, 1, 0.5);
       }
 
       // --- Draw body ---

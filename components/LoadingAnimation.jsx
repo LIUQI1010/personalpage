@@ -43,22 +43,26 @@ const LoadingAnimation = ({ onComplete }) => {
     const centerY = vh / 2;
     const maxRadius = Math.sqrt(vw * vw + vh * vh) / 2;
 
+    // --- 竖屏/横屏适配 ---
+    const isPortrait = vw < vh;
+    const scale = isPortrait ? 0.7 : 1;
+
     // --- Lizard Config ---
     const LERP = 0.15;
     const SPINE_COUNT = 6;
-    const SPINE_GAP = 14;
-    const TAIL_GAPS = [12, 10, 8];
-    const UPPER_LEG = 18;
-    const LOWER_LEG = 15;
-    const SHOULDER_W = 6;
-    const FOOT_SPREAD = 22;
-    const STEP_THRESH = 25;
+    const SPINE_GAP = 14 * scale;
+    const TAIL_GAPS = [12, 10, 8].map(g => g * scale);
+    const UPPER_LEG = 18 * scale;
+    const LOWER_LEG = 15 * scale;
+    const SHOULDER_W = 6 * scale;
+    const FOOT_SPREAD = 22 * scale;
+    const STEP_THRESH = 25 * scale;
     const STEP_MS = 120;
     const MAX_BEND = 0.5;
 
     // --- Lizard State ---
-    // 从左下角可见区域开始
-    const startX = vw * 0.05;
+    // 竖屏：从底部居中开始；横屏：从左下角开始
+    const startX = isPortrait ? vw * 0.5 : vw * 0.05;
     const startY = vh * 0.92;
     let mx = startX;
     let my = startY;
@@ -223,7 +227,7 @@ const LoadingAnimation = ({ onComplete }) => {
     };
 
     // --- Draw ---
-    const BODY_WIDTHS = [5, 3.5, 5.5, 6, 4.5, 3, 2, 1.2, 0.6, 0.2];
+    const BODY_WIDTHS = [5, 3.5, 5.5, 6, 4.5, 3, 2, 1.2, 0.6, 0.2].map(w => w * scale);
 
     const jointPerp = (joints, i) => {
       let dx, dy;
@@ -292,7 +296,20 @@ const LoadingAnimation = ({ onComplete }) => {
       ctx.save();
       ctx.globalAlpha = lizardOpacity;
 
-      const joints = [...spine, ...tail];
+      const time = performance.now() / 1000;
+      const rawJoints = [...spine, ...tail];
+
+      // 身体末端+尾巴摆动
+      const totalLen = spine.length + tail.length;
+      const swayStart = Math.floor(spine.length * 0.5);
+      const joints = rawJoints.map((j, i) => {
+        if (i < swayStart) return j;
+        const perp = jointPerp(rawJoints, i);
+        const t = (i - swayStart) / (totalLen - swayStart);
+        const wave = Math.sin(time * 4 - (i - swayStart) * 0.9) * 3.5 * t;
+        return { x: j.x + perp.x * wave, y: j.y + perp.y * wave };
+      });
+
       const hd = spineDir(0);
 
       const leftPts = [];
@@ -330,25 +347,6 @@ const LoadingAnimation = ({ onComplete }) => {
           ctx.lineTo(l.foot.x, l.foot.y);
         }, 1.8, 0.6);
 
-        const fdx = l.foot.x - ex;
-        const fdy = l.foot.y - ey;
-        const flen = Math.sqrt(fdx * fdx + fdy * fdy) || 1;
-        const fDirX = fdx / flen;
-        const fDirY = fdy / flen;
-        const toeLen = 5;
-        const toeAngles = [-0.5, -0.17, 0.17, 0.5];
-
-        glowStroke(() => {
-          ctx.beginPath();
-          for (const ang of toeAngles) {
-            const cos = Math.cos(ang),
-              sin = Math.sin(ang);
-            const tx = fDirX * cos - fDirY * sin;
-            const ty = fDirX * sin + fDirY * cos;
-            ctx.moveTo(l.foot.x, l.foot.y);
-            ctx.lineTo(l.foot.x + tx * toeLen, l.foot.y + ty * toeLen);
-          }
-        }, 1, 0.5);
       }
 
       // Body
@@ -403,13 +401,20 @@ const LoadingAnimation = ({ onComplete }) => {
     };
     updateMask(0);
 
-    // --- 贝塞尔曲线路径：从左下角爬到中心 ---
-    const pathPoints = [
-      { x: startX, y: startY },
-      { x: vw * 0.2, y: vh * 0.65 },
-      { x: vw * 0.4, y: vh * 0.35 },
-      { x: centerX, y: centerY },
-    ];
+    // --- 贝塞尔曲线路径 ---
+    const pathPoints = isPortrait
+      ? [ // 竖屏：从底部居中向上 S 形游到中心
+          { x: startX, y: startY },
+          { x: vw * 0.3, y: vh * 0.7 },
+          { x: vw * 0.7, y: vh * 0.45 },
+          { x: centerX, y: centerY },
+        ]
+      : [ // 横屏：从左下角到中心
+          { x: startX, y: startY },
+          { x: vw * 0.2, y: vh * 0.65 },
+          { x: vw * 0.4, y: vh * 0.35 },
+          { x: centerX, y: centerY },
+        ];
 
     // 三次贝塞尔插值
     const cubicBezier = (p0, p1, p2, p3, t) => {
@@ -420,7 +425,31 @@ const LoadingAnimation = ({ onComplete }) => {
       };
     };
 
+    // 贝塞尔切线（一阶导数）
+    const cubicBezierTangent = (p0, p1, p2, p3, t) => {
+      const u = 1 - t;
+      return {
+        x: 3 * u * u * (p1.x - p0.x) + 6 * u * t * (p2.x - p1.x) + 3 * t * t * (p3.x - p2.x),
+        y: 3 * u * u * (p1.y - p0.y) + 6 * u * t * (p2.y - p1.y) + 3 * t * t * (p3.y - p2.y),
+      };
+    };
+
+    // 沿路径叠加正弦横向摆动，模拟蜥蜴 S 形爬行
+    const UNDULATION_FREQ = isPortrait ? 3 : 3.5;
+    const UNDULATION_AMP = isPortrait ? 16 : 28;
+    const pathWithUndulation = (p0, p1, p2, p3, t) => {
+      const pos = cubicBezier(p0, p1, p2, p3, t);
+      const tan = cubicBezierTangent(p0, p1, p2, p3, t);
+      const tanLen = Math.sqrt(tan.x * tan.x + tan.y * tan.y) || 1;
+      const nx = -tan.y / tanLen;
+      const ny = tan.x / tanLen;
+      const envelope = Math.sin(Math.PI * t) * (1 - t * t);
+      const offset = UNDULATION_AMP * envelope * Math.sin(2 * Math.PI * UNDULATION_FREQ * t);
+      return { x: pos.x + nx * offset, y: pos.y + ny * offset };
+    };
+
     const progress = { value: 0 };
+    const spiral = { angle: 0, radius: isPortrait ? 25 : 35, phase: 'crawl' };
     let arrived = false;
     let animId;
 
@@ -432,10 +461,14 @@ const LoadingAnimation = ({ onComplete }) => {
     }
 
     const loop = () => {
-      // 根据进度计算路径位置
-      const pos = cubicBezier(pathPoints[0], pathPoints[1], pathPoints[2], pathPoints[3], progress.value);
-      mx = pos.x;
-      my = pos.y;
+      if (spiral.phase === 'crawl') {
+        const pos = pathWithUndulation(pathPoints[0], pathPoints[1], pathPoints[2], pathPoints[3], progress.value);
+        mx = pos.x;
+        my = pos.y;
+      } else {
+        mx = centerX + Math.cos(spiral.angle) * spiral.radius;
+        my = centerY + Math.sin(spiral.angle) * spiral.radius;
+      }
       updateSpine();
       updateTail();
       updateLegs(performance.now());
@@ -464,16 +497,14 @@ const LoadingAnimation = ({ onComplete }) => {
       ease: 'power2.inOut',
     });
 
-    // 阶段二：蜥蜴在中心停顿
-    tl.to({}, { duration: 0.15 });
-
-    // 阶段三：蜥蜴淡出
-    tl.to(progress, {
-      value: 1, // 保持位置不变
-      duration: 0.3,
-      onUpdate: function () {
-        lizardOpacity = 1 - this.progress();
-      },
+    // 阶段二：蜥蜴在中心盘旋并逐渐消失
+    tl.to(spiral, {
+      angle: Math.PI * 2,
+      radius: 0,
+      duration: 1.2,
+      ease: 'power1.in',
+      onStart: () => { spiral.phase = 'spiral'; },
+      onUpdate: function () { lizardOpacity = 1 - this.progress(); },
       onComplete: () => {
         arrived = true;
         cancelAnimationFrame(animId);
@@ -481,31 +512,25 @@ const LoadingAnimation = ({ onComplete }) => {
       },
     });
 
-    // 圆环出现并扩散
+    // 圆环扩散 + 遮罩揭开同时开始
+    const revealLabel = 'reveal';
+
     tl.fromTo(
       ring,
       { scale: 0, opacity: 1 },
-      {
-        scale: 1,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-      },
-      '-=0.25',
+      { scale: 1, opacity: 0, duration: 0.8, ease: 'power2.out' },
+      revealLabel,
     );
 
-    // 圆形遮罩扩散露出页面
     tl.to(
       radiusRef.current,
       {
         value: maxRadius,
         duration: 1.15,
         ease: 'power2.out',
-        onUpdate: () => {
-          updateMask(radiusRef.current.value);
-        },
+        onUpdate: () => { updateMask(radiusRef.current.value); },
       },
-      '-=0.5',
+      revealLabel,
     );
 
     return () => {
@@ -521,33 +546,35 @@ const LoadingAnimation = ({ onComplete }) => {
   const ringSize = Math.max(vw, vh) * 0.6;
 
   return (
-    <div
-      ref={overlayRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 10000,
-        background: 'oklch(0.13 0.03 261.7)',
-        pointerEvents: 'none',
-      }}
-    >
-      {/* 蜥蜴 canvas */}
-      <canvas
-        ref={canvasRef}
+    <>
+      <div
+        ref={overlayRef}
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
+          position: 'fixed',
+          inset: 0,
+          zIndex: 10000,
+          background: 'oklch(0.13 0.03 261.7)',
+          pointerEvents: 'none',
         }}
-      />
+      >
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      </div>
 
-      {/* 扩散圆环 */}
+      {/* 扩散圆环 — 独立于 overlay，不受 mask 影响 */}
       <div
         ref={ringRef}
         style={{
-          position: 'absolute',
+          position: 'fixed',
+          zIndex: 10001,
           left: '50%',
           top: '50%',
           width: ringSize,
@@ -559,9 +586,10 @@ const LoadingAnimation = ({ onComplete }) => {
           boxShadow: '0 0 15px rgba(0, 255, 255, 0.4), inset 0 0 15px rgba(0, 255, 255, 0.1)',
           transform: 'scale(0)',
           opacity: 0,
+          pointerEvents: 'none',
         }}
       />
-    </div>
+    </>
   );
 };
 

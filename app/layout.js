@@ -47,7 +47,20 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
+      <head>
+        {/* 如果动画已播放过或非首页，立即隐藏遮罩（在 head 中执行，避免 hydration 不匹配） */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem('loading-played')||location.pathname!=='/'){document.documentElement.classList.add('no-loading')}}catch(e){}`,
+          }}
+        />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `.no-loading #ssr-loading-overlay{display:none!important}`,
+          }}
+        />
+      </head>
       <body>
         {/* SSR 遮罩：防止开屏动画加载前看到主页内容，由 LoadingAnimation 客户端接管后移除 */}
         <div
@@ -58,12 +71,6 @@ export default function RootLayout({ children }) {
             zIndex: 10000,
             background: 'oklch(0.13 0.03 261.7)',
             pointerEvents: 'none',
-          }}
-        />
-        {/* 如果动画已播放过或非首页，立即移除遮罩；否则等 LoadingAnimation 接管 */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem('loading-played')||location.pathname!=='/'){var e=document.getElementById('ssr-loading-overlay');if(e)e.remove()}}catch(e){}`,
           }}
         />
         {children}
